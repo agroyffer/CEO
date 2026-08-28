@@ -394,7 +394,6 @@ const ORIGINS = [
 ];
 
 /* ================= EMPRESAS ================= */
-/* areas: puestos que esa empresa suele abrir */
 const COMPANIES = [
   {n:"Kiosco Cripto SRL",s:"Fintech de garaje",t:1,cap:.4,c1:"#e0a030",c2:"#8a5a10",sh:"sq",ini:"KC",areas:["ven","mkt","fin"]},
   {n:"Agencia Sinergia+",s:"Marketing digital",t:1,cap:.6,c1:"#8a5fd0",c2:"#4a2a80",sh:"circ",ini:"S+",areas:["mkt","ven","ope"]},
@@ -444,8 +443,6 @@ const RANKS = [
 ];
 
 const OUTLETS = ["Cronista Digital","Infomercado","Portal Negocios","El Balance","Hilo de LinkedIn","Newsletter de startups"];
-
-/* rumores sobre el estado real de la empresa: a veces mienten */
 const RUMORS = {
   bien:["Vienen de cerrar una ronda","El sector la mira de reojo","Contratan sin parar"],
   regular:["Nadie sabe bien cómo les va","Cambiaron de auditor el año pasado","Reestructuración reciente"],
@@ -462,59 +459,105 @@ function avatarSVG(){
   const shirt=lane==="izq"?"#1a1a1a":"#e8ece9";
   const tie=lane==="izq"?"#8a1a2a":(lvl>=5?"#c9a227":"#3fb950");
   const hair={mba:"#3a2a1c",calle:"#221a14",trust:"#8a6a3a",tecnico:"#2a2420"}[o]||"#2a2420";
-  const hairShape={
-    mba:`<path d="M28 34c0-11 8-18 22-18s22 7 22 18c0 3-1 5-1 5-2-6-9-9-21-9s-19 3-21 9c0 0-1-2-1-5z" fill="${hair}"/>`,
-    calle:`<path d="M26 36c0-12 9-20 24-20s24 8 24 20H26z" fill="#2b3a2e"/><path d="M24 36h52v5H24z" fill="#1f2c23"/><path d="M74 36h16v4c0 1-1 2-2 2H74z" fill="#243328"/>`,
-    trust:`<path d="M28 36c0-12 9-19 22-19s22 7 22 19c0 2-1 4-1 4-1-8-8-12-13-9-4 2-9 2-14-1-5-3-13 0-15 10 0 0-1-2-1-4z" fill="${hair}"/>`,
-    tecnico:`<path d="M24 40c0-14 10-24 26-24s26 10 26 24v3H24z" fill="#3a4a52"/><path d="M31 39c0-11 7-18 19-18s19 7 19 18c0 0-6-6-19-6s-19 6-19 6z" fill="${hair}"/>`,
-  }[o];
-  const longHair=g==="M"?`<path d="M24 40c0 16 2 26 4 32h9c-3-8-4-18-4-28zM76 40c0 16-2 26-4 32h-9c3-8 4-18 4-28z" fill="${hair}"/>`:"";
-  const glasses=(o==="mba"||o==="tecnico")?`<g fill="none" stroke="#2a2a2a" stroke-width="2"><circle cx="41" cy="49" r="7"/><circle cx="59" cy="49" r="7"/><path d="M48 49h4M34 47l-4-1M66 47l4-1"/></g>`:"";
-  const shades=lane==="izq"?`<g><rect x="33" y="44" width="16" height="10" rx="4" fill="#12100f"/><rect x="51" y="44" width="16" height="10" rx="4" fill="#12100f"/><path d="M49 48h2" stroke="#12100f" stroke-width="3"/></g>`:"";
-  const mouth=lane==="izq"?`<path d="M43 62c4 3 10 3 14-1" stroke="${skinS}" stroke-width="2" fill="none" stroke-linecap="round"/>`:`<path d="M44 62h12" stroke="${skinS}" stroke-width="2" fill="none" stroke-linecap="round"/>`;
-  const eyes=lane==="izq"?"":`<circle cx="41" cy="49" r="2.2" fill="#2a2420"/><circle cx="59" cy="49" r="2.2" fill="#2a2420"/>`;
-  return `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
-    <path d="M50 74c-14 0-26 8-28 20l-2 26h60l-2-26c-2-12-14-20-28-20z" fill="${suit}"/>
-    <path d="M50 74l-9 4 9 16 9-16z" fill="${shirt}"/>
-    <path d="M50 80l-4 4 4 14 4-14z" fill="${tie}"/>
-    <path d="M44 66h12v10c0 3-12 3-12 0z" fill="${skinS}"/>
-    <ellipse cx="50" cy="48" rx="21" ry="23" fill="${skin}"/>
-    ${longHair}${hairShape}${glasses}${shades}${eyes}${mouth}</svg>`;
+  
+  // ARREGLO DEL PARSEO SVG: En lugar de strings con <path>, construimos un arreglo de etiquetas.
+  let hairShapeTags = [];
+  if(o === "mba") {
+    hairShapeTags.push({t:'path', d:'M28 34c0-11 8-18 22-18s22 7 22 18c0 3-1 5-1 5-2-6-9-9-21-9s-19 3-21 9c0 0-1-2-1-5z', fill:hair});
+  } else if (o === "calle") {
+    hairShapeTags.push({t:'path', d:'M26 36c0-12 9-20 24-20s24 8 24 20H26z', fill:'#2b3a2e'});
+    hairShapeTags.push({t:'path', d:'M24 36h52v5H24z', fill:'#1f2c23'});
+    hairShapeTags.push({t:'path', d:'M74 36h16v4c0 1-1 2-2 2H74z', fill:'#243328'});
+  } else if (o === "trust") {
+    hairShapeTags.push({t:'path', d:'M28 36c0-12 9-19 22-19s22 7 22 19c0 2-1 4-1 4-1-8-8-12-13-9-4 2-9 2-14-1-5-3-13 0-15 10 0 0-1-2-1-4z', fill:hair});
+  } else if (o === "tecnico") {
+    hairShapeTags.push({t:'path', d:'M24 40c0-14 10-24 26-24s26 10 26 24v3H24z', fill:'#3a4a52'});
+    hairShapeTags.push({t:'path', d:'M31 39c0-11 7-18 19-18s19 7 19 18c0 0-6-6-19-6s-19 6-19 6z', fill:hair});
+  }
+  
+  let tags = [];
+  tags.push({t:'path', d:'M50 74c-14 0-26 8-28 20l-2 26h60l-2-26c-2-12-14-20-28-20z', fill:suit});
+  tags.push({t:'path', d:'M50 74l-9 4 9 16 9-16z', fill:shirt});
+  tags.push({t:'path', d:'M50 80l-4 4 4 14 4-14z', fill:tie});
+  tags.push({t:'path', d:'M44 66h12v10c0 3-12 3-12 0z', fill:skinS});
+  tags.push({t:'ellipse', cx:'50', cy:'48', rx:'21', ry:'23', fill:skin});
+  
+  if (g === "M") {
+    tags.push({t:'path', d:'M24 40c0 16 2 26 4 32h9c-3-8-4-18-4-28zM76 40c0 16-2 26-4 32h-9c3-8 4-18 4-28z', fill:hair});
+  }
+  tags.push(...hairShapeTags);
+  
+  if (o === "mba" || o === "tecnico") {
+    tags.push({t:'g', fill:'none', stroke:'#2a2a2a', 'stroke-width':'2', inner: [
+      {t:'circle', cx:'41', cy:'49', r:'7'},
+      {t:'circle', cx:'59', cy:'49', r:'7'},
+      {t:'path', d:'M48 49h4M34 47l-4-1M66 47l4-1'}
+    ]});
+  }
+  
+  if (lane === "izq") {
+    tags.push({t:'g', inner: [
+      {t:'rect', x:'33', y:'44', width:'16', height:'10', rx:'4', fill:'#12100f'},
+      {t:'rect', x:'51', y:'44', width:'16', height:'10', rx:'4', fill:'#12100f'},
+      {t:'path', d:'M49 48h2', stroke:'#12100f', 'stroke-width':'3'}
+    ]});
+    tags.push({t:'path', d:'M43 62c4 3 10 3 14-1', stroke:skinS, 'stroke-width':'2', fill:'none', 'stroke-linecap':'round'});
+  } else {
+    tags.push({t:'circle', cx:'41', cy:'49', r:'2.2', fill:'#2a2420'});
+    tags.push({t:'circle', cx:'59', cy:'49', r:'2.2', fill:'#2a2420'});
+    tags.push({t:'path', d:'M44 62h12', stroke:skinS, 'stroke-width':'2', fill:'none', 'stroke-linecap':'round'});
+  }
+
+  function renderTag(tagObj) {
+    let attrs = Object.keys(tagObj).filter(k => k !== 't' && k !== 'inner')
+                  .map(k => `${k}="${tagObj[k]}"`).join(' ');
+    if (tagObj.inner) {
+      return `<${tagObj.t} ${attrs}>${tagObj.inner.map(renderTag).join('')}</${tagObj.t}>`;
+    }
+    return `<${tagObj.t} ${attrs}/>`;
+  }
+
+  return `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">${tags.map(renderTag).join('')}</svg>`;
 }
 
 /* ================= ESCENAS ================= */
+// ARREGLO DEL PARSEO SVG PARA SCENES
+function sTag(t, attrs, inner) {
+  let a = Object.keys(attrs||{}).map(k => `${k}="${attrs[k]}"`).join(' ');
+  return inner ? `<${t} ${a}>${inner}</${t}>` : `<${t} ${a}/>`;
+}
 const SCENES = {
-  cut:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#1a1512"/><g fill="#3a2a24"><rect x="12" y="42" width="18" height="24" rx="2"/><rect x="36" y="36" width="18" height="30" rx="2"/><rect x="60" y="48" width="18" height="18" rx="2"/><rect x="84" y="30" width="18" height="36" rx="2"/></g><path d="M8 20l104 34" stroke="#d1495b" stroke-width="3"/></svg>`,
-  hold:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#121a15"/><g fill="#2a4032"><circle cx="34" cy="34" r="10"/><circle cx="60" cy="30" r="10"/><circle cx="86" cy="34" r="10"/><path d="M20 66c0-12 6-18 14-18s14 6 14 18zM46 66c0-13 6-20 14-20s14 7 14 20zM72 66c0-12 6-18 14-18s14 6 14 18z"/></g></svg>`,
-  paint:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#171420"/><path d="M12 58L36 34l18 14 20-26 22 20" fill="none" stroke="#8a5fd0" stroke-width="3"/><circle cx="96" cy="28" r="6" fill="#e0a030"/></svg>`,
-  fall:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#1a1216"/><path d="M12 18l24 20 18-8 22 22 22-6" fill="none" stroke="#d1495b" stroke-width="3"/><path d="M98 46l8-2-2 8z" fill="#d1495b"/></svg>`,
-  ai:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#161320"/><g stroke="#8a5fd0" stroke-width="1.5" fill="none"><circle cx="60" cy="37" r="14"/><path d="M60 23v-9M60 51v9M46 37h-9M74 37h9"/></g><g fill="#c9a0f0"><circle cx="60" cy="14" r="3"/><circle cx="60" cy="60" r="3"/><circle cx="37" cy="37" r="3"/><circle cx="83" cy="37" r="3"/></g></svg>`,
-  brick:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#15130f"/><g fill="#3a2f22"><rect x="10" y="20" width="30" height="12"/><rect x="44" y="20" width="30" height="12"/><rect x="78" y="20" width="30" height="12"/><rect x="10" y="36" width="46" height="12"/><rect x="60" y="36" width="48" height="12"/><rect x="10" y="52" width="30" height="12"/><rect x="44" y="52" width="64" height="12"/></g></svg>`,
-  cash:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#111a13"/><g fill="#1f6b2a" stroke="#3fb950" stroke-width="1.5"><rect x="18" y="26" width="40" height="24" rx="3"/><rect x="34" y="34" width="40" height="24" rx="3"/><rect x="52" y="20" width="40" height="24" rx="3"/></g></svg>`,
-  dice:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#1a1712"/><rect x="30" y="18" width="34" height="34" rx="6" fill="#2e2a22" stroke="#e0a030" stroke-width="1.5"/><g fill="#e0a030"><circle cx="40" cy="28" r="3"/><circle cx="54" cy="42" r="3"/><circle cx="47" cy="35" r="3"/></g></svg>`,
-  shades:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#131315"/><path d="M24 32h32v14a8 8 0 01-16 0z" fill="#0c0c0e" stroke="#4a4a52" stroke-width="1.5"/><path d="M64 32h32v14a8 8 0 01-16 0z" fill="#0c0c0e" stroke="#4a4a52" stroke-width="1.5"/><path d="M56 36h8" stroke="#4a4a52" stroke-width="2"/></svg>`,
-  shield:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#121a1c"/><path d="M60 12l24 8v18c0 14-10 22-24 26-14-4-24-12-24-26V20z" fill="#1c2c2e" stroke="#4a8a90" stroke-width="2"/></svg>`,
-  hands:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#12180f"/><path d="M18 44c10-8 20-4 28 2l14 8 14-8c8-6 18-10 28-2" fill="none" stroke="#8a9c3f" stroke-width="4" stroke-linecap="round"/></svg>`,
-  box:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#171410"/><g fill="#3a2e1e" stroke="#6a563a" stroke-width="1.5"><rect x="26" y="26" width="30" height="30" rx="2"/><rect x="62" y="34" width="26" height="22" rx="2"/></g></svg>`,
-  bell:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#141a14"/><path d="M60 14c10 0 16 8 16 18v12l6 8H38l6-8V32c0-10 6-18 16-18z" fill="#2a3a26" stroke="#c9a227" stroke-width="2"/><circle cx="60" cy="58" r="5" fill="#c9a227"/></svg>`,
-  clock:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#15171a"/><circle cx="60" cy="37" r="20" fill="none" stroke="#5f7a9a" stroke-width="2.5"/><path d="M60 24v14l10 6" fill="none" stroke="#8ab0d0" stroke-width="2.5"/></svg>`,
-  chart:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#14181c"/><g fill="#2a3a48"><rect x="16" y="40" width="14" height="24"/><rect x="36" y="30" width="14" height="34"/><rect x="56" y="34" width="14" height="30"/><rect x="76" y="20" width="14" height="44"/></g></svg>`,
-  scale:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#16181a"/><path d="M60 14v46M36 62h48M28 26h64" stroke="#8a9098" stroke-width="2.5"/><path d="M28 26l-8 14h16zM92 26l-8 14h16z" fill="#2a3038" stroke="#8a9098" stroke-width="1.5"/></svg>`,
-  zip:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#1a1416"/><path d="M40 30h40v26H40z" fill="#2a2024" stroke="#8a6a70" stroke-width="1.5"/><circle cx="60" cy="42" r="5" fill="#d1495b"/></svg>`,
-  party:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#1a1620"/><path d="M46 20h28l-10 18v14h6v6H50v-6h6V38z" fill="#2e2438" stroke="#e0a030" stroke-width="1.5"/></svg>`,
-  mail:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#15181a"/><rect x="32" y="24" width="56" height="34" rx="3" fill="#222a2e" stroke="#5a6a72" stroke-width="1.5"/><path d="M32 26l28 20 28-20" fill="none" stroke="#5a6a72" stroke-width="2"/></svg>`,
-  folder:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#15181a"/><path d="M28 22h20l6 6h38v30H28z" fill="#243038" stroke="#5f8aa0" stroke-width="1.5"/></svg>`,
-  sword:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#1a1518"/><path d="M28 56L82 18M38 62L92 24" stroke="#a08090" stroke-width="3" stroke-linecap="round"/></svg>`,
-  chair:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#16191c"/><path d="M42 18h36v26H42z" fill="#2a3238" stroke="#7a8a94" stroke-width="1.5"/><path d="M38 46h44v6H38zM58 52v12M44 64h32" stroke="#7a8a94" stroke-width="3"/></svg>`,
-  target:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#14191a"/><circle cx="60" cy="37" r="22" fill="none" stroke="#3a5a50" stroke-width="2"/><circle cx="60" cy="37" r="13" fill="none" stroke="#3fb950" stroke-width="2"/><circle cx="60" cy="37" r="4" fill="#3fb950"/></svg>`,
-  crash:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#1a1214"/><path d="M12 20l18 14 14-6 16 20 14-10 16 22" fill="none" stroke="#d1495b" stroke-width="3"/></svg>`,
-  mic:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#151a1c"/><rect x="52" y="14" width="16" height="28" rx="8" fill="#2a3438" stroke="#7fb2e0" stroke-width="1.5"/><path d="M42 38c0 10 8 16 18 16s18-6 18-16M60 54v10M48 64h24" fill="none" stroke="#7fb2e0" stroke-width="2.5"/></svg>`,
-  net:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#15191c"/><g stroke="#5f9ad0" stroke-width="1.5"><path d="M30 22L60 40 90 22M30 56L60 40 90 56"/></g><g fill="#8ab0d0"><circle cx="30" cy="22" r="5"/><circle cx="90" cy="22" r="5"/><circle cx="30" cy="56" r="5"/><circle cx="90" cy="56" r="5"/><circle cx="60" cy="40" r="6"/></g></svg>`,
-  desk:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#15181a"/><rect x="30" y="26" width="40" height="26" rx="2" fill="#232b30" stroke="#5a6a72" stroke-width="1.5"/><path d="M22 56h76M40 56v8M80 56v8" stroke="#5a6a72" stroke-width="2.5"/></svg>`,
-  door:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#171418"/><rect x="44" y="12" width="32" height="52" rx="2" fill="#241f26" stroke="#6a5a70" stroke-width="1.5"/><circle cx="69" cy="40" r="3" fill="#a08aa8"/><path d="M18 64h20M82 64h20" stroke="#3a323e" stroke-width="2"/></svg>`,
+  cut: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#1a1512"}) + sTag('g',{fill:"#3a2a24"}, sTag('rect',{x:"12",y:"42",width:"18",height:"24",rx:"2"}) + sTag('rect',{x:"36",y:"36",width:"18",height:"30",rx:"2"}) + sTag('rect',{x:"60",y:"48",width:"18",height:"18",rx:"2"}) + sTag('rect',{x:"84",y:"30",width:"18",height:"36",rx:"2"})) + sTag('path',{d:"M8 20l104 34",stroke:"#d1495b","stroke-width":"3"})),
+  hold: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#121a15"}) + sTag('g',{fill:"#2a4032"}, sTag('circle',{cx:"34",cy:"34",r:"10"}) + sTag('circle',{cx:"60",cy:"30",r:"10"}) + sTag('circle',{cx:"86",cy:"34",r:"10"}) + sTag('path',{d:"M20 66c0-12 6-18 14-18s14 6 14 18zM46 66c0-13 6-20 14-20s14 7 14 20zM72 66c0-12 6-18 14-18s14 6 14 18z"}))),
+  paint: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#171420"}) + sTag('path',{d:"M12 58L36 34l18 14 20-26 22 20",fill:"none",stroke:"#8a5fd0","stroke-width":"3"}) + sTag('circle',{cx:"96",cy:"28",r:"6",fill:"#e0a030"})),
+  fall: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#1a1216"}) + sTag('path',{d:"M12 18l24 20 18-8 22 22 22-6",fill:"none",stroke:"#d1495b","stroke-width":"3"}) + sTag('path',{d:"M98 46l8-2-2 8z",fill:"#d1495b"})),
+  ai: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#161320"}) + sTag('g',{stroke:"#8a5fd0","stroke-width":"1.5",fill:"none"}, sTag('circle',{cx:"60",cy:"37",r:"14"}) + sTag('path',{d:"M60 23v-9M60 51v9M46 37h-9M74 37h9"})) + sTag('g',{fill:"#c9a0f0"}, sTag('circle',{cx:"60",cy:"14",r:"3"}) + sTag('circle',{cx:"60",cy:"60",r:"3"}) + sTag('circle',{cx:"37",cy:"37",r:"3"}) + sTag('circle',{cx:"83",cy:"37",r:"3"}))),
+  brick: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#15130f"}) + sTag('g',{fill:"#3a2f22"}, sTag('rect',{x:"10",y:"20",width:"30",height:"12"}) + sTag('rect',{x:"44",y:"20",width:"30",height:"12"}) + sTag('rect',{x:"78",y:"20",width:"30",height:"12"}) + sTag('rect',{x:"10",y:"36",width:"46",height:"12"}) + sTag('rect',{x:"60",y:"36",width:"48",height:"12"}) + sTag('rect',{x:"10",y:"52",width:"30",height:"12"}) + sTag('rect',{x:"44",y:"52",width:"64",height:"12"}))),
+  cash: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#111a13"}) + sTag('g',{fill:"#1f6b2a",stroke:"#3fb950","stroke-width":"1.5"}, sTag('rect',{x:"18",y:"26",width:"40",height:"24",rx:"3"}) + sTag('rect',{x:"34",y:"34",width:"40",height:"24",rx:"3"}) + sTag('rect',{x:"52",y:"20",width:"40",height:"24",rx:"3"}))),
+  dice: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#1a1712"}) + sTag('rect',{x:"30",y:"18",width:"34",height:"34",rx:"6",fill:"#2e2a22",stroke:"#e0a030","stroke-width":"1.5"}) + sTag('g',{fill:"#e0a030"}, sTag('circle',{cx:"40",cy:"28",r:"3"}) + sTag('circle',{cx:"54",cy:"42",r:"3"}) + sTag('circle',{cx:"47",cy:"35",r:"3"}))),
+  shades: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#131315"}) + sTag('path',{d:"M24 32h32v14a8 8 0 01-16 0z",fill:"#0c0c0e",stroke:"#4a4a52","stroke-width":"1.5"}) + sTag('path',{d:"M64 32h32v14a8 8 0 01-16 0z",fill:"#0c0c0e",stroke:"#4a4a52","stroke-width":"1.5"}) + sTag('path',{d:"M56 36h8",stroke:"#4a4a52","stroke-width":"2"})),
+  shield: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#121a1c"}) + sTag('path',{d:"M60 12l24 8v18c0 14-10 22-24 26-14-4-24-12-24-26V20z",fill:"#1c2c2e",stroke:"#4a8a90","stroke-width":"2"})),
+  hands: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#12180f"}) + sTag('path',{d:"M18 44c10-8 20-4 28 2l14 8 14-8c8-6 18-10 28-2",fill:"none",stroke:"#8a9c3f","stroke-width":"4","stroke-linecap":"round"})),
+  box: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#171410"}) + sTag('g',{fill:"#3a2e1e",stroke:"#6a563a","stroke-width":"1.5"}, sTag('rect',{x:"26",y:"26",width:"30",height:"30",rx:"2"}) + sTag('rect',{x:"62",y:"34",width:"26",height:"22",rx:"2"}))),
+  bell: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#141a14"}) + sTag('path',{d:"M60 14c10 0 16 8 16 18v12l6 8H38l6-8V32c0-10 6-18 16-18z",fill:"#2a3a26",stroke:"#c9a227","stroke-width":"2"}) + sTag('circle',{cx:"60",cy:"58",r:"5",fill:"#c9a227"})),
+  clock: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#15171a"}) + sTag('circle',{cx:"60",cy:"37",r:"20",fill:"none",stroke:"#5f7a9a","stroke-width":"2.5"}) + sTag('path',{d:"M60 24v14l10 6",fill:"none",stroke:"#8ab0d0","stroke-width":"2.5"})),
+  chart: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#14181c"}) + sTag('g',{fill:"#2a3a48"}, sTag('rect',{x:"16",y:"40",width:"14",height:"24"}) + sTag('rect',{x:"36",y:"30",width:"14",height:"34"}) + sTag('rect',{x:"56",y:"34",width:"14",height:"30"}) + sTag('rect',{x:"76",y:"20",width:"14",height:"44"}))),
+  scale: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#16181a"}) + sTag('path',{d:"M60 14v46M36 62h48M28 26h64",stroke:"#8a9098","stroke-width":"2.5"}) + sTag('path',{d:"M28 26l-8 14h16zM92 26l-8 14h16z",fill:"#2a3038",stroke:"#8a9098","stroke-width":"1.5"})),
+  zip: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#1a1416"}) + sTag('path',{d:"M40 30h40v26H40z",fill:"#2a2024",stroke:"#8a6a70","stroke-width":"1.5"}) + sTag('circle',{cx:"60",cy:"42",r:"5",fill:"#d1495b"})),
+  party: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#1a1620"}) + sTag('path',{d:"M46 20h28l-10 18v14h6v6H50v-6h6V38z",fill:"#2e2438",stroke:"#e0a030","stroke-width":"1.5"})),
+  mail: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#15181a"}) + sTag('rect',{x:"32",y:"24",width:"56",height:"34",rx:"3",fill:"#222a2e",stroke:"#5a6a72","stroke-width":"1.5"}) + sTag('path',{d:"M32 26l28 20 28-20",fill:"none",stroke:"#5a6a72","stroke-width":"2"})),
+  folder: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#15181a"}) + sTag('path',{d:"M28 22h20l6 6h38v30H28z",fill:"#243038",stroke:"#5f8aa0","stroke-width":"1.5"})),
+  sword: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#1a1518"}) + sTag('path',{d:"M28 56L82 18M38 62L92 24",stroke:"#a08090","stroke-width":"3","stroke-linecap":"round"})),
+  chair: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#16191c"}) + sTag('path',{d:"M42 18h36v26H42z",fill:"#2a3238",stroke:"#7a8a94","stroke-width":"1.5"}) + sTag('path',{d:"M38 46h44v6H38zM58 52v12M44 64h32",stroke:"#7a8a94","stroke-width":"3"})),
+  target: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#14191a"}) + sTag('circle',{cx:"60",cy:"37",r:"22",fill:"none",stroke:"#3a5a50","stroke-width":"2"}) + sTag('circle',{cx:"60",cy:"37",r:"13",fill:"none",stroke:"#3fb950","stroke-width":"2"}) + sTag('circle',{cx:"60",cy:"37",r:"4",fill:"#3fb950"})),
+  crash: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#1a1214"}) + sTag('path',{d:"M12 20l18 14 14-6 16 20 14-10 16 22",fill:"none",stroke:"#d1495b","stroke-width":"3"})),
+  mic: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#151a1c"}) + sTag('rect',{x:"52",y:"14",width:"16",height:"28",rx:"8",fill:"#2a3438",stroke:"#7fb2e0","stroke-width":"1.5"}) + sTag('path',{d:"M42 38c0 10 8 16 18 16s18-6 18-16M60 54v10M48 64h24",fill:"none",stroke:"#7fb2e0","stroke-width":"2.5"})),
+  net: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#15191c"}) + sTag('g',{stroke:"#5f9ad0","stroke-width":"1.5"}, sTag('path',{d:"M30 22L60 40 90 22M30 56L60 40 90 56"})) + sTag('g',{fill:"#8ab0d0"}, sTag('circle',{cx:"30",cy:"22",r:"5"}) + sTag('circle',{cx:"90",cy:"22",r:"5"}) + sTag('circle',{cx:"30",cy:"56",r:"5"}) + sTag('circle',{cx:"90",cy:"56",r:"5"}) + sTag('circle',{cx:"60",cy:"40",r:"6"}))),
+  desk: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#15181a"}) + sTag('rect',{x:"30",y:"26",width:"40",height:"26",rx:"2",fill:"#232b30",stroke:"#5a6a72","stroke-width":"1.5"}) + sTag('path',{d:"M22 56h76M40 56v8M80 56v8",stroke:"#5a6a72","stroke-width":"2.5"})),
+  door: sTag('svg',{viewBox:"0 0 120 74"}, sTag('rect',{width:"120",height:"74",fill:"#171418"}) + sTag('rect',{x:"44",y:"12",width:"32",height:"52",rx:"2",fill:"#241f26",stroke:"#6a5a70","stroke-width":"1.5"}) + sTag('circle',{cx:"69",cy:"40",r:"3",fill:"#a08aa8"}) + sTag('path',{d:"M18 64h20M82 64h20",stroke:"#3a323e","stroke-width":"2"})),
 };
 
-/* ================= EVENTOS: TODAS LAS SALIDAS DUELEN ================= */
+/* ================= EVENTOS ================= */
 const EVENTS = [
   {t:"Runway de tres meses", s:"La plata alcanza hasta marzo. Tenés que elegir cómo estirarla.",
    o:[
@@ -766,7 +809,7 @@ function capF(v){return v>=1000?"$"+(v/1000).toFixed(1)+"MM":v>=1?"$"+v.toFixed(
 function ovrColor(o){return o>=88?"#c9a227":o>=76?"#3fb950":o>=62?"#8a9c3f":o>=48?"#e0a030":"#7a6a55";}
 function repColor(r){return r>=75?"#3fb950":r>=55?"#8a9c3f":r>=40?"#e0a030":r>=20?"#e05f30":"#d1495b";}
 function rankColor(i){return ["#5a6a64","#5a6a64","#5f8a9c","#5f8a9c","#8a9c3f","#3fb950","#c9a227","#e0b830","#f0d060"][i]||"#5a6a64";}
-/* Para usar logos propios: agregá img:"ruta/al/logo.png" en la empresa. */
+
 const SHAPES={
   sq:  '<rect x="1" y="1" width="38" height="38" rx="8"/>',
   circ:'<circle cx="20" cy="20" r="19"/>',
@@ -794,21 +837,17 @@ function fitBand(c){
   if(c>=20) return {k:"bajo", l:"Te queda grande"};
   return {k:"nulo", l:"No tenés idea"};
 }
-/* el OVR depende del puesto que ocupás, no solo de vos */
 function computeOvr(){
   const s=S.stats;
   const c=S.area?S.comp[S.area]:20;
   return clamp(26 + c*.35 + s.vision*.12 + s.ejecucion*.12 + s.carisma*.10 + s.rosca*.11 + S.tierBonus);
 }
-/* OVR hipotético si tomaras ese puesto en esa empresa, sin tocar el estado real */
 function previewOvr(area,tier){
   const s=S.stats, c=S.comp[area];
   const tb=Math.min((tier-1)*4,34);
   return clamp(26 + c*.35 + s.vision*.12 + s.ejecucion*.12 + s.carisma*.10 + s.rosca*.11 + tb);
 }
 const CAP_REF=[1,38,2500,300000,3000000];
-/* salario anual: la base la pone el tier, pero el cap real de esa empresa,
-   el cargo que tendrías y qué tan bien encajás en el área lo mueven */
 function salaryFor(co,area,rank){
   const base=13000*Math.pow(3.25,co.t-1);
   const capMult=Math.max(.65,Math.min(1.7,Math.pow(co.cap/(CAP_REF[co.t-1]||1),.22)));
@@ -817,13 +856,11 @@ function salaryFor(co,area,rank){
   const repMult=.82+S.rep/260;
   return Math.round(base*capMult*rankMult*fit*repMult);
 }
-/* cuánto mueve el OVR un resultado, para mostrarlo en el chip */
 function ovrDelta(eff){
   if(!eff) return 0;
   return Math.round((eff.ovr||0) + (eff.vision||0)*.12 + (eff.ejecucion||0)*.12
     + (eff.carisma||0)*.10 + (eff.rosca||0)*.11);
 }
-/* precio y ganancia de un resultado, cada eje con su propio color */
 function metrics(rl){
   const e=rl.eff||{}, m=[];
   const d=ovrDelta(e);
@@ -864,7 +901,6 @@ function rankOf(o){
   let r=RANKS[0],i=0;
   RANKS.forEach((x,j)=>{if(o>=x.min){r=x;i=j;}});
   const out={...r,i};
-  // en la franja C el título sale de tu área: no es lo mismo un CFO que un CTO
   if(i===6 && S && S.area && CSUITE[S.area]){
     out.n=CSUITE[S.area].n; out.s=CSUITE[S.area].s; out.full=CSUITE[S.area].full;
   }
@@ -879,7 +915,6 @@ function startCareer(){
   const o=ORIGINS.find(x=>x.id===S.origin);
   const st={...o.stats};
   const comp={};
-  // ruido: dos partidas con el mismo origen no son iguales
   for(const k in o.comp) comp[k]=clamp(o.comp[k]+rndInt(-7,7));
   for(const k in st) st[k]=clamp(st[k]+rndInt(-3,3));
   S={...S, phase:"offer", stats:st, comp,
@@ -896,7 +931,6 @@ function startCareer(){
   render();
 }
 
-/* una oferta = empresa + puesto abierto + estado oculto */
 function makeOffers(tier,n,exclude){
   let pool=COMPANIES.filter(c=>c.t===tier&&(!exclude||c.n!==exclude.n));
   if(pool.length<n) pool=COMPANIES.filter(c=>c.t<=tier&&(!exclude||c.n!==exclude.n));
@@ -904,7 +938,6 @@ function makeOffers(tier,n,exclude){
   while(out.length<n&&pool.length){
     const co=pool.splice(Math.floor(Math.random()*pool.length),1)[0];
     const salud=rndInt(25,95);
-    // el rumor a veces miente
     const real=salud>=65?"bien":salud>=42?"regular":"mal";
     const shown=Math.random()<.25 ? rnd(["bien","regular","mal"]) : real;
     out.push({...co, area:rnd(co.areas), salud, rumor:rnd(RUMORS[shown])});
@@ -924,7 +957,6 @@ function pickCompany(i){
   S.flash=null;
   if(i===-1&&!S.company) i=0;
   if(i===-1){
-    // quedarse no es gratis: te pueden reubicar en un área que no es la tuya
     const otras=S.company.areas.filter(a=>a!==S.area);
     if(otras.length && Math.random()<.28){
       const nueva=rnd(otras);
@@ -951,10 +983,9 @@ function advanceYear(){
   S.age++; S.sinceMarket++;
   const marks=[];
 
-  /* --- rendimiento del año en el puesto que ocupás --- */
   const c=S.comp[S.area];
   const gen=(S.stats.vision+S.stats.ejecucion+S.stats.carisma+S.stats.rosca)/4;
-  const exigencia=S.company.t*6 + S.rank.i*1.5;     // el cargo también sube la vara
+  const exigencia=S.company.t*6 + S.rank.i*1.5;
   const suerte=rndInt(-12,12);
   S.perf=clamp(28 + c*.60 + gen*.45 + suerte - exigencia);
 
@@ -962,7 +993,6 @@ function advanceYear(){
     S.comp[S.area]=clamp(S.comp[S.area]+(S.perf>=72?rndInt(3,6):rndInt(1,3)));
     S.stats.ejecucion=clamp(S.stats.ejecucion+rndInt(1,2));
     if(S.perf>=72){ S.rep=clamp(S.rep+2); S.stats.vision=clamp(S.stats.vision+1); }
-    // los años excepcionales dejan prestigio acumulado: la única vía al 90+
     if(S.perf>=74){ S.tierBonus=clamp(S.tierBonus+1,34); S.stats.rosca=clamp(S.stats.rosca+1); }
     S.badYears=0;
   }else if(S.perf>=34){
@@ -974,10 +1004,8 @@ function advanceYear(){
     S.rep=clamp(S.rep-1.5);
   }
 
-  /* lo que no usás se oxida */
   for(const k in S.comp){ if(k!==S.area) S.comp[k]=Math.max(0,S.comp[k]-0.32); }
 
-  /* crecimiento general */
   const g=S.lane==="izq"?1.2:1;
   S.stats.vision=clamp(S.stats.vision+Math.round(rndInt(0,2)*g));
   S.stats.carisma=clamp(S.stats.carisma+rndInt(0,2));
@@ -987,13 +1015,11 @@ function advanceYear(){
   if(S.age>52) S.vigencia=clamp(S.vigencia-(0.8+(S.age-52)*0.06));
   if(S.rep>78) S.vigencia=clamp(S.vigencia+1);
 
-  /* plata: el sueldo converge hacia lo que el puesto actual pagaría hoy */
   const salaryTarget=salaryFor(S.company,S.area,S.rank);
   S.salary=Math.round(S.salary*.6 + salaryTarget*.4);
   S.salary=Math.round(S.salary*(1+.02+S.perf/2200));
   S.cash+=S.salary*Math.max(.12,(.50-S.rank.i*.035)+Math.random()*.18);
 
-  /* la empresa tiene vida propia */
   S.company.salud=clamp(S.company.salud + rndInt(-7,6) + (S.perf-50)/12);
   const drift=(S.perf-50)/420+(S.company.salud-50)/700+(Math.random()-.45)*.12;
   S.company.cap=Math.max(.05,S.company.cap*(1+drift));
@@ -1021,7 +1047,6 @@ function advanceYear(){
       cta:"Seguir"});
   }
 
-  /* golpes */
   if(S.age-S.shockYear>6){
     const sh=rollShock();
     if(sh){
@@ -1035,18 +1060,15 @@ function advanceYear(){
   S.pendingMarks.push(...marks);
   S.blockYears++;
 
-  /* finales: se vuelca la fila antes de cerrar */
   if(S.riesgo>=80&&Math.random()<(S.riesgo-72)/100){ flushRow(); return endGame("carcel"); }
   if(S.cash<-1200000){ flushRow(); return endGame("bancarrota"); }
   if(S.rep<=4&&Math.random()<.10){ flushRow(); return endGame("cancelado"); }
   if(S.vigencia<=4){ flushRow(); return endGame("obsolescencia"); }
   if(S.age>=RETIRE_AGES[Math.min(S.extensiones,RETIRE_AGES.length-1)]){ flushRow(); S.phase="longevity"; render(); return; }
 
-  /* te echan: por rendimiento o porque la empresa se cae */
   const crisis = S.company.salud<=20 && Math.random()<.45;
   if(S.badYears>=3 || crisis){ flushRow(); return fireEmployee(crisis); }
 
-  /* una decisión cada N años según el ritmo: los años intermedios se agrupan */
   const cad={int:1,nor:2,exp:3}[S.pace];
   if(S.blockYears>=cad){ flushRow(); return nextDecision(); }
   return advanceYear();
@@ -1082,7 +1104,6 @@ function fireEmployee(crisis){
   S.warn = crisis
     ? `<b>La empresa se cayó.</b> ${S.company.n} entró en crisis y desarmó tu área. No es tu culpa, pero el que se queda sin puesto sos vos.`
     : `<b>Te echaron.</b> Tres años flojos en ${areaById(S.area).n.toLowerCase()} y el board decidió que el problema eras vos.`;
-  // el mercado te trata peor: un tier menos y puestos que quizás no te sirven
   const t=Math.max(1, accessibleTier()-1);
   S.offers=makeOffers(t,3,S.company);
   S.company=null; S.area=null; S.sinceMarket=0;
@@ -1102,7 +1123,6 @@ function nextDecision(){
   const r=Math.random();
   if(canEvent && r<.26){
     const pool=EVENTS.filter(e=>(!e.min||S.age>=e.min)&&(!e.minOvr||computeOvr()>=e.minOvr));
-    // si ya estás arriba, las oportunidades grandes aparecen más seguido
     const elite=pool.filter(e=>e.minOvr);
     const pick = (elite.length && Math.random()<.45) ? rnd(elite) : rnd(pool);
     if(pool.length){ S.choice={kind:"event",...pick}; S.phase="choice"; render(); return; }
@@ -1120,7 +1140,6 @@ function resolveChoice(i){
   const o=S.choice.o[i];
   let r=o.roll[0],acc=0,x=Math.random()*100;
   for(const cand of o.roll){ acc+=cand.p; if(x<=acc){ r=cand; break; } }
-  // la tirada se muestra: alterna entre los resultados y frena en el que salió
   S.rolling={oi:i, ri:o.roll.indexOf(r), cur:0, spins:0};
   S.phase="rolling";
   render();
@@ -1201,7 +1220,6 @@ function buyExtension(){
     react:"Los mercados lo celebraron. Tus nietos, un poco menos."};
   S.phase="living"; nextDecision();
 }
-/* hitos: ascensos, despidos, caídas de empresa */
 function pushMilestone(m){ S.milestones.push(m); }
 function renderOverlay(){
   const ov=document.getElementById("overlay");
@@ -1265,7 +1283,6 @@ function render(){
   renderOverlay();
 }
 
-/* el OVR sube o baja de a uno, para que la decisión se sienta */
 function tickOvr(){
   const target=computeOvr();
   const el=document.getElementById("ovrNum");
@@ -1612,4 +1629,3 @@ render();
 </script>
 </body>
 </html>
-
