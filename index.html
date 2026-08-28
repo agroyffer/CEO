@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CARGO — simulador de carrera corporativa</title>
+<title>Market CAPo — simulador de carrera corporativa</title>
 <style>
 :root{
   --bg:#0c0e0d; --panel:#141817; --panel-2:#1b201e; --line:#2a312e;
@@ -351,16 +351,16 @@ body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,-apple-
 <script>
 /* ================= CONFIG ================= */
 const GAME = {
-  name:"Capital Humano",
-  tagline:"simulador de carrera corporativa",
+  name:"Market CAPo",
+  tagline:"Como el Guitar Hero pero con más guitarra",
   hero:"Construí tu carrera corporativa",
-  pitch:"Elegí de dónde venís y por qué carril jugás. Después aguantá los puestos que te toquen, año a año, hasta el directorio o hasta que llegue el fiscal.",
+  pitch:"Elegí tus origenes y estilo. Conseguite un laburo honesto, aguantá los puestos que te toquen, año a año, hasta el llegar al directorio o el corchazo.",
 };
 let PACE = "int";
 const PACES = [
   {id:"int", n:"Intensa", d:"Una decisión por año, para vivirla completa."},
   {id:"nor", n:"Normal", d:"Decisiones cada dos años, ritmo parejo."},
-  {id:"exp", n:"Exprés", d:"Decisiones cada tres años para disfrutarlo rápido."},
+  {id:"exp", n:"Exprés", d:"Decisiones cada tres años para partidas rápidas."},
 ];
 
 /* ================= ÁREAS Y ORÍGENES ================= */
@@ -375,7 +375,7 @@ const AREAS = [
 const areaById = id => AREAS.find(a=>a.id===id);
 
 const ORIGINS = [
-  {id:"mba", ic:"🎓", n:"MBA en Masachusets Avenger",
+  {id:"mba", ic:"🎓", n:"MBA en Masachusets Wachoski",
    d:"Deuda de seis cifras y un vocabulario impecable. Sabés hablar de todo y ejecutar poco.",
    stats:{vision:16,ejecucion:6,carisma:12,rosca:18}, cash:-40000, rep:58,
    comp:{ven:18,pro:10,fin:34,ope:14,mkt:26,leg:16}},
@@ -383,7 +383,7 @@ const ORIGINS = [
    d:"Empezaste vendiendo algo en la puerta de algún lado. Nadie te regaló nada y se nota.",
    stats:{vision:8,ejecucion:22,carisma:16,rosca:4}, cash:2000, rep:52,
    comp:{ven:36,pro:10,fin:8,ope:30,mkt:18,leg:4}},
-  {id:"trust", ic:"🛥️", n:"Trust fund",
+  {id:"trust", ic:"🛥️", n:"Trust Fund",
    d:"Papá tiene campos. Tenés contactos en todas partes y experiencia real en ninguna.",
    stats:{vision:10,ejecucion:4,carisma:14,rosca:24}, cash:900000, rep:44,
    comp:{ven:16,pro:4,fin:24,ope:6,mkt:20,leg:26}},
