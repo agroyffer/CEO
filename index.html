@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -108,7 +108,7 @@ body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,-apple-
 .offer.stay{grid-column:span 2;}
 @media(max-width:520px){.offers{grid-template-columns:1fr;}.offer.stay{grid-column:span 1;}}
 
-/* timeline */
+/* timeline rediseñado (versión normal/intensa) */
 .timeline{background:var(--panel-2);border:1px solid var(--line);border-radius:9px;overflow:hidden;display:flex;flex-direction:column;}
 .thead,.row{display:grid;grid-template-columns:42px 1fr 34px 34px 32px 46px;gap:5px;padding:6px 9px;align-items:center;}
 .thead{font-size:.46rem;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);border-bottom:1px solid var(--line);}
@@ -128,6 +128,23 @@ body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,-apple-
 .row .ov{text-align:center;font-weight:800;font-size:.68rem;border-radius:4px;padding:2px 0;font-variant-numeric:tabular-nums;}
 .row .rp{text-align:center;font-weight:800;font-size:.66rem;border-radius:4px;padding:2px 0;font-variant-numeric:tabular-nums;}
 .row .cap{text-align:center;font-size:.62rem;color:var(--muted);font-variant-numeric:tabular-nums;}
+
+/* timeline ultra limpio y atractivo para modo exprés */
+body.pace-exp .timeline { background: transparent; border: none; }
+body.pace-exp .thead { display: none; }
+body.pace-exp .rows { display: flex; flex-direction: column; gap: 6px; max-height: 600px; overflow-y: auto; padding-right: 4px; }
+body.pace-exp .row {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 12px; font-size: .75rem; border-bottom: 1px solid var(--line);
+}
+body.pace-exp .row.ghost { display: none; }
+body.pace-exp .row .age { font-weight: 700; color: var(--dim); font-size: .65rem; min-width: 32px; text-align: left; }
+body.pace-exp .row .co { flex: 1; display: flex; align-items: center; gap: 8px; margin: 0 8px; }
+body.pace-exp .row .co span { font-weight: 700; color: var(--ink); }
+body.pace-exp .row .postag { background: #232d29; color: var(--blue); font-size: .48rem; padding: 2px 5px; border-radius: 4px; }
+body.pace-exp .row .ov { background: transparent !important; color: var(--money); font-weight: 900; font-size: .8rem; min-width: 36px; text-align: right; }
+body.pace-exp .row .rank, body.pace-exp .row .rp, body.pace-exp .row .cap, body.pace-exp .row .marks { display: none; }
 
 /* setup */
 .setup h2{font-size:1.1rem;font-weight:800;margin-bottom:13px;}
