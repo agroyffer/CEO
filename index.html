@@ -460,7 +460,6 @@ function avatarSVG(){
   const tie=lane==="izq"?"#8a1a2a":(lvl>=5?"#c9a227":"#3fb950");
   const hair={mba:"#3a2a1c",calle:"#221a14",trust:"#8a6a3a",tecnico:"#2a2420"}[o]||"#2a2420";
   
-  // ARREGLO DEL PARSEO SVG: En lugar de strings con <path>, construimos un arreglo de etiquetas.
   let hairShapeTags = [];
   if(o === "mba") {
     hairShapeTags.push({t:'path', d:'M28 34c0-11 8-18 22-18s22 7 22 18c0 3-1 5-1 5-2-6-9-9-21-9s-19 3-21 9c0 0-1-2-1-5z', fill:hair});
@@ -521,7 +520,6 @@ function avatarSVG(){
 }
 
 /* ================= ESCENAS ================= */
-// ARREGLO DEL PARSEO SVG PARA SCENES
 function sTag(t, attrs, inner) {
   let a = Object.keys(attrs||{}).map(k => `${k}="${attrs[k]}"`).join(' ');
   return inner ? `<${t} ${a}>${inner}</${t}>` : `<${t} ${a}/>`;
@@ -740,7 +738,7 @@ const EVENTS = [
             head:"La fusión avanza después de vender y se pierde la mejor parte"}]}]},
 ];
 
-/* focos anuales: un canje real, con chance real de las dos caras */
+/* focos anuales */
 const FOCI = [
   {n:"Vivir en eventos", tag:"Juego de gestión", scene:"net",
    chips:[{l:"Contactos que abren puertas"},{l:"Puro canapé, cero avance"}],
@@ -925,7 +923,7 @@ function startCareer(){
     perf:50, badYears:0, press:null, warn:null, choice:null, flash:null, displayOvr:0, esCEO:false, milestones:[],
     blockStart:23, blockYears:0, pendingMarks:[],
     ended:false, endReason:null, endApplied:false, fired:false,
-    maxOvr:0, maxRank:null, empresasFundidas:0, // <--- NUEVO
+    maxOvr:0, maxRank:null, empresasFundidas:0,
     rank:rankOf(0), offers:makeOffers(1,3)};
   S.rank=rankOf(computeOvr());
   S.displayOvr=computeOvr();
@@ -978,6 +976,12 @@ function pickCompany(i){
   S.blockStart=S.age+1; S.blockYears=0; S.pendingMarks=[];
   S.rank=rankOf(computeOvr());
   advanceYear();
+}
+
+function trackPeaks() {
+  const currentOvr = computeOvr();
+  if (currentOvr > S.maxOvr) S.maxOvr = currentOvr;
+  if (!S.maxRank || S.rank.i > S.maxRank.i) S.maxRank = S.rank;
 }
 
 function advanceYear(){
@@ -1035,6 +1039,8 @@ function advanceYear(){
   const prevRank=S.rank.i;
   const prevName=S.rank.n;
   S.rank=rankOf(computeOvr());
+  trackPeaks();
+
   if(S.rank.i>prevRank){
     marks.push("⬆️");
     const c=S.rank.i>=6;
@@ -1089,6 +1095,7 @@ function rollShock(){
   return null;
 }
 function fireEmployee(crisis){
+  if(crisis) S.empresasFundidas++; 
   S.fired=true; S.badYears=0;
   S.rep=clamp(S.rep-(crisis?4:10));
   S.tierBonus=clamp(S.tierBonus-4,30);
@@ -1117,6 +1124,23 @@ function flushRow(){
     rep:Math.round(S.rep), perf:S.perf, marks:S.pendingMarks});
   S.blockStart=S.age+1; S.blockYears=0; S.pendingMarks=[];
 }
+
+function renderSparkline() {
+  if (!S.rows || S.rows.length < 2) return '';
+  const maxOvr = Math.max(...S.rows.map(r => r.ovr), 1);
+  const minOvr = Math.min(...S.rows.map(r => r.ovr), 0);
+  const w = 300, h = 40;
+  const points = S.rows.map((r, i) => {
+    const x = (i / (S.rows.length - 1)) * w;
+    const y = h - ((r.ovr - minOvr) / (maxOvr - minOvr || 1)) * h;
+    return `${x},${y}`;
+  }).join(' ');
+  
+  return `<svg viewBox="0 -5 300 50" style="width:100%; height:50px; overflow:visible;">
+    <polyline points="${points}" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+}
+
 function nextDecision(){
   const cad={int:1,nor:2,exp:3}[S.pace];
   const gap=S.age-S.lastEventAge;
@@ -1191,7 +1215,10 @@ function applyChoice(oi,ri){
   const dOvr=computeOvr()-ovrAntes;
   S.flash={good:dOvr>=0, title:(o.chips[ri]||{}).l||o.n, mets};
   S.choice=null; S.lastEventAge=S.age;
+  
   S.rank=rankOf(computeOvr());
+  trackPeaks();
+  
   if(S.riesgo>=88&&Math.random()<.35) return endGame("carcel");
   advanceYear();
 }
@@ -1574,6 +1601,7 @@ const ENDINGS={
   voluntario:{stamp:"Decisión propia",color:"#8ab0d0",bg:"#182028",verdict:"Cerraste la persiana vos",
     obit:"Después de más de dos siglos de trimestres, elegiste el momento de bajar la cortina en vez de esperar a que otro la bajara por vos. Es la única reunión de tu vida entera que empezó puntual y terminó cuando vos quisiste."},
 };
+
 function renderEnd(){
   const e=ENDINGS[S.endReason]||ENDINGS.jubilacion;
   if(!S.endApplied){
@@ -1583,28 +1611,45 @@ function renderEnd(){
     if(S.endReason==="substack"){S.cash+=2500000;S.rep=clamp(S.rep+12);}
     S.endApplied=true;
   }
+
+  const familiasAfectadas = S.layoffs * Math.floor(Math.random() * 80 + 30);
+
   return `
-    <div class="identity">
-      <div class="ovrblock" style="background:${e.bg};color:${e.color};border:1px solid ${e.color}33">
-        <small>FINAL</small><b>${computeOvr()}</b><div class="rk">${S.age} años</div></div>
-      <div class="avatarbox">${avatarSVG()}</div>
-      <div class="namecard">
-        <div class="tags"><span class="tag role">${S.rank.n}</span>
-          <span class="tag lane-${S.lane}">${S.lane==='izq'?'Por izquierda':'Por derecha'}</span></div>
-        ${S.company?`<div class="company">${logo(S.company)}<span>${S.company.n}</span></div>`:`<div class="company none">Sin empleo</div>`}
-        <div class="agebox"><div class="lbl">Terminó a los</div><div class="val">${S.age}</div></div>
+    <div style="background: linear-gradient(180deg, ${e.bg}, var(--panel)); border: 1px solid ${e.color}44; border-radius: 12px; padding: 24px 20px; margin-bottom: 16px;">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <div class="stamp" style="background:${e.bg};color:${e.color}; margin-bottom: 12px;">${e.stamp}</div>
+        <h2 style="font-size: 1.8rem; font-weight: 900; letter-spacing: -.02em; color: var(--ink);">${e.verdict}</h2>
+      </div>
+      
+      <p style="font-size: 1.05rem; color: var(--muted); line-height: 1.6; font-style: italic; border-left: 3px solid ${e.color}; padding-left: 14px; margin-bottom: 28px;">"${e.obit}"</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+        <div style="background: rgba(0,0,0,.2); padding: 14px; border-radius: 8px; border: 1px solid var(--line);">
+          <div style="font-size: .55rem; color: var(--dim); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 4px;">Patrimonio Final</div>
+          <div style="font-size: 1.6rem; font-weight: 900; color: ${S.cash<0?'var(--red)':'var(--money)'};">${money(S.cash)}</div>
+        </div>
+        <div style="background: rgba(0,0,0,.2); padding: 14px; border-radius: 8px; border: 1px solid var(--line);">
+          <div style="font-size: .55rem; color: var(--dim); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 4px;">Pico de Carrera (OVR)</div>
+          <div style="font-size: 1.6rem; font-weight: 900; color: var(--ink);">${S.maxOvr || computeOvr()} <span style="font-size:.65rem; color:var(--muted); font-weight:700; text-transform:uppercase;">/ ${S.maxRank ? S.maxRank.s : S.rank.s}</span></div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 10px;">
+        <div style="font-size: .55rem; color: var(--dim); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 12px; text-align: center;">Evolución de OVR histórico</div>
+        ${renderSparkline()}
       </div>
     </div>
-    <div class="endcard">
-      <div class="stamp" style="background:${e.bg};color:${e.color}">${e.stamp}</div>
-      <div class="netfinal ${S.cash<0?'bad':''}">${money(S.cash)}</div>
-      <div class="netlbl">Patrimonio final</div>
-      <div class="verdict">${e.verdict}</div>
-      <p class="obit">${e.obit}</p>
+
+    <div class="counters" style="margin-bottom: 16px;">
+      <div class="counter"><div class="lbl">Años Trabajados</div><div class="val">${S.age - 22}</div></div>
+      <div class="counter"><div class="lbl">Familias Despedidas</div><div class="val" style="color: var(--red);">${familiasAfectadas}</div></div>
+      <div class="counter"><div class="lbl">Empresas Fundidas</div><div class="val">${S.empresasFundidas}</div></div>
     </div>
-    ${renderRep()}${renderCase()}
-    <div style="text-align:center;margin-top:14px;"><button class="btn" onclick="initSetup()">Otra carrera</button></div>`;
+
+    ${renderCase()}
+    <div style="text-align:center;margin-top:24px;"><button class="btn" onclick="initSetup()">Otra carrera</button></div>`;
 }
+
 function renderTimeline(){
   const cad={int:1,nor:2,exp:3}[S.pace||'int'];
   const rows=S.rows.map((r,i)=>`
