@@ -1,45 +1,1615 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>CARGO — simulador de carrera corporativa</title>
-  <style>
-    :root{--bg:#0c0e0d;--panel:#141817;--ink:#e6ece9;--muted:#7d8a85;--money:#3fb950}
-    html,body{height:100%}
-    body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;padding:20px}
-    .masthead{display:flex;align-items:center;gap:12px}
-    .mark{width:28px;height:28px;border-radius:6px;background:var(--money);display:flex;align-items:center;justify-content:center;color:#08100b;font-weight:900}
-    h1{font-size:16px;margin:0;text-transform:uppercase;letter-spacing:.12em}
-    .tagline{color:var(--muted);font-size:12px}
-    #board{margin-top:18px;background:#111513;border:1px solid #232927;border-radius:10px;padding:18px;min-height:240px}
-    pre{white-space:pre-wrap;word-break:break-word}
-    a.link{color:var(--money)}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CARGO — simulador de carrera corporativa</title>
+<style>
+:root{
+  --bg:#0c0e0d; --panel:#141817; --panel-2:#1b201e; --line:#2a312e;
+  --money:#3fb950; --red:#d1495b; --amber:#e0a030; --blue:#5f9ad0; --purple:#8a5fd0;
+  --ink:#e6ece9; --muted:#7d8a85; --dim:#4d5854;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,-apple-system,sans-serif;min-height:100vh;padding:18px 12px 44px;-webkit-font-smoothing:antialiased;}
+.masthead{display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:16px;flex-wrap:wrap;}
+.masthead .mark{width:22px;height:22px;border-radius:5px;background:var(--money);display:flex;align-items:center;justify-content:center;color:#0c0e0d;font-weight:900;font-size:.8rem;}
+.masthead h1{font-size:.95rem;letter-spacing:.3em;text-transform:uppercase;font-weight:800;}
+.masthead .tagline{font-size:.6rem;color:var(--dim);letter-spacing:.1em;}
+
+.board{max-width:1120px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:16px;}
+@media(max-width:880px){.board{grid-template-columns:1fr;}}
+
+/* ficha */
+.identity{display:flex;gap:10px;margin-bottom:12px;}
+.ovrblock{width:76px;flex-shrink:0;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px;}
+.ovrblock small{font-size:.5rem;letter-spacing:.14em;font-weight:800;opacity:.7;}
+.ovrblock b{font-size:2.05rem;line-height:1;font-variant-numeric:tabular-nums;font-weight:900;}
+.ovrblock .rk{font-size:.5rem;letter-spacing:.06em;text-transform:uppercase;font-weight:800;margin-top:4px;opacity:.82;text-align:center;line-height:1.15;}
+.avatarbox{width:60px;flex-shrink:0;border-radius:9px;background:linear-gradient(165deg,#242c28,#151a18);border:1px solid var(--line);overflow:hidden;position:relative;}
+.avatarbox svg{width:100%;height:100%;display:block;}
+.avatarbox .lvl{position:absolute;left:0;right:0;bottom:0;background:rgba(8,10,9,.86);text-align:center;padding:2px 0 3px;}
+.avatarbox .lvl b{font-size:.9rem;font-weight:900;display:block;line-height:1;}
+.avatarbox .lvl small{font-size:.42rem;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;}
+.namecard{flex:1;border-radius:9px;background:var(--panel-2);border:1px solid var(--line);padding:9px 12px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;}
+.namecard .tags{display:flex;gap:5px;margin-bottom:5px;flex-wrap:wrap;}
+.tag{font-size:.55rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;padding:3px 6px;border-radius:4px;background:#252b29;color:var(--muted);}
+.tag.role{background:#1e2a38;color:#7fb2e0;}
+.tag.band{background:#2e2416;color:#e0b860;}
+.tag.lane-der{background:#16301f;color:#5fd07f;}
+.tag.lane-izq{background:#301a1a;color:#e08080;}
+.company{display:flex;align-items:center;gap:9px;font-size:1.12rem;font-weight:700;}
+.company span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.company.none{color:var(--dim);font-style:italic;font-weight:600;font-size:.95rem;}
+.logo{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:900;flex-shrink:0;letter-spacing:-.03em;overflow:hidden;}
+.logo.lg{width:38px;height:38px;font-size:.88rem;border-radius:9px;}
+.agebox{position:absolute;right:11px;top:9px;text-align:right;}
+.agebox .lbl{font-size:.48rem;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;}
+.agebox .val{font-size:1rem;font-weight:800;font-variant-numeric:tabular-nums;}
+.agebox .val.money{font-size:.88rem;color:var(--money);}
+
+.repbox{background:var(--panel-2);border:1px solid var(--line);border-radius:9px;padding:9px 11px;margin-bottom:11px;}
+.repbox .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+.repbox .lbl{font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);}
+.repbox .verdict{font-size:.76rem;font-weight:800;}
+.repbox .track{height:7px;background:#232927;border-radius:4px;overflow:hidden;}
+.repbox .track .fill{height:100%;border-radius:4px;transition:width .5s ease,background .5s ease;}
+.repbox .scale{display:flex;justify-content:space-between;font-size:.48rem;color:var(--dim);margin-top:4px;letter-spacing:.06em;}
+
+.counters{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:9px 0;margin-bottom:10px;}
+.counter{text-align:center;border-right:1px solid var(--line);}
+.counter:last-child{border-right:none;}
+.counter .lbl{font-size:.48rem;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-bottom:2px;}
+.counter .val{font-size:.98rem;font-weight:800;font-variant-numeric:tabular-nums;}
+
+.attrs{display:flex;flex-direction:column;gap:6px;margin-bottom:11px;}
+.attr{display:flex;align-items:center;gap:8px;}
+.attr .k{width:64px;font-size:.56rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);}
+.attr .bar{flex:1;height:5px;background:#232927;border-radius:3px;overflow:hidden;}
+.attr .fill{height:100%;border-radius:3px;transition:width .45s ease;}
+.attr .num{width:22px;text-align:right;font-size:.7rem;font-variant-numeric:tabular-nums;color:var(--muted);}
+
+.case{min-height:40px;display:flex;align-items:center;justify-content:center;gap:6px;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:11px;flex-wrap:wrap;}
+.case .empty{font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);}
+.badge{font-size:.55rem;font-weight:700;padding:4px 8px;border-radius:20px;border:1px solid var(--line);background:var(--panel-2);color:var(--amber);}
+.badge.bad{color:var(--red);border-color:#3a2024;}
+
+.press{background:#12100f;border:1px solid #2b2422;border-radius:8px;padding:9px 11px;margin-bottom:11px;}
+.press .outlet{font-size:.48rem;letter-spacing:.14em;text-transform:uppercase;color:#8a6a5a;margin-bottom:3px;}
+.press .head{font-size:.76rem;line-height:1.4;color:#dcc8bc;font-weight:600;}
+.press .react{font-size:.6rem;color:var(--dim);margin-top:5px;}
+
+/* decisiones */
+.decision h3{font-size:.94rem;font-weight:800;margin-bottom:2px;}
+.decision .sub{font-size:.72rem;color:var(--muted);line-height:1.45;margin-bottom:11px;}
+.offers{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.offer{background:var(--panel-2);border:1px solid var(--line);border-radius:9px;padding:11px 9px;text-align:center;cursor:pointer;transition:.14s;display:flex;flex-direction:column;}
+.offer:hover{border-color:var(--money);background:#1d2521;transform:translateY(-2px);}
+.offer.risky:hover{border-color:var(--red);background:#251a1c;}
+.offer.cross{border-color:#4a3a20;}
+.offer.cross:hover{border-color:var(--amber);background:#252016;}
+.offer.blocked{opacity:.3;cursor:not-allowed;}
+.offer.blocked:hover{transform:none;border-color:var(--line);background:var(--panel-2);}
+.offer .kicker{font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);}
+.offer .ttl{font-size:.84rem;font-weight:700;margin:2px 0 8px;line-height:1.25;}
+.offer .scene{height:74px;border-radius:7px;overflow:hidden;margin-bottom:8px;background:#10130f;}
+.offer .scene svg{width:100%;height:100%;display:block;}
+.offer .sig{height:40px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;}
+.offer .foot{font-size:.54rem;color:var(--muted);margin-top:auto;padding-top:6px;}
+.offer .foot .sep{color:var(--dim);margin:0 4px;}
+.chips{display:flex;flex-direction:column;gap:4px;margin-top:6px;}
+.chip{display:flex;align-items:center;justify-content:space-between;gap:6px;border-radius:20px;padding:4px 9px;font-size:.55rem;font-weight:700;line-height:1.3;}
+.chip b{white-space:nowrap;font-size:.53rem;}
+.chip.good{background:#132a1c;color:#5fd07f;}
+.chip.bad{background:#2a1418;color:#e07a86;}
+.chip.neutral{background:#22282a;color:var(--muted);}
+.chip.warn{background:#2a2414;color:var(--amber);}
+.chip b{font-variant-numeric:tabular-nums;}
+.offer.stay{grid-column:span 2;}
+@media(max-width:520px){.offers{grid-template-columns:1fr;}.offer.stay{grid-column:span 1;}}
+
+/* timeline */
+.timeline{background:var(--panel-2);border:1px solid var(--line);border-radius:9px;overflow:hidden;display:flex;flex-direction:column;}
+.thead,.row{display:grid;grid-template-columns:42px 1fr 34px 34px 32px 46px;gap:5px;padding:6px 9px;align-items:center;}
+.thead{font-size:.46rem;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);border-bottom:1px solid var(--line);}
+.thead span:nth-child(n+3){text-align:center;}
+.rows{flex:1;overflow-y:auto;max-height:580px;}
+.row{font-size:.73rem;border-bottom:1px solid #202624;animation:sl .28s ease both;}
+@keyframes sl{from{opacity:0;transform:translateX(-7px);}to{opacity:1;transform:none;}}
+@media(prefers-reduced-motion:reduce){.row{animation:none;}}
+.row.ghost{opacity:.15;}
+.row.now{background:#1f2622;}
+.row .age{text-align:center;font-variant-numeric:tabular-nums;color:var(--muted);font-size:.67rem;}
+.row .co{display:flex;align-items:center;gap:6px;overflow:hidden;}
+.row .co>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.row .co .logo{width:15px;height:15px;font-size:.44rem;border-radius:4px;}
+.row .marks{display:flex;gap:2px;margin-left:3px;flex-shrink:0;font-size:.64rem;}
+.row .rank{text-align:center;font-size:.55rem;font-weight:800;letter-spacing:.04em;}
+.row .ov{text-align:center;font-weight:800;font-size:.68rem;border-radius:4px;padding:2px 0;font-variant-numeric:tabular-nums;}
+.row .rp{text-align:center;font-weight:800;font-size:.66rem;border-radius:4px;padding:2px 0;font-variant-numeric:tabular-nums;}
+.row .cap{text-align:center;font-size:.62rem;color:var(--muted);font-variant-numeric:tabular-nums;}
+
+/* setup */
+.setup h2{font-size:1.1rem;font-weight:800;margin-bottom:13px;}
+.setupgrid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.2fr) minmax(0,1fr);gap:14px;}
+@media(max-width:900px){.setupgrid{grid-template-columns:1fr 1fr;}.setupgrid .col:nth-child(3){grid-column:span 2;}}
+@media(max-width:600px){.setupgrid{grid-template-columns:1fr;}.setupgrid .col:nth-child(3){grid-column:span 1;}}
+.col>h4{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:10px;}
+.avatar{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center;margin-bottom:10px;}
+.avatar .frame{width:112px;height:120px;margin:0 auto 8px;border-radius:12px;background:linear-gradient(165deg,#2a322e,#171c1a);border:1px solid var(--line);overflow:hidden;}
+.avatar .frame svg{width:100%;height:100%;display:block;}
+.avatar .nm{font-size:.72rem;font-weight:800;letter-spacing:.05em;}
+.avatar .rl{font-size:.53rem;color:var(--muted);margin-top:1px;}
+.field{margin-bottom:9px;}
+.field label{display:block;font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:4px;}
+.field input{width:100%;background:#111513;border:1px solid var(--line);border-radius:7px;color:var(--ink);padding:9px 10px;font-family:inherit;font-size:.82rem;font-weight:700;text-align:center;}
+.field input:focus{outline:none;border-color:var(--money);}
+.toggle{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.toggle.three{grid-template-columns:1fr 1fr 1fr;}
+.toggle button{background:#111513;border:1px solid var(--line);border-radius:7px;color:var(--muted);padding:9px 3px;font-family:inherit;font-size:.68rem;font-weight:700;cursor:pointer;transition:.14s;}
+.toggle button.on{background:var(--ink);color:#0c0e0d;border-color:var(--ink);}
+.toggle button.on.izq{background:var(--red);color:#fff;border-color:var(--red);}
+.toggle button.on.der{background:var(--money);color:#0c0e0d;border-color:var(--money);}
+.toggle .hint{grid-column:1/-1;font-size:.55rem;color:var(--dim);text-align:center;margin-top:2px;line-height:1.4;}
+.origins{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:8px;display:flex;flex-direction:column;gap:6px;}
+.origin{display:flex;align-items:flex-start;gap:9px;padding:10px;border-radius:7px;border:1px solid transparent;cursor:pointer;transition:.14s;}
+.origin:hover{background:#232b28;}
+.origin.on{background:#1a2320;border-color:var(--money);}
+.origin .ic{font-size:1.05rem;width:20px;text-align:center;flex-shrink:0;line-height:1.3;}
+.origin .tx{flex:1;min-width:0;}
+.origin .tx b{display:block;font-size:.76rem;font-weight:700;margin-bottom:2px;}
+.origin .tx small{font-size:.6rem;color:var(--muted);line-height:1.4;display:block;}
+.origin .ck{color:var(--money);font-weight:900;opacity:0;flex-shrink:0;}
+.origin.on .ck{opacity:1;}
+.floor{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:20px 10px 12px;display:grid;grid-template-columns:repeat(3,1fr);gap:7px;position:relative;}
+.floor::before{content:"DIRECTORIO";position:absolute;top:6px;left:0;right:0;text-align:center;font-size:.42rem;letter-spacing:.2em;color:var(--dim);}
+.slot{border:1px solid var(--line);border-radius:6px;background:#111513;padding:10px 2px;text-align:center;font-size:.58rem;font-weight:800;color:var(--muted);cursor:pointer;transition:.14s;}
+.slot:hover{border-color:var(--muted);color:var(--ink);}
+.slot.on{background:var(--ink);color:#0c0e0d;border-color:var(--ink);}
+.slot.wide{grid-column:span 3;}
+.setupfoot{display:flex;justify-content:space-between;align-items:center;margin-top:15px;padding-top:13px;border-top:1px solid var(--line);}
+
+.btn{background:var(--money);color:#0c0e0d;border:none;border-radius:7px;padding:11px 24px;font-family:inherit;font-size:.76rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:.14s;}
+.btn:hover{filter:brightness(1.12);}
+.btn:disabled{background:#2a312e;color:var(--dim);cursor:not-allowed;}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--muted);}
+.btn:focus-visible,.offer:focus-visible,.origin:focus-visible,.slot:focus-visible{outline:2px solid var(--money);outline-offset:2px;}
+.landing{display:grid;grid-template-columns:1fr 1.15fr;gap:26px;align-items:center;padding:14px 8px;}
+@media(max-width:760px){.landing{grid-template-columns:1fr;gap:18px;}}
+.landing .art{border-radius:12px;overflow:hidden;border:1px solid var(--line);}
+.landing .art svg{width:100%;height:100%;display:block;}
+.landing .eyebrow{font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin-bottom:10px;}
+.landing h2{font-size:2.05rem;font-weight:800;line-height:1.08;letter-spacing:-.02em;margin-bottom:10px;}
+@media(max-width:760px){.landing h2{font-size:1.6rem;}}
+.landing p{font-size:.84rem;color:var(--muted);line-height:1.6;margin-bottom:16px;max-width:420px;}
+.paces{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
+.pace{background:#1c2320;border:1px solid var(--line);color:var(--muted);border-radius:22px;padding:9px 20px;font-family:inherit;font-size:.76rem;font-weight:700;cursor:pointer;transition:.14s;}
+.pace:hover{color:var(--ink);border-color:var(--muted);}
+.pace.on{background:var(--ink);color:#0c0e0d;border-color:var(--ink);}
+.pacehint{font-size:.66rem;color:var(--dim);margin-bottom:18px;}
+.intro{text-align:center;padding:36px 18px;}
+.intro p{color:var(--muted);font-size:.84rem;line-height:1.65;max-width:430px;margin:0 auto 18px;}
+.intro .big{font-size:1.4rem;font-weight:800;margin-bottom:8px;}
+
+.endcard{text-align:center;padding:4px 0 10px;}
+.endcard .stamp{display:inline-block;font-size:.56rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase;padding:5px 12px;border-radius:20px;margin-bottom:9px;}
+.endcard .verdict{font-size:1.05rem;font-weight:800;margin-bottom:5px;}
+.endcard .obit{font-size:.79rem;color:var(--muted);line-height:1.55;font-style:italic;padding:0 6px;}
+.netfinal{font-size:1.95rem;font-weight:900;color:var(--money);font-variant-numeric:tabular-nums;margin:8px 0 2px;}
+.netfinal.bad{color:var(--red);}
+.netlbl{font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:11px;}
+.footnote{max-width:1120px;margin:12px auto 0;text-align:center;font-size:.54rem;color:var(--dim);line-height:1.5;}
+
+/* ---- competencias y puestos ---- */
+.compbox{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:11px 12px;}
+.compbox h5{font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:9px;text-align:center;}
+.comprow{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.comprow .k{width:74px;font-size:.55rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);}
+.comprow .bar{flex:1;height:6px;background:#232927;border-radius:3px;overflow:hidden;}
+.comprow .fill{height:100%;border-radius:3px;transition:width .4s ease;}
+.comprow .bd{width:52px;text-align:right;font-size:.53rem;font-weight:800;letter-spacing:.03em;}
+.compnote{font-size:.55rem;color:var(--dim);line-height:1.45;margin-top:8px;text-align:center;}
+
+.postag{font-size:.5rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 5px;border-radius:3px;background:#252b29;color:var(--muted);flex-shrink:0;}
+.offer .post{display:flex;align-items:center;justify-content:center;gap:5px;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;}
+.offer .post b{color:var(--ink);font-size:.6rem;letter-spacing:.06em;}
+.chip.fit-alto{background:#132a1c;color:#5fd07f;}
+.chip.fit-medio{background:#252a18;color:#b0c060;}
+.chip.fit-bajo{background:#2a2214;color:#e0a030;}
+.chip.fit-nulo{background:#2a1418;color:#e07a86;}
+.chip.rumor{background:#1c2028;color:#8a9aa8;font-style:italic;}
+.perfbox{display:flex;align-items:center;gap:9px;background:var(--panel-2);border:1px solid var(--line);border-radius:9px;padding:8px 11px;margin-bottom:11px;}
+.perfbox .lbl{font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);flex-shrink:0;}
+.perfbox .track{flex:1;height:6px;background:#232927;border-radius:3px;overflow:hidden;}
+.perfbox .fill{height:100%;border-radius:3px;transition:width .4s ease;}
+.perfbox .v{font-size:.62rem;font-weight:800;flex-shrink:0;}
+.warnbox{background:#2a1418;border:1px solid #4a2028;border-radius:8px;padding:9px 11px;margin-bottom:11px;font-size:.72rem;color:#e0a0a8;line-height:1.4;}
+.warnbox b{color:#f0c0c8;}
+/* ---- resultados de cada opción ---- */
+.outcomes{display:flex;flex-direction:column;gap:6px;margin-top:6px;}
+.outcome{background:#151a18;border:1px solid var(--line);border-radius:8px;padding:6px 8px;text-align:left;}
+.outcome.cross-note{background:#1e1a10;border-color:#4a3a20;}
+.oc-head{display:flex;justify-content:space-between;align-items:baseline;gap:6px;margin-bottom:4px;}
+.oc-head span{font-size:.58rem;font-weight:700;color:var(--ink);line-height:1.3;}
+.oc-head b{font-size:.6rem;font-variant-numeric:tabular-nums;color:var(--muted);flex-shrink:0;}
+.oc-mets{display:flex;flex-wrap:wrap;gap:4px;}
+.met{font-size:.5rem;font-weight:800;padding:2px 6px;border-radius:10px;letter-spacing:.02em;}
+.met.up{background:#13291b;color:#5fd07f;}
+.met.down{background:#2a1418;color:#e08a94;}
+
+/* ---- contador de OVR ---- */
+.ovrblock{transition:box-shadow .3s ease;}
+.ovrblock.rising{box-shadow:0 0 0 2px #3fb950, 0 0 22px rgba(63,185,80,.5);}
+.ovrblock.falling{box-shadow:0 0 0 2px #d1495b, 0 0 22px rgba(209,73,91,.5);}
+.ovrblock b{transition:transform .12s ease;}
+.ovrblock.ticking b{transform:scale(1.14);}
+
+/* ---- destello del resultado ---- */
+.flash{border-radius:10px;padding:10px 12px;margin-bottom:11px;animation:flashIn .45s cubic-bezier(.2,1.4,.4,1) both;}
+.flash.good{background:linear-gradient(100deg,#16301f,#101a14);border:1px solid #2c6b3c;}
+.flash.bad{background:linear-gradient(100deg,#301a1e,#1a1013);border:1px solid #6b2c36;}
+.flash .fh{font-size:.78rem;font-weight:800;margin-bottom:5px;}
+.flash.good .fh{color:#7fe09c;}
+.flash.bad .fh{color:#f0909c;}
+.flash .fm{display:flex;flex-wrap:wrap;gap:5px;}
+.flash .met{font-size:.55rem;padding:3px 8px;}
+@keyframes flashIn{from{opacity:0;transform:translateY(-10px) scale(.96);}to{opacity:1;transform:none;}}
+@media(prefers-reduced-motion:reduce){.flash{animation:none;}}
+
+/* ---- click con respuesta ---- */
+.offer{position:relative;}
+.offer:active{transform:scale(.975);}
+.offer.chosen{border-color:var(--money);background:#1e2822;animation:pick .3s ease;}
+@keyframes pick{0%{transform:scale(1);}45%{transform:scale(1.03);}100%{transform:scale(1);}}
+/* ---- overlay de hito ---- */
+.overlay{position:fixed;inset:0;background:rgba(6,8,7,.78);backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;z-index:60;padding:20px;
+  animation:ovIn .25s ease both;}
+@keyframes ovIn{from{opacity:0;}to{opacity:1;}}
+.mile{max-width:340px;width:100%;border-radius:16px;padding:26px 22px 20px;text-align:center;
+  border:1px solid var(--line);background:linear-gradient(165deg,#1e2422,#12100f);
+  animation:mileIn .5s cubic-bezier(.2,1.5,.4,1) both;position:relative;overflow:hidden;}
+@keyframes mileIn{from{opacity:0;transform:translateY(24px) scale(.9);}to{opacity:1;transform:none;}}
+.mile.good{border-color:#2c6b3c;box-shadow:0 0 50px rgba(63,185,80,.24);}
+.mile.bad{border-color:#6b2c36;box-shadow:0 0 50px rgba(209,73,91,.24);}
+.mile.gold{border-color:#8a6a20;box-shadow:0 0 60px rgba(201,162,39,.3);}
+.mile .rays{position:absolute;inset:-40%;background:conic-gradient(from 0deg,transparent 0 12%,rgba(255,255,255,.05) 12% 14%,transparent 14% 26%,rgba(255,255,255,.05) 26% 28%,transparent 28%);
+  animation:spin 18s linear infinite;pointer-events:none;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.mile .ic{font-size:2.6rem;line-height:1;margin-bottom:10px;position:relative;}
+.mile .kick{font-size:.54rem;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;position:relative;}
+.mile h3{font-size:1.5rem;font-weight:900;letter-spacing:-.01em;margin-bottom:4px;position:relative;}
+.mile .sub{font-size:.76rem;color:var(--muted);line-height:1.5;margin-bottom:16px;position:relative;}
+.mile .badge2{display:inline-block;font-size:.6rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 12px;border-radius:20px;margin-bottom:14px;position:relative;}
+.mile .btn{width:100%;position:relative;}
+@media(prefers-reduced-motion:reduce){.mile,.overlay{animation:none;}.mile .rays{animation:none;}}
+
+/* ---- ruleta de resultado ---- */
+.rolling-note{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);
+  text-align:center;margin-bottom:9px;animation:pulse 1s ease infinite;}
+@keyframes pulse{0%,100%{opacity:.5;}50%{opacity:1;}}
+.outcome.lit{transform:scale(1.03);}
+.outcome.lit.win{background:#15301f;border-color:#3fb950;box-shadow:0 0 18px rgba(63,185,80,.35);}
+.outcome.lit.lose{background:#301519;border-color:#d1495b;box-shadow:0 0 18px rgba(209,73,91,.35);}
+.outcome{transition:transform .1s ease,background .1s ease,border-color .1s ease,box-shadow .1s ease;}
+.offer.spinning{border-color:var(--amber);}
+/* ---- cabecera compacta ---- */
+.avatarbox{cursor:pointer;transition:.15s;}
+.avatarbox:hover{border-color:var(--money);}
+.avatarbox .tap{position:absolute;bottom:2px;left:0;right:0;text-align:center;font-size:.4rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--dim);}
+.hero-money{background:var(--panel-2);border:1px solid var(--line);border-radius:9px;padding:10px 13px;
+  margin-bottom:11px;display:flex;align-items:baseline;justify-content:space-between;}
+.hero-money .lbl{font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);}
+.hero-money .val{font-size:1.5rem;font-weight:900;color:var(--money);font-variant-numeric:tabular-nums;}
+.hero-money .val.bad{color:var(--red);}
+.hero-money .age{font-size:.68rem;color:var(--muted);}
+.hero-money .val.salsm{font-size:1.05rem;color:var(--ink);}
+.offer .sal{font-size:.68rem;font-weight:800;color:var(--money);text-align:center;margin-top:6px;}
+.offer .sal small{display:block;font-size:.5rem;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;}
+.offer .sal.down{color:var(--red);}
+.miniline{display:flex;align-items:center;justify-content:space-between;gap:8px;
+  font-size:.62rem;color:var(--muted);margin-bottom:10px;padding:0 2px;}
+.miniline b{color:var(--ink);}
+.miniline .dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px;}
+
+/* ---- popup de stats ---- */
+.statspop{max-width:300px;width:100%;border-radius:14px;padding:18px 18px 16px;
+  background:linear-gradient(165deg,#1e2422,#12100f);border:1px solid var(--line);
+  animation:mileIn .3s ease both;}
+.statspop h4{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:12px;text-align:center;}
+.statspop .row2{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.statspop .row2 .k{width:76px;font-size:.62rem;color:var(--muted);}
+.statspop .row2 .bar{flex:1;height:6px;background:#232927;border-radius:3px;overflow:hidden;}
+.statspop .row2 .fill{height:100%;border-radius:3px;}
+.statspop .row2 .n{width:24px;text-align:right;font-size:.68rem;font-weight:700;color:var(--ink);}
+.statspop .div{height:1px;background:var(--line);margin:12px 0;}
+.statspop .close{width:100%;}
+
+/* ---- tarjetas de decisión simplificadas ---- */
+.outcome{padding:8px 9px;}
+.oc-big{display:flex;align-items:baseline;justify-content:center;gap:10px;margin-bottom:4px;}
+.oc-big .num{font-size:1.05rem;font-weight:900;font-variant-numeric:tabular-nums;}
+.oc-big .num.up{color:#5fd07f;}
+.oc-big .num.down{color:#e08a94;}
+.oc-minor{font-size:.5rem;color:var(--dim);text-align:center;line-height:1.4;}
+.axis-tag{font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;font-weight:800;padding:2px 7px;
+  border-radius:10px;display:inline-block;margin-bottom:6px;}
+.axis-tag.ovr{background:#1a2838;color:#7fb2e0;}
+.axis-tag.cash{background:#1a2e20;color:#7fd0a0;}
+</style>
 </head>
 <body>
-  <header class="masthead">
-    <div class="mark">$</div>
-    <div>
-      <h1 id="gameName">Capital Humano</h1>
-      <div class="tagline" id="gameTag">simulador de carrera corporativa</div>
-    </div>
-  </header>
 
-  <main id="board">
-    <p>Versión pública mínima: la página original contenía fragmentos truncados que rompían el HTML/JS/CSS. Reemplacé <code>index.html</code> por una versión limpia para que GitHub Pages pueda publicar.</p>
-    <p>Si querés recuperar el diseño completo, puedo restaurar y corregir las secciones paso a paso.</p>
-    <p>Comprobá el sitio en: <a class="link" href="https://agroyffer.github.io/CEO/">https://agroyffer.github.io/CEO/</a></p>
-  </main>
+<div class="masthead"><div class="mark">$</div><h1 id="gameName"></h1><span class="tagline" id="gameTag"></span></div>
+<div class="board" id="board"></div>
+<p class="footnote" id="foot"></p>
+<div id="overlay"></div>
+<div id="statspop"></div>
 
-  <script>
-    // Script mínimo para confirmar que JS ejecuta sin errores
-    try{
-      document.getElementById('gameName').textContent = 'Capital Humano';
-      document.getElementById('gameTag').textContent = 'simulador de carrera corporativa';
-    }catch(e){
-      console.error('Error inicializando la página:',e);
+<script>
+/* ================= CONFIG ================= */
+const GAME = {
+  name:"Capital Humano",
+  tagline:"simulador de carrera corporativa",
+  hero:"Construí tu carrera corporativa",
+  pitch:"Elegí de dónde venís y por qué carril jugás. Después aguantá los puestos que te toquen, año a año, hasta el directorio o hasta que llegue el fiscal.",
+};
+let PACE = "int";
+const PACES = [
+  {id:"int", n:"Intensa", d:"Una decisión por año, para vivirla completa."},
+  {id:"nor", n:"Normal", d:"Decisiones cada dos años, ritmo parejo."},
+  {id:"exp", n:"Exprés", d:"Decisiones cada tres años para disfrutarlo rápido."},
+];
+
+/* ================= ÁREAS Y ORÍGENES ================= */
+const AREAS = [
+  {id:"ven", n:"Ventas", s:"VTA"},
+  {id:"pro", n:"Producto", s:"PRD"},
+  {id:"fin", n:"Finanzas", s:"FIN"},
+  {id:"ope", n:"Operaciones", s:"OPE"},
+  {id:"mkt", n:"Marketing", s:"MKT"},
+  {id:"leg", n:"Legales", s:"LEG"},
+];
+const areaById = id => AREAS.find(a=>a.id===id);
+
+const ORIGINS = [
+  {id:"mba", ic:"🎓", n:"MBA en Masachusets Avenger",
+   d:"Deuda de seis cifras y un vocabulario impecable. Sabés hablar de todo y ejecutar poco.",
+   stats:{vision:16,ejecucion:6,carisma:12,rosca:18}, cash:-40000, rep:58,
+   comp:{ven:18,pro:10,fin:34,ope:14,mkt:26,leg:16}},
+  {id:"calle", ic:"🔧", n:"Escuela de la calle",
+   d:"Empezaste vendiendo algo en la puerta de algún lado. Nadie te regaló nada y se nota.",
+   stats:{vision:8,ejecucion:22,carisma:16,rosca:4}, cash:2000, rep:52,
+   comp:{ven:36,pro:10,fin:8,ope:30,mkt:18,leg:4}},
+  {id:"trust", ic:"🛥️", n:"Trust fund",
+   d:"Papá tiene campos. Tenés contactos en todas partes y experiencia real en ninguna.",
+   stats:{vision:10,ejecucion:4,carisma:14,rosca:24}, cash:900000, rep:44,
+   comp:{ven:16,pro:4,fin:24,ope:6,mkt:20,leg:26}},
+  {id:"tecnico", ic:"💻", n:"Técnico que se cansó",
+   d:"Sabías hacer el producto y viste que el que factura es el otro. Con la gente, un desastre.",
+   stats:{vision:18,ejecucion:20,carisma:4,rosca:4}, cash:15000, rep:56,
+   comp:{ven:6,pro:38,fin:12,ope:28,mkt:8,leg:8}},
+];
+
+/* ================= EMPRESAS ================= */
+/* areas: puestos que esa empresa suele abrir */
+const COMPANIES = [
+  {n:"Kiosco Cripto SRL",s:"Fintech de garaje",t:1,cap:.4,c1:"#e0a030",c2:"#8a5a10",sh:"sq",ini:"KC",areas:["ven","mkt","fin"]},
+  {n:"Agencia Sinergia+",s:"Marketing digital",t:1,cap:.6,c1:"#8a5fd0",c2:"#4a2a80",sh:"circ",ini:"S+",areas:["mkt","ven","ope"]},
+  {n:"DeliverYa",s:"Delivery de última milla",t:1,cap:1.2,c1:"#3fb950",c2:"#1f6b2a",sh:"shield",ini:"DY",areas:["ope","ven","pro"]},
+  {n:"Coworking El Nido",s:"Real estate disfrazado",t:1,cap:.8,c1:"#d1495b",c2:"#7a2a35",sh:"hex",ini:"EN",areas:["ven","ope","leg"]},
+  {n:"Tarjeta Ilimitada",s:"Préstamos personales",t:1,cap:2.1,c1:"#e05f30",c2:"#8a3010",sh:"diam",ini:"TI",areas:["fin","leg","ven"]},
+  {n:"AppMiPyme",s:"Software de gestión",t:1,cap:.9,c1:"#5f9ad0",c2:"#2a5a80",sh:"band",ini:"AM",areas:["pro","ven","ope"]},
+  {n:"Vaquita Pagos",s:"Billetera virtual",t:2,cap:34,c1:"#3fb950",c2:"#1f6b2a",sh:"sq",ini:"VP",areas:["pro","fin","mkt"]},
+  {n:"Rappidito",s:"Superapp de delivery",t:2,cap:58,c1:"#e0a030",c2:"#8a5a10",sh:"circ",ini:"RP",areas:["ope","mkt","ven"]},
+  {n:"NubeSur",s:"Cloud regional",t:2,cap:41,c1:"#5f9ad0",c2:"#2a5a80",sh:"shield",ini:"NS",areas:["pro","ope","ven"]},
+  {n:"Crédito Express",s:"Fintech de consumo",t:2,cap:76,c1:"#d1495b",c2:"#7a2a35",sh:"hex",ini:"CE",areas:["fin","leg","mkt"]},
+  {n:"AgroDato",s:"Agtech con satélites",t:2,cap:29,c1:"#8a9c3f",c2:"#4a5a1a",sh:"diam",ini:"AD",areas:["pro","ven","ope"]},
+  {n:"Ticketera Nac&Pop",s:"Eventos y entradas",t:2,cap:22,c1:"#8a5fd0",c2:"#4a2a80",sh:"band",ini:"TN",areas:["mkt","ope","leg"]},
+  {n:"Unicornia",s:"Marketplace regional",t:3,cap:1400,c1:"#e0a030",c2:"#8a5a10",sh:"sq",ini:"UN",areas:["pro","mkt","fin"]},
+  {n:"MegaBanco Digital",s:"Neobanco",t:3,cap:2800,c1:"#3fb950",c2:"#1f6b2a",sh:"circ",ini:"MB",areas:["fin","leg","pro"]},
+  {n:"Petrolera del Sur",s:"Energía y lobby",t:3,cap:5200,c1:"#5f6a70",c2:"#2a3035",sh:"shield",ini:"PS",areas:["leg","ope","fin"]},
+  {n:"LogiTotal",s:"Logística continental",t:3,cap:1900,c1:"#e05f30",c2:"#8a3010",sh:"hex",ini:"LT",areas:["ope","ven","fin"]},
+  {n:"Semillas Kronos",s:"Biotecnología agrícola",t:3,cap:3300,c1:"#8a9c3f",c2:"#4a5a1a",sh:"diam",ini:"SK",areas:["pro","leg","ope"]},
+  {n:"Prometeus AI",s:"Modelos fundacionales",t:4,cap:180000,c1:"#8a5fd0",c2:"#4a2a80",sh:"band",ini:"PA",areas:["pro","fin","mkt"]},
+  {n:"OmniRetail Global",s:"Retail mundial",t:4,cap:420000,c1:"#e0a030",c2:"#8a5a10",sh:"sq",ini:"OR",areas:["ope","ven","fin"]},
+  {n:"Sistema Financiero Unificado",s:"Banca sistémica",t:4,cap:310000,c1:"#3fb950",c2:"#1f6b2a",sh:"circ",ini:"SF",areas:["fin","leg","ope"]},
+  {n:"Vertex Semiconductores",s:"Chips y defensa",t:4,cap:520000,c1:"#5f9ad0",c2:"#2a5a80",sh:"shield",ini:"VS",areas:["pro","ope","leg"]},
+  {n:"Consorcio Orbital Helios",s:"Energía en órbita baja",t:5,cap:2400000,c1:"#d0c060",c2:"#7a6a20",sh:"hex",ini:"CH",areas:["ope","fin","leg"]},
+  {n:"Instituto de Continuidad",s:"Extensión de vida",t:5,cap:3100000,c1:"#60d0c0",c2:"#207a6a",sh:"diam",ini:"IC",areas:["pro","leg","mkt"]},
+  {n:"Fideicomiso Perpetuo",s:"Patrimonio intergeneracional",t:5,cap:5800000,c1:"#c0c0c8",c2:"#5a5a62",sh:"band",ini:"FP",areas:["fin","leg","ven"]},
+  {n:"Iglesia de la Optimización",s:"Culto corporativo registrado",t:5,cap:1900000,c1:"#e0e0e8",c2:"#8a8a92",sh:"sq",ini:"IO",areas:["mkt","ven","leg"]},
+];
+
+const CSUITE = {
+  fin:{n:"CFO",  s:"CFO", full:"Chief Financial Officer"},
+  mkt:{n:"CMO",  s:"CMO", full:"Chief Marketing Officer"},
+  ope:{n:"COO",  s:"COO", full:"Chief Operating Officer"},
+  pro:{n:"CTO",  s:"CTO", full:"Chief Technology Officer"},
+  ven:{n:"CRO",  s:"CRO", full:"Chief Revenue Officer"},
+  leg:{n:"CLO",  s:"CLO", full:"Chief Legal Officer"},
+};
+const RANKS = [
+  {min:0, n:"Pasante",      s:"PAS", band:null},
+  {min:18,n:"Analista",     s:"ANL", band:null},
+  {min:28,n:"Jefe de área", s:"JEF", band:"B-level"},
+  {min:40,n:"Gerente",      s:"GER", band:"B-level"},
+  {min:50,n:"Director",     s:"DIR", band:"D-level"},
+  {min:60,n:"VP",           s:"VP",  band:"V-level"},
+  {min:70,n:"C-level",      s:"CXO", band:"C-level"},
+  {min:82,n:"CEO",          s:"CEO", band:"C-level"},
+  {min:92,n:"Chairman",     s:"CHM", band:"C-level"},
+];
+
+const OUTLETS = ["Cronista Digital","Infomercado","Portal Negocios","El Balance","Hilo de LinkedIn","Newsletter de startups"];
+
+/* rumores sobre el estado real de la empresa: a veces mienten */
+const RUMORS = {
+  bien:["Vienen de cerrar una ronda","El sector la mira de reojo","Contratan sin parar"],
+  regular:["Nadie sabe bien cómo les va","Cambiaron de auditor el año pasado","Reestructuración reciente"],
+  mal:["Se fueron tres directores en un año","Pagan los sueldos con demora","Rumores de venta apurada"],
+};
+
+/* ================= AVATAR ================= */
+function avatarSVG(){
+  const o=S.origin, lane=S.lane, g=S.gender;
+  const lvl=S.rank?S.rank.i:0;
+  const skin="#d9a879", skinS="#c08f61";
+  const suits=["#4a5450","#3d4a58","#2e3a48","#242c38","#1c2230","#181d28","#12161f","#0e1118"];
+  const suit=suits[Math.min(lvl,7)];
+  const shirt=lane==="izq"?"#1a1a1a":"#e8ece9";
+  const tie=lane==="izq"?"#8a1a2a":(lvl>=5?"#c9a227":"#3fb950");
+  const hair={mba:"#3a2a1c",calle:"#221a14",trust:"#8a6a3a",tecnico:"#2a2420"}[o]||"#2a2420";
+  const hairShape={
+    mba:`<path d="M28 34c0-11 8-18 22-18s22 7 22 18c0 3-1 5-1 5-2-6-9-9-21-9s-19 3-21 9c0 0-1-2-1-5z" fill="${hair}"/>`,
+    calle:`<path d="M26 36c0-12 9-20 24-20s24 8 24 20H26z" fill="#2b3a2e"/><path d="M24 36h52v5H24z" fill="#1f2c23"/><path d="M74 36h16v4c0 1-1 2-2 2H74z" fill="#243328"/>`,
+    trust:`<path d="M28 36c0-12 9-19 22-19s22 7 22 19c0 2-1 4-1 4-1-8-8-12-13-9-4 2-9 2-14-1-5-3-13 0-15 10 0 0-1-2-1-4z" fill="${hair}"/>`,
+    tecnico:`<path d="M24 40c0-14 10-24 26-24s26 10 26 24v3H24z" fill="#3a4a52"/><path d="M31 39c0-11 7-18 19-18s19 7 19 18c0 0-6-6-19-6s-19 6-19 6z" fill="${hair}"/>`,
+  }[o];
+  const longHair=g==="M"?`<path d="M24 40c0 16 2 26 4 32h9c-3-8-4-18-4-28zM76 40c0 16-2 26-4 32h-9c3-8 4-18 4-28z" fill="${hair}"/>`:"";
+  const glasses=(o==="mba"||o==="tecnico")?`<g fill="none" stroke="#2a2a2a" stroke-width="2"><circle cx="41" cy="49" r="7"/><circle cx="59" cy="49" r="7"/><path d="M48 49h4M34 47l-4-1M66 47l4-1"/></g>`:"";
+  const shades=lane==="izq"?`<g><rect x="33" y="44" width="16" height="10" rx="4" fill="#12100f"/><rect x="51" y="44" width="16" height="10" rx="4" fill="#12100f"/><path d="M49 48h2" stroke="#12100f" stroke-width="3"/></g>`:"";
+  const mouth=lane==="izq"?`<path d="M43 62c4 3 10 3 14-1" stroke="${skinS}" stroke-width="2" fill="none" stroke-linecap="round"/>`:`<path d="M44 62h12" stroke="${skinS}" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+  const eyes=lane==="izq"?"":`<circle cx="41" cy="49" r="2.2" fill="#2a2420"/><circle cx="59" cy="49" r="2.2" fill="#2a2420"/>`;
+  return `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+    <path d="M50 74c-14 0-26 8-28 20l-2 26h60l-2-26c-2-12-14-20-28-20z" fill="${suit}"/>
+    <path d="M50 74l-9 4 9 16 9-16z" fill="${shirt}"/>
+    <path d="M50 80l-4 4 4 14 4-14z" fill="${tie}"/>
+    <path d="M44 66h12v10c0 3-12 3-12 0z" fill="${skinS}"/>
+    <ellipse cx="50" cy="48" rx="21" ry="23" fill="${skin}"/>
+    ${longHair}${hairShape}${glasses}${shades}${eyes}${mouth}</svg>`;
+}
+
+/* ================= ESCENAS ================= */
+const SCENES = {
+  cut:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#1a1512"/><g fill="#3a2a24"><rect x="12" y="42" width="18" height="24" rx="2"/><rect x="36" y="36" width="18" height="30" rx="2"/><rect x="60" y="48" width="18" height="18" rx="2"/><rect x="84" y="30" width="18" height="36" rx="2"/></g><path d="M8 20l104 34" stroke="#d1495b" stroke-width="3"/></svg>`,
+  hold:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#121a15"/><g fill="#2a4032"><circle cx="34" cy="34" r="10"/><circle cx="60" cy="30" r="10"/><circle cx="86" cy="34" r="10"/><path d="M20 66c0-12 6-18 14-18s14 6 14 18zM46 66c0-13 6-20 14-20s14 7 14 20zM72 66c0-12 6-18 14-18s14 6 14 18z"/></g></svg>`,
+  paint:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#171420"/><path d="M12 58L36 34l18 14 20-26 22 20" fill="none" stroke="#8a5fd0" stroke-width="3"/><circle cx="96" cy="28" r="6" fill="#e0a030"/></svg>`,
+  fall:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#1a1216"/><path d="M12 18l24 20 18-8 22 22 22-6" fill="none" stroke="#d1495b" stroke-width="3"/><path d="M98 46l8-2-2 8z" fill="#d1495b"/></svg>`,
+  ai:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#161320"/><g stroke="#8a5fd0" stroke-width="1.5" fill="none"><circle cx="60" cy="37" r="14"/><path d="M60 23v-9M60 51v9M46 37h-9M74 37h9"/></g><g fill="#c9a0f0"><circle cx="60" cy="14" r="3"/><circle cx="60" cy="60" r="3"/><circle cx="37" cy="37" r="3"/><circle cx="83" cy="37" r="3"/></g></svg>`,
+  brick:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#15130f"/><g fill="#3a2f22"><rect x="10" y="20" width="30" height="12"/><rect x="44" y="20" width="30" height="12"/><rect x="78" y="20" width="30" height="12"/><rect x="10" y="36" width="46" height="12"/><rect x="60" y="36" width="48" height="12"/><rect x="10" y="52" width="30" height="12"/><rect x="44" y="52" width="64" height="12"/></g></svg>`,
+  cash:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#111a13"/><g fill="#1f6b2a" stroke="#3fb950" stroke-width="1.5"><rect x="18" y="26" width="40" height="24" rx="3"/><rect x="34" y="34" width="40" height="24" rx="3"/><rect x="52" y="20" width="40" height="24" rx="3"/></g></svg>`,
+  dice:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#1a1712"/><rect x="30" y="18" width="34" height="34" rx="6" fill="#2e2a22" stroke="#e0a030" stroke-width="1.5"/><g fill="#e0a030"><circle cx="40" cy="28" r="3"/><circle cx="54" cy="42" r="3"/><circle cx="47" cy="35" r="3"/></g></svg>`,
+  shades:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#131315"/><path d="M24 32h32v14a8 8 0 01-16 0z" fill="#0c0c0e" stroke="#4a4a52" stroke-width="1.5"/><path d="M64 32h32v14a8 8 0 01-16 0z" fill="#0c0c0e" stroke="#4a4a52" stroke-width="1.5"/><path d="M56 36h8" stroke="#4a4a52" stroke-width="2"/></svg>`,
+  shield:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#121a1c"/><path d="M60 12l24 8v18c0 14-10 22-24 26-14-4-24-12-24-26V20z" fill="#1c2c2e" stroke="#4a8a90" stroke-width="2"/></svg>`,
+  hands:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#12180f"/><path d="M18 44c10-8 20-4 28 2l14 8 14-8c8-6 18-10 28-2" fill="none" stroke="#8a9c3f" stroke-width="4" stroke-linecap="round"/></svg>`,
+  box:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#171410"/><g fill="#3a2e1e" stroke="#6a563a" stroke-width="1.5"><rect x="26" y="26" width="30" height="30" rx="2"/><rect x="62" y="34" width="26" height="22" rx="2"/></g></svg>`,
+  bell:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#141a14"/><path d="M60 14c10 0 16 8 16 18v12l6 8H38l6-8V32c0-10 6-18 16-18z" fill="#2a3a26" stroke="#c9a227" stroke-width="2"/><circle cx="60" cy="58" r="5" fill="#c9a227"/></svg>`,
+  clock:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#15171a"/><circle cx="60" cy="37" r="20" fill="none" stroke="#5f7a9a" stroke-width="2.5"/><path d="M60 24v14l10 6" fill="none" stroke="#8ab0d0" stroke-width="2.5"/></svg>`,
+  chart:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#14181c"/><g fill="#2a3a48"><rect x="16" y="40" width="14" height="24"/><rect x="36" y="30" width="14" height="34"/><rect x="56" y="34" width="14" height="30"/><rect x="76" y="20" width="14" height="44"/></g></svg>`,
+  scale:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#16181a"/><path d="M60 14v46M36 62h48M28 26h64" stroke="#8a9098" stroke-width="2.5"/><path d="M28 26l-8 14h16zM92 26l-8 14h16z" fill="#2a3038" stroke="#8a9098" stroke-width="1.5"/></svg>`,
+  zip:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#1a1416"/><path d="M40 30h40v26H40z" fill="#2a2024" stroke="#8a6a70" stroke-width="1.5"/><circle cx="60" cy="42" r="5" fill="#d1495b"/></svg>`,
+  party:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#1a1620"/><path d="M46 20h28l-10 18v14h6v6H50v-6h6V38z" fill="#2e2438" stroke="#e0a030" stroke-width="1.5"/></svg>`,
+  mail:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#15181a"/><rect x="32" y="24" width="56" height="34" rx="3" fill="#222a2e" stroke="#5a6a72" stroke-width="1.5"/><path d="M32 26l28 20 28-20" fill="none" stroke="#5a6a72" stroke-width="2"/></svg>`,
+  folder:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#15181a"/><path d="M28 22h20l6 6h38v30H28z" fill="#243038" stroke="#5f8aa0" stroke-width="1.5"/></svg>`,
+  sword:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#1a1518"/><path d="M28 56L82 18M38 62L92 24" stroke="#a08090" stroke-width="3" stroke-linecap="round"/></svg>`,
+  chair:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#16191c"/><path d="M42 18h36v26H42z" fill="#2a3238" stroke="#7a8a94" stroke-width="1.5"/><path d="M38 46h44v6H38zM58 52v12M44 64h32" stroke="#7a8a94" stroke-width="3"/></svg>`,
+  target:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#14191a"/><circle cx="60" cy="37" r="22" fill="none" stroke="#3a5a50" stroke-width="2"/><circle cx="60" cy="37" r="13" fill="none" stroke="#3fb950" stroke-width="2"/><circle cx="60" cy="37" r="4" fill="#3fb950"/></svg>`,
+  crash:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#1a1214"/><path d="M12 20l18 14 14-6 16 20 14-10 16 22" fill="none" stroke="#d1495b" stroke-width="3"/></svg>`,
+  mic:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#151a1c"/><rect x="52" y="14" width="16" height="28" rx="8" fill="#2a3438" stroke="#7fb2e0" stroke-width="1.5"/><path d="M42 38c0 10 8 16 18 16s18-6 18-16M60 54v10M48 64h24" fill="none" stroke="#7fb2e0" stroke-width="2.5"/></svg>`,
+  net:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#15191c"/><g stroke="#5f9ad0" stroke-width="1.5"><path d="M30 22L60 40 90 22M30 56L60 40 90 56"/></g><g fill="#8ab0d0"><circle cx="30" cy="22" r="5"/><circle cx="90" cy="22" r="5"/><circle cx="30" cy="56" r="5"/><circle cx="90" cy="56" r="5"/><circle cx="60" cy="40" r="6"/></g></svg>`,
+  desk:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#15181a"/><rect x="30" y="26" width="40" height="26" rx="2" fill="#232b30" stroke="#5a6a72" stroke-width="1.5"/><path d="M22 56h76M40 56v8M80 56v8" stroke="#5a6a72" stroke-width="2.5"/></svg>`,
+  door:`<svg viewBox="0 0 120 74"><rect width="120" height="74" fill="#171418"/><rect x="44" y="12" width="32" height="52" rx="2" fill="#241f26" stroke="#6a5a70" stroke-width="1.5"/><circle cx="69" cy="40" r="3" fill="#a08aa8"/><path d="M18 64h20M82 64h20" stroke="#3a323e" stroke-width="2"/></svg>`,
+};
+
+/* ================= EVENTOS: TODAS LAS SALIDAS DUELEN ================= */
+const EVENTS = [
+  {t:"Runway de tres meses", s:"La plata alcanza hasta marzo. Tenés que elegir cómo estirarla.",
+   o:[
+    {n:"Recortar con cirugía", tag:"Juego de gestión", scene:"cut",
+     chips:[{l:"Sale prolijo, se nota la firmeza"},{l:"Te llevás puesto lo que no debías"}],
+     roll:[{p:60,eff:{ovr:14,rep:4},cash:-15000,mark:"✂️",
+            head:"Ajusta la estructura sin tocar al equipo clave y el board lo destaca"},
+           {p:40,eff:{ovr:-15,carisma:-8,rep:-10},layoffs:1,mark:"💀",
+            head:"El recorte se lleva a los referentes que sostenían al equipo"}]},
+    {n:"Vender activos no esenciales", tag:"Juego de plata", scene:"cash",
+     chips:[{l:"Conseguís caja fresca"},{l:"Malvendés bajo presión"}],
+     roll:[{p:55,eff:{ovr:2,rep:2},cash:180000,mark:"💵",
+            head:"Vende activos no esenciales y estira el runway sin traumas internos"},
+           {p:45,eff:{ovr:-4,rep:-4},cash:-90000,mark:"📉",
+            head:"Malvende bajo presión de tiempo y pierde más de lo que consigue"}]}]},
+
+  {t:"Due diligence", s:"El fondo pide los números. Cómo los mostrés define si cierra la ronda.",
+   o:[
+    {n:"Pulir el relato", tag:"Juego de gestión", scene:"paint", lane:"izq",
+     chips:[{l:"Cierra la ronda sin ruido"},{l:"Se nota el maquillaje"}],
+     roll:[{p:55,eff:{ovr:16,rosca:6,riesgo:8},cap:.35,mark:"🎨",
+            head:"Cierra la ronda con métricas prolijas que convencieron al fondo"},
+           {p:45,eff:{ovr:-18,rep:-20,riesgo:20},cap:-.3,mark:"🔍",
+            head:"El fondo detecta inconsistencias y se cae la operación en la recta final"}]},
+    {n:"Negociar el precio real", tag:"Juego de plata", scene:"chart",
+     chips:[{l:"Entra menos plata pero entra segura"},{l:"El fondo se retira del todo"}],
+     roll:[{p:55,eff:{ovr:4,rep:6},cash:220000,cap:.1,mark:"🤝",
+            head:"Cierra una ronda más chica pero limpia, con el fondo conforme"},
+           {p:45,eff:{ovr:-6,rep:-4},cash:-40000,cap:-.2,mark:"🚪",
+            head:"El fondo se retira tras la negociación y la ronda se cae"}]}]},
+
+  {t:"Pivot a IA", s:"El producto anda pero no dice IA. Los fondos solo miran a los que lo dicen.",
+   o:[
+    {n:"Pivotear el producto", tag:"Juego de gestión", scene:"ai",
+     chips:[{l:"El pivot pega y arrastra al equipo"},{l:"Queda a mitad de camino"}],
+     roll:[{p:50,eff:{ovr:18,vision:8,rep:6},cap:.4,mark:"🤖",
+            head:"El pivot a IA llega a producto real y el mercado lo reconoce"},
+           {p:50,eff:{ovr:-14,ejecucion:-10,rep:-8},cap:-.15,mark:"🫠",
+            head:"El pivot queda en discurso y el equipo pierde el rumbo"}]},
+    {n:"Vender el relato afuera", tag:"Juego de plata", scene:"mic",
+     chips:[{l:"Los fondos compran la narrativa"},{l:"Te descubren el bluff"}],
+     roll:[{p:50,eff:{ovr:6,carisma:4},cash:150000,cap:.25,mark:"📣",
+            head:"El discurso de IA convence a los inversores y sube la valuación"},
+           {p:50,eff:{ovr:-8,rep:-12},cash:-60000,cap:-.1,mark:"🎭",
+            head:"El mercado nota que el discurso no tiene producto detrás"}]}]},
+
+  {t:"Oferta de adquisición", s:"Quieren comprar la empresa. Vos decidís qué parte de vos vender.", min:30,
+   o:[
+    {n:"Vender la conducción", tag:"Juego de gestión", scene:"chair",
+     chips:[{l:"Te dejan al mando del área"},{l:"Te sacan apenas cierran"}],
+     roll:[{p:55,eff:{ovr:16,rosca:6},cashMult:.04,exit:1,mark:"👔",
+            head:"Vende la compañía y queda al frente de la unidad de negocio"},
+           {p:45,eff:{ovr:-16,carisma:-6,rep:-8},cashMult:.02,exit:1,mark:"🚪",
+            head:"La integración lo saca de la conducción apenas cierra la operación"}]},
+    {n:"Negociar el precio", tag:"Juego de plata", scene:"cash",
+     chips:[{l:"Sacás más plata de la ofrecida"},{l:"Se enfrían y bajan la oferta"}],
+     roll:[{p:50,eff:{ovr:4,rep:4},cashMult:.08,exit:1,mark:"💰",
+            head:"Renegocia el precio al alza y cierra la venta en mejores términos"},
+           {p:50,eff:{ovr:-6,rep:-6},cashMult:.015,exit:1,mark:"📉",
+            head:"La contraparte se enfría durante la negociación y baja la oferta"}]}]},
+
+  {t:"Información privilegiada", s:"Sabés el balance 48 horas antes. Qué hacés con eso define el resto.", min:28,
+   o:[
+    {n:"Operar antes del anuncio", tag:"Juego de plata", scene:"shades", lane:"izq",
+     chips:[{l:"Cobrás y nadie mira para ahí"},{l:"Salta en la auditoría"}],
+     roll:[{p:55,eff:{ovr:4},cash:600000,mark:"🕶️",
+            head:"Movimientos discretos en la acción que nadie llega a cuestionar"},
+           {p:45,eff:{ovr:-20,rep:-26,riesgo:36},cash:-100000,mark:"🚨",
+            head:"El regulador detecta operaciones sospechosas previas al balance"}]},
+    {n:"Reforzar el protocolo", tag:"Juego de gestión", scene:"shield",
+     chips:[{l:"Ganás reputación como el prolijo"},{l:"Te marcan como el que complica todo"}],
+     roll:[{p:55,eff:{ovr:12,rep:10,riesgo:-14},mark:"🛡️",
+            head:"Refuerza el protocolo de compliance y el directorio lo valora"},
+           {p:45,eff:{ovr:-8,rosca:-12},mark:"🎯",
+            head:"El área lo empieza a ver como el que frena todo por las dudas"}]}]},
+
+  {t:"Se sindicalizan", s:"Armaron comisión interna. Cómo lo manejás define el clima de los próximos años.",
+   o:[
+    {n:"Negociar en serio", tag:"Juego de gestión", scene:"hands",
+     chips:[{l:"Cierra rápido y el equipo responde"},{l:"Se abre la puerta a más reclamos"}],
+     roll:[{p:60,eff:{ovr:10,carisma:8,rep:12},cash:-60000,mark:"🤝",
+            head:"Cierra un acuerdo salarial que ordena el clima interno"},
+           {p:40,eff:{ovr:-10,rep:-4},cash:-150000,cap:-.1,mark:"📈",
+            head:"El acuerdo abre reclamos en cadena en el resto de las áreas"}]},
+    {n:"Tercerizar el área", tag:"Juego de plata", scene:"box", lane:"izq",
+     chips:[{l:"Baja el costo sin ruido"},{l:"Termina en escándalo y juicio"}],
+     roll:[{p:50,eff:{ovr:6},cap:.18,mark:"📦",
+            head:"Terceriza el área en silencio y el costo baja sin repercusión"},
+           {p:50,eff:{ovr:-16,carisma:-18,rep:-30,riesgo:22},cash:-200000,cap:-.12,mark:"📣",
+            head:"La tercerización termina en denuncia judicial y escrache público"}]}]},
+
+  {t:"Salida a bolsa", s:"La ventana está abierta. Cómo la usás define si se cierra a favor o en contra.", min:34, minOvr:56,
+   o:[
+    {n:"Salir ahora", tag:"Juego de gestión", scene:"bell",
+     chips:[{l:"Debut fuerte y quedás instalado"},{l:"Debut flojo y quedás marcado"}],
+     roll:[{p:50,eff:{ovr:20,rosca:8,rep:14},cashMult:.04,ipo:1,mark:"🔔",
+            head:"Toca la campana con demanda fuerte y queda instalado como referente"},
+           {p:50,eff:{ovr:-16,rep:-12},cashMult:.01,ipo:1,mark:"🔻",
+            head:"La acción cierra el primer día por debajo del precio de colocación"}]},
+    {n:"Colocar deuda mientras tanto", tag:"Juego de plata", scene:"folder",
+     chips:[{l:"Financiás barato sin exponerte"},{l:"Te cobran caro por el riesgo"}],
+     roll:[{p:55,eff:{ovr:4},cash:250000,mark:"📄",
+            head:"Coloca deuda en buenos términos mientras espera mejor ventana"},
+           {p:45,eff:{ovr:-6},cash:-120000,mark:"🧾",
+            head:"El mercado le cobra una tasa alta por el riesgo percibido"}]}]},
+
+  {t:"Denuncia interna", s:"Alguien mandó un mail al comité de ética con capturas. Ya lo leyeron tres personas.",
+   o:[
+    {n:"Investigar en serio", tag:"Juego de gestión", scene:"scale",
+     chips:[{l:"Limpiás la casa y ganás crédito"},{l:"La investigación te alcanza a vos"}],
+     roll:[{p:55,eff:{ovr:12,rep:16},mark:"⚖️",
+            head:"Abre una investigación interna que ordena el área en conflicto"},
+           {p:45,eff:{ovr:-16,rosca:-14,rep:-6},mark:"🪞",
+            head:"La investigación termina alcanzando a la propia conducción"}]},
+    {n:"Acuerdo y silencio", tag:"Juego de plata", scene:"zip", lane:"izq",
+     chips:[{l:"Se apaga sin que trascienda"},{l:"Se filtra y escala a los medios"}],
+     roll:[{p:50,eff:{ovr:4},cash:-80000,mark:"🤐",
+            head:"Salida acordada y confidencial que cierra el tema puertas adentro"},
+           {p:50,eff:{ovr:-20,rep:-32,riesgo:20},cash:-200000,mark:"📰",
+            head:"Se filtra el acuerdo de confidencialidad y el caso llega a los medios"}]}]},
+
+  {t:"Regulador en la puerta", s:"Pidieron los servidores. Cómo respondés define cuánto dura esto.", min:32,
+   o:[
+    {n:"Cooperar del todo", tag:"Juego de gestión", scene:"folder",
+     chips:[{l:"Cierra rápido con multa chica"},{l:"Encuentran algo grande"}],
+     roll:[{p:60,eff:{ovr:8,rep:8},cash:-50000,mark:"📁",
+            head:"Entrega la documentación y cierra el expediente con una multa menor"},
+           {p:40,eff:{ovr:-18,rep:-16},cash:-200000,cap:-.2,mark:"🔎",
+            head:"La inspección detecta irregularidades y amplía el alcance de la causa"}]},
+    {n:"Litigar el alcance", tag:"Juego de plata", scene:"sword", lane:"izq",
+     chips:[{l:"Acotás el daño económico"},{l:"Se te complica caro"}],
+     roll:[{p:50,eff:{ovr:4},cash:-40000,mark:"⚔️",
+            head:"Acota el alcance de la inspección con una estrategia legal agresiva"},
+           {p:50,eff:{ovr:-14,rep:-20,riesgo:24},cash:-300000,mark:"⛓️",
+            head:"El juez rechaza los planteos y amplía la investigación sobre la compañía"}]}]},
+
+  {t:"El mercado está raro", s:"Ves señales de que esto se pincha. Cómo jugás la corazonada define todo.", min:34,
+   o:[
+    {n:"Anunciarlo en público", tag:"Juego de gestión", scene:"crash",
+     chips:[{l:"Acertás y sos leyenda"},{l:"No pasa nada y quedás como el payaso"}],
+     roll:[{p:35,eff:{ovr:26,vision:12,rep:22},cash:600000,oracle:1,mark:"🔮",
+            head:"Había anticipado la caída semanas antes y ahora todos lo citan"},
+           {p:65,eff:{ovr:-14,rep:-18},mark:"📢",
+            head:"Anunció un derrumbe que no ocurrió y el mercado se lo recuerda todos los días"}]},
+    {n:"Cubrirte en silencio", tag:"Juego de plata", scene:"net",
+     chips:[{l:"Te salvás sin exponerte"},{l:"Igual te agarra parado"}],
+     roll:[{p:55,eff:{ovr:6},cash:200000,mark:"🧷",
+            head:"Reordenó su exposición a tiempo sin hacer ruido público"},
+           {p:45,eff:{ovr:-8},cash:-180000,mark:"🌊",
+            head:"La volatilidad lo agarra parado pese a la cobertura previa"}]}]},
+
+  {t:"Te ofrecen el sillón", s:"Se va el CEO y el board te mira a vos. Es el puesto que querías y el que te puede destruir.", min:36, minOvr:62,
+   o:[
+    {n:"Aceptar la conducción", tag:"Juego de gestión", scene:"chair",
+     chips:[{l:"Te la bancás y quedás arriba"},{l:"Te come el puesto"}],
+     roll:[{p:45,eff:{ovr:26,rosca:10,carisma:6,rep:12},cap:.4,ceo:1,mark:"👑",
+            head:"Asume la conducción con respaldo unánime del directorio"},
+           {p:55,eff:{ovr:-20,ejecucion:-10,rep:-14},cap:-.2,mark:"🪤",
+            head:"No logra ordenar la compañía en su primer año al mando"}]},
+    {n:"Pedir más equity primero", tag:"Juego de plata", scene:"cash",
+     chips:[{l:"Aceptan y ganás de entrada"},{l:"Se ofenden y retiran la oferta"}],
+     roll:[{p:45,eff:{ovr:8,rosca:4},cash:400000,mark:"💰",
+            head:"Negocia mejores términos antes de asumir y los consigue"},
+           {p:55,eff:{ovr:-6,rep:-8},mark:"🚫",
+            head:"El board retira la oferta al ver la negociación como codicia"}]}]},
+
+  {t:"Fusión histórica", s:"Se puede armar la operación más grande del sector. O el papelón más grande.", min:40, minOvr:70,
+   o:[
+    {n:"Empujar la fusión", tag:"Juego de gestión", scene:"net",
+     chips:[{l:"Entrás en la historia del sector"},{l:"Se cae y te lleva puesto"}],
+     roll:[{p:40,eff:{ovr:30,rosca:12,rep:20},cap:1.0,mark:"🏛️",
+            head:"Cierra la mayor fusión de la historia del sector"},
+           {p:60,eff:{ovr:-22,rosca:-10,rep:-16},cash:-300000,cap:-.3,mark:"💣",
+            head:"La fusión se cae en la recta final tras meses de negociación pública"}]},
+    {n:"Vender la posición", tag:"Juego de plata", scene:"cash",
+     chips:[{l:"Cobrás tu parte antes de que se defina"},{l:"Vendés barato lo que iba a valer más"}],
+     roll:[{p:45,eff:{ovr:6},cashMult:.03,mark:"💵",
+            head:"Vende su posición antes de que se defina la fusión y asegura ganancia"},
+           {p:55,eff:{ovr:-8},cashMult:.008,mark:"📉",
+            head:"La fusión avanza después de vender y se pierde la mejor parte"}]}]},
+];
+
+/* focos anuales: un canje real, con chance real de las dos caras */
+const FOCI = [
+  {n:"Vivir en eventos", tag:"Juego de gestión", scene:"net",
+   chips:[{l:"Contactos que abren puertas"},{l:"Puro canapé, cero avance"}],
+   roll:[{p:55,eff:{rosca:10,carisma:4}},{p:45,eff:{ejecucion:-6},cash:-15000}]},
+  {n:"Encerrarte a ejecutar", tag:"Juego de gestión", scene:"desk",
+   chips:[{l:"Sale el proyecto redondo"},{l:"Te aíslan del resto"}],
+   roll:[{p:55,eff:{ejecucion:10},cap:.06},{p:45,eff:{rosca:-8,carisma:-4}}]},
+  {n:"Construir perfil público", tag:"Juego de gestión", scene:"mic",
+   chips:[{l:"Te leen y te respetan"},{l:"Te cargan en cada posteo"}],
+   roll:[{p:50,eff:{carisma:9,rep:10}},{p:50,eff:{rep:-12,rosca:-4}}]},
+  {n:"Rosca con el board", tag:"Juego de plata", scene:"chair",
+   chips:[{l:"Te blindás para lo que viene"},{l:"Te marcan como el político"}],
+   roll:[{p:55,eff:{rosca:11},cash:60000},{p:45,eff:{carisma:-8,rep:-6}}]},
+  {n:"Recortar en silencio", tag:"Juego de plata", scene:"box",
+   chips:[{l:"Mejora el margen sin ruido"},{l:"Se nota y explota"}],
+   roll:[{p:55,eff:{ejecucion:2},cap:.1},{p:45,eff:{carisma:-10,rep:-14},cap:.02}]},
+  {n:"Bajar un cambio", tag:"Juego de gestión", scene:"clock",
+   chips:[{l:"Volvés con la cabeza fresca"},{l:"Perdés terreno sin recuperarlo"}],
+   roll:[{p:60,eff:{riesgo:-10,rep:4,ovr:3}},{p:40,eff:{ovr:-8,rosca:-6}}]},
+];
+
+const SHOCKS = [
+  {id:"burnout",p:.05,min:32,mark:"🕯️",eff:{ejecucion:-20,carisma:-8,vigencia:-12,ovr:-6},
+   head:"Toma licencia por agotamiento y delega la operación por tiempo indeterminado",
+   react:"Volvés, pero no volvés igual. Nunca se vuelve igual."},
+  {id:"escandalo",p:.055,min:30,needRiesgo:38,mark:"📉",eff:{rep:-28,ovr:-5,riesgo:6},
+   head:"Una investigación periodística expone prácticas internas de la compañía",
+   react:"Dos semanas de infierno mediático y un año de reuniones incómodas."},
+  {id:"juicio",p:.05,min:36,needLayoffs:2,mark:"⚖️",eff:{ovr:-4,rep:-8,riesgo:8},cash:-450000,
+   head:"Fallo adverso en una demanda colectiva por los despidos de años anteriores",
+   react:"La plata se va, pero lo que más duele es el precedente."},
+  {id:"traicion",p:.05,min:34,mark:"🔪",eff:{rosca:-18,carisma:-6,ovr:-5},
+   head:"Su mano derecha se va con la mitad del equipo a fundar la competencia",
+   react:"Te enteraste por LinkedIn, como todo el mundo."},
+  {id:"obsoleto",p:.07,min:58,mark:"🦕",eff:{vigencia:-18,ovr:-6,ejecucion:-8},
+   head:"El sector lo trata como una figura del pasado en la última conferencia",
+   react:"Nadie te lo dice de frente. Simplemente dejan de consultarte."},
+  {id:"colapso",p:.05,min:40,mark:"💥",eff:{ovr:-8,vigencia:-10},cash:-200000,
+   head:"El principal cliente rescinde el contrato y arrastra el trimestre completo",
+   react:"Un solo mail te borró tres años de trabajo."},
+];
+
+const RETIRE_AGES=[66,88,115,155,205,260];
+const EXT_COSTS=[3e6,4e7,5e8,6e9,8e10];
+const EXT_NAMES=[
+  {n:"Terapia de senescencia",d:"Veinte años más de agenda."},
+  {n:"Reemplazo de órganos impresos",d:"Casi tres décadas extra."},
+  {n:"Respaldo neuronal parcial",d:"Cuarenta años más, con lagunas."},
+  {n:"Transferencia de sustrato",d:"Cincuenta años. Ya nadie discute si seguís siendo vos."},
+  {n:"Continuidad indefinida",d:"El Instituto no da cifras."},
+];
+const AWARDS={ipo:"IPO",exit:"Exit",unicornio:"Unicornio",forbes:"Portada de Forbes",
+  querido:"Jefe del año",odiado:"Villano de LinkedIn",oraculo:"Predijo el crack"};
+
+/* ================= HELPERS ================= */
+let S=null;
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const rndInt=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const clamp=(n,max=99)=>Math.max(0,Math.min(max,Math.round(n)));
+function money(v){const a=Math.abs(v),s=v<0?"-":"";
+  if(a>=1e9)return s+"$"+(a/1e9).toFixed(1)+"MM";
+  if(a>=1e6)return s+"$"+(a/1e6).toFixed(1)+"M";
+  if(a>=1e3)return s+"$"+(a/1e3).toFixed(0)+"K";
+  return s+"$"+Math.round(a);}
+function capF(v){return v>=1000?"$"+(v/1000).toFixed(1)+"MM":v>=1?"$"+v.toFixed(0)+"M":"$"+(v*1000).toFixed(0)+"K";}
+function ovrColor(o){return o>=88?"#c9a227":o>=76?"#3fb950":o>=62?"#8a9c3f":o>=48?"#e0a030":"#7a6a55";}
+function repColor(r){return r>=75?"#3fb950":r>=55?"#8a9c3f":r>=40?"#e0a030":r>=20?"#e05f30":"#d1495b";}
+function rankColor(i){return ["#5a6a64","#5a6a64","#5f8a9c","#5f8a9c","#8a9c3f","#3fb950","#c9a227","#e0b830","#f0d060"][i]||"#5a6a64";}
+/* Para usar logos propios: agregá img:"ruta/al/logo.png" en la empresa. */
+const SHAPES={
+  sq:  '<rect x="1" y="1" width="38" height="38" rx="8"/>',
+  circ:'<circle cx="20" cy="20" r="19"/>',
+  shield:'<path d="M20 1l17 6v14c0 10-7 16-17 19C10 37 3 31 3 21V7z"/>',
+  hex: '<path d="M20 1l16.5 9.5v19L20 39 3.5 29.5v-19z"/>',
+  diam:'<path d="M20 1l19 19-19 19L1 20z"/>',
+  band:'<rect x="1" y="1" width="38" height="38" rx="8"/><path d="M1 26h38v13H1z" opacity=".45"/>',
+};
+function logo(co,cls){
+  if(!co) return `<div class="logo ${cls||''}" style="background:#232927;color:var(--dim)">?</div>`;
+  if(co.img) return `<div class="logo ${cls||''}" style="background:#fff"><img src="${co.img}" alt="" style="width:100%;height:100%;object-fit:contain"></div>`;
+  const id="lg"+co.ini.replace(/[^A-Za-z0-9]/g,"")+(co.t||0);
+  return `<div class="logo ${cls||''}" style="background:none">
+    <svg viewBox="0 0 40 40" style="width:100%;height:100%;display:block">
+      <defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="${co.c1}"/><stop offset="1" stop-color="${co.c2}"/></linearGradient></defs>
+      <g fill="url(#${id})">${SHAPES[co.sh]||SHAPES.sq}</g>
+      <text x="20" y="26" text-anchor="middle" font-family="Inter,sans-serif" font-size="15"
+        font-weight="900" fill="#0c0e0d" opacity=".92">${co.ini}</text>
+    </svg></div>`;
+}
+function fitBand(c){
+  if(c>=58) return {k:"alto", l:"Es lo tuyo"};
+  if(c>=38) return {k:"medio", l:"Te las arreglás"};
+  if(c>=20) return {k:"bajo", l:"Te queda grande"};
+  return {k:"nulo", l:"No tenés idea"};
+}
+/* el OVR depende del puesto que ocupás, no solo de vos */
+function computeOvr(){
+  const s=S.stats;
+  const c=S.area?S.comp[S.area]:20;
+  return clamp(26 + c*.35 + s.vision*.12 + s.ejecucion*.12 + s.carisma*.10 + s.rosca*.11 + S.tierBonus);
+}
+/* OVR hipotético si tomaras ese puesto en esa empresa, sin tocar el estado real */
+function previewOvr(area,tier){
+  const s=S.stats, c=S.comp[area];
+  const tb=Math.min((tier-1)*4,34);
+  return clamp(26 + c*.35 + s.vision*.12 + s.ejecucion*.12 + s.carisma*.10 + s.rosca*.11 + tb);
+}
+const CAP_REF=[1,38,2500,300000,3000000];
+/* salario anual: la base la pone el tier, pero el cap real de esa empresa,
+   el cargo que tendrías y qué tan bien encajás en el área lo mueven */
+function salaryFor(co,area,rank){
+  const base=13000*Math.pow(3.25,co.t-1);
+  const capMult=Math.max(.65,Math.min(1.7,Math.pow(co.cap/(CAP_REF[co.t-1]||1),.22)));
+  const rankMult=1+rank.i*.17;
+  const fit=.72+(S.comp[area]/100)*.55;
+  const repMult=.82+S.rep/260;
+  return Math.round(base*capMult*rankMult*fit*repMult);
+}
+/* cuánto mueve el OVR un resultado, para mostrarlo en el chip */
+function ovrDelta(eff){
+  if(!eff) return 0;
+  return Math.round((eff.ovr||0) + (eff.vision||0)*.12 + (eff.ejecucion||0)*.12
+    + (eff.carisma||0)*.10 + (eff.rosca||0)*.11);
+}
+/* precio y ganancia de un resultado, cada eje con su propio color */
+function metrics(rl){
+  const e=rl.eff||{}, m=[];
+  const d=ovrDelta(e);
+  if(d) m.push({t:`${d>0?'+':''}${d} OVR`, c:d>0?'up':'down'});
+  if(e.rep) m.push({t:`${e.rep>0?'+':''}${e.rep} reputación`, c:e.rep>0?'up':'down'});
+  if(e.riesgo) m.push({t:`${e.riesgo>0?'+':''}${e.riesgo} riesgo legal`, c:e.riesgo>0?'down':'up'});
+  if(rl.cash) m.push({t:`${rl.cash>0?'+':''}${money(rl.cash)}`, c:rl.cash>0?'up':'down'});
+  if(rl.cashMult) m.push({t:`+${(rl.cashMult*100).toFixed(0)}% del valor`, c:'up'});
+  if(rl.cap) m.push({t:`${rl.cap>0?'+':''}${Math.round(rl.cap*100)}% la empresa`, c:rl.cap>0?'up':'down'});
+  if(rl.layoffs) m.push({t:"despidos masivos", c:'down'});
+  if(rl.ipo) m.push({t:"sale a bolsa", c:'up'});
+  if(rl.exit) m.push({t:"exit", c:'up'});
+  return m;
+}
+function splitMetrics(rl){
+  const all=metrics(rl), headline=[], minor=[];
+  all.forEach(m=>{
+    const money = m.t.startsWith("+$")||m.t.startsWith("-$")||m.t.includes("% del valor")||m.t.includes("% la empresa");
+    if(m.t.includes("OVR")||money) headline.push(m); else minor.push(m);
+  });
+  return {headline,minor};
+}
+function axisTag(o){
+  let ovrSum=0,cashSum=0;
+  o.roll.forEach(rl=>{
+    ovrSum+=Math.abs(ovrDelta(rl.eff));
+    let c=0;
+    if(rl.cash) c+=Math.abs(rl.cash)/18000;
+    if(rl.cashMult) c+=rl.cashMult*110;
+    if(rl.cap) c+=Math.abs(rl.cap)*38;
+    cashSum+=c;
+  });
+  if(cashSum>ovrSum*1.15) return {cls:"cash",label:"Juego de plata"};
+  if(ovrSum>cashSum*1.15) return {cls:"ovr",label:"Juego de gestión"};
+  return null;
+}
+function rankOf(o){
+  let r=RANKS[0],i=0;
+  RANKS.forEach((x,j)=>{if(o>=x.min){r=x;i=j;}});
+  const out={...r,i};
+  // en la franja C el título sale de tu área: no es lo mismo un CFO que un CTO
+  if(i===6 && S && S.area && CSUITE[S.area]){
+    out.n=CSUITE[S.area].n; out.s=CSUITE[S.area].s; out.full=CSUITE[S.area].full;
+  }
+  if(S && S.esCEO && i>=6){ out.n="CEO"; out.s="CEO"; out.full="Chief Executive Officer"; }
+  return out;
+}
+
+/* ================= FLUJO ================= */
+function initSetup(){ S={phase:"setup",gender:"H",apellido:"",lane:null,origin:null,pace:PACE}; render(); }
+
+function startCareer(){
+  const o=ORIGINS.find(x=>x.id===S.origin);
+  const st={...o.stats};
+  const comp={};
+  // ruido: dos partidas con el mismo origen no son iguales
+  for(const k in o.comp) comp[k]=clamp(o.comp[k]+rndInt(-7,7));
+  for(const k in st) st[k]=clamp(st[k]+rndInt(-3,3));
+  S={...S, phase:"offer", stats:st, comp,
+    area:null, riesgo:S.lane==="izq"?12:4, rep:o.rep-(S.lane==="izq"?6:0),
+    vigencia:100, extensiones:0, shockYear:-99, lastEventAge:-99,
+    tierBonus:0, age:22, cash:o.cash, salary:18000,
+    company:null, rows:[], awards:[], layoffs:0, rounds:0, exits:0, sinceMarket:0,
+    perf:50, badYears:0, press:null, warn:null, choice:null, flash:null, displayOvr:0, esCEO:false, milestones:[],
+    blockStart:23, blockYears:0, pendingMarks:[],
+    ended:false, endReason:null, endApplied:false, fired:false,
+    rank:rankOf(0), offers:makeOffers(1,3)};
+  S.rank=rankOf(computeOvr());
+  S.displayOvr=computeOvr();
+  render();
+}
+
+/* una oferta = empresa + puesto abierto + estado oculto */
+function makeOffers(tier,n,exclude){
+  let pool=COMPANIES.filter(c=>c.t===tier&&(!exclude||c.n!==exclude.n));
+  if(pool.length<n) pool=COMPANIES.filter(c=>c.t<=tier&&(!exclude||c.n!==exclude.n));
+  const out=[];
+  while(out.length<n&&pool.length){
+    const co=pool.splice(Math.floor(Math.random()*pool.length),1)[0];
+    const salud=rndInt(25,95);
+    // el rumor a veces miente
+    const real=salud>=65?"bien":salud>=42?"regular":"mal";
+    const shown=Math.random()<.25 ? rnd(["bien","regular","mal"]) : real;
+    out.push({...co, area:rnd(co.areas), salud, rumor:rnd(RUMORS[shown])});
+  }
+  return out;
+}
+function accessibleTier(){
+  const o=computeOvr();
+  const repCap=S.rep<18?2:S.rep<32?3:4;
+  const vigCap=S.vigencia<20?1:S.vigencia<40?2:S.vigencia<60?3:5;
+  const byOvr=o>=76?4:o>=58?3:o>=38?2:1;
+  const base=Math.min(byOvr,repCap,vigCap);
+  if(S.extensiones>=1&&o>=84&&S.vigencia>=55) return 5;
+  return Math.max(1,base);
+}
+function pickCompany(i){
+  S.flash=null;
+  if(i===-1&&!S.company) i=0;
+  if(i===-1){
+    // quedarse no es gratis: te pueden reubicar en un área que no es la tuya
+    const otras=S.company.areas.filter(a=>a!==S.area);
+    if(otras.length && Math.random()<.28){
+      const nueva=rnd(otras);
+      S.warn=`<b>Reestructuración.</b> ${S.company.n} disolvió tu área y te reubicó en ${areaById(nueva).n.toLowerCase()}. No te preguntaron.`;
+      S.area=nueva; S.badYears=0;
+    } else S.warn=null;
+  }
+  if(i!==-1){
+    const c=S.offers[i];
+    S.company={...c};
+    S.area=c.area;
+    S.tierBonus=(c.t-1)*4;
+    const rankNow=rankOf(computeOvr());
+    S.salary=salaryFor(S.company,S.area,rankNow);
+    S.badYears=0; S.fired=false; S.warn=null;
+  }
+  S.sinceMarket=0;
+  S.blockStart=S.age+1; S.blockYears=0; S.pendingMarks=[];
+  S.rank=rankOf(computeOvr());
+  advanceYear();
+}
+
+function advanceYear(){
+  S.age++; S.sinceMarket++;
+  const marks=[];
+
+  /* --- rendimiento del año en el puesto que ocupás --- */
+  const c=S.comp[S.area];
+  const gen=(S.stats.vision+S.stats.ejecucion+S.stats.carisma+S.stats.rosca)/4;
+  const exigencia=S.company.t*6 + S.rank.i*1.5;     // el cargo también sube la vara
+  const suerte=rndInt(-12,12);
+  S.perf=clamp(28 + c*.60 + gen*.45 + suerte - exigencia);
+
+  if(S.perf>=58){
+    S.comp[S.area]=clamp(S.comp[S.area]+(S.perf>=72?rndInt(3,6):rndInt(1,3)));
+    S.stats.ejecucion=clamp(S.stats.ejecucion+rndInt(1,2));
+    if(S.perf>=72){ S.rep=clamp(S.rep+2); S.stats.vision=clamp(S.stats.vision+1); }
+    // los años excepcionales dejan prestigio acumulado: la única vía al 90+
+    if(S.perf>=74){ S.tierBonus=clamp(S.tierBonus+1,34); S.stats.rosca=clamp(S.stats.rosca+1); }
+    S.badYears=0;
+  }else if(S.perf>=34){
+    S.comp[S.area]=clamp(S.comp[S.area]+rndInt(0,2));
+    S.badYears=0;
+  }else{
+    S.badYears++;
+    marks.push("🔻");
+    S.rep=clamp(S.rep-1.5);
+  }
+
+  /* lo que no usás se oxida */
+  for(const k in S.comp){ if(k!==S.area) S.comp[k]=Math.max(0,S.comp[k]-0.32); }
+
+  /* crecimiento general */
+  const g=S.lane==="izq"?1.2:1;
+  S.stats.vision=clamp(S.stats.vision+Math.round(rndInt(0,2)*g));
+  S.stats.carisma=clamp(S.stats.carisma+rndInt(0,2));
+  S.stats.rosca=clamp(S.stats.rosca+Math.round(rndInt(0,2)*g));
+  S.riesgo=clamp(S.riesgo+(S.lane==="izq"?rndInt(0,2):-1));
+  S.rep=clamp(S.rep+(S.rep<45?1.6:-.3));
+  if(S.age>52) S.vigencia=clamp(S.vigencia-(0.8+(S.age-52)*0.06));
+  if(S.rep>78) S.vigencia=clamp(S.vigencia+1);
+
+  /* plata: el sueldo converge hacia lo que el puesto actual pagaría hoy */
+  const salaryTarget=salaryFor(S.company,S.area,S.rank);
+  S.salary=Math.round(S.salary*.6 + salaryTarget*.4);
+  S.salary=Math.round(S.salary*(1+.02+S.perf/2200));
+  S.cash+=S.salary*Math.max(.12,(.50-S.rank.i*.035)+Math.random()*.18);
+
+  /* la empresa tiene vida propia */
+  S.company.salud=clamp(S.company.salud + rndInt(-7,6) + (S.perf-50)/12);
+  const drift=(S.perf-50)/420+(S.company.salud-50)/700+(Math.random()-.45)*.12;
+  S.company.cap=Math.max(.05,S.company.cap*(1+drift));
+
+  if(Math.random()<.12){S.rounds++;S.company.cap*=1.28;marks.push("💵");}
+  if(Math.random()<.07){S.layoffs++;marks.push("✂️");S.stats.carisma=clamp(S.stats.carisma-3);S.rep=clamp(S.rep-6);}
+  if(Math.random()<.045&&computeOvr()>68&&!S.awards.includes("forbes")){S.awards.push("forbes");S.rep=clamp(S.rep+8);marks.push("📰");}
+  if(S.company.cap>1000&&S.company.t<=2&&!S.awards.includes("unicornio")){S.awards.push("unicornio");S.rep=clamp(S.rep+6);marks.push("🦄");}
+  if(S.rep>=88&&!S.awards.includes("querido"))S.awards.push("querido");
+  if(S.rep<=12&&!S.awards.includes("odiado"))S.awards.push("odiado");
+
+  const prevRank=S.rank.i;
+  const prevName=S.rank.n;
+  S.rank=rankOf(computeOvr());
+  if(S.rank.i>prevRank){
+    marks.push("⬆️");
+    const c=S.rank.i>=6;
+    pushMilestone({
+      tone:c?"gold":"good", ic:c?"👑":"⬆️",
+      kick:c?"Llegaste a la franja C":"Ascenso",
+      title:S.rank.n,
+      badge:S.rank.band||null, badgeBg:"#2e2416", badgeCol:"#e0b860",
+      sub:c?`${S.rank.full||S.rank.n} de ${S.company.n}. Arriba tuyo ya casi no queda nadie, y todo lo que pase de acá en adelante lleva tu firma.`
+           :`Pasaste de ${prevName.toLowerCase()} a ${S.rank.n.toLowerCase()} en ${S.company.n}. Más sueldo, más exigencia y menos excusas.`,
+      cta:"Seguir"});
+  }
+
+  /* golpes */
+  if(S.age-S.shockYear>6){
+    const sh=rollShock();
+    if(sh){
+      S.shockYear=S.age;
+      applyEff(sh.eff); if(sh.cash) S.cash+=sh.cash;
+      marks.push(sh.mark); S.rank=rankOf(computeOvr());
+      S.press={outlet:rnd(OUTLETS),head:sh.head,react:sh.react};
     }
-  </script>
+  }
+
+  S.pendingMarks.push(...marks);
+  S.blockYears++;
+
+  /* finales: se vuelca la fila antes de cerrar */
+  if(S.riesgo>=80&&Math.random()<(S.riesgo-72)/100){ flushRow(); return endGame("carcel"); }
+  if(S.cash<-1200000){ flushRow(); return endGame("bancarrota"); }
+  if(S.rep<=4&&Math.random()<.10){ flushRow(); return endGame("cancelado"); }
+  if(S.vigencia<=4){ flushRow(); return endGame("obsolescencia"); }
+  if(S.age>=RETIRE_AGES[Math.min(S.extensiones,RETIRE_AGES.length-1)]){ flushRow(); S.phase="longevity"; render(); return; }
+
+  /* te echan: por rendimiento o porque la empresa se cae */
+  const crisis = S.company.salud<=20 && Math.random()<.45;
+  if(S.badYears>=3 || crisis){ flushRow(); return fireEmployee(crisis); }
+
+  /* una decisión cada N años según el ritmo: los años intermedios se agrupan */
+  const cad={int:1,nor:2,exp:3}[S.pace];
+  if(S.blockYears>=cad){ flushRow(); return nextDecision(); }
+  return advanceYear();
+}
+function applyEff(eff){
+  for(const k in (eff||{})){
+    if(k==="ovr") S.tierBonus=clamp(S.tierBonus+eff.ovr,34);
+    else if(k==="riesgo") S.riesgo=clamp(S.riesgo+eff.riesgo);
+    else if(k==="rep") S.rep=clamp(S.rep+eff.rep);
+    else if(k==="vigencia") S.vigencia=clamp(S.vigencia+eff.vigencia);
+    else if(S.stats[k]!==undefined) S.stats[k]=clamp(S.stats[k]+eff[k]);
+  }
+}
+function rollShock(){
+  const pool=SHOCKS.filter(s=>S.age>=s.min&&(!s.needRiesgo||S.riesgo>=s.needRiesgo)&&(!s.needLayoffs||S.layoffs>=s.needLayoffs));
+  for(const s of pool){ if(Math.random()<s.p) return s; }
+  return null;
+}
+function fireEmployee(crisis){
+  S.fired=true; S.badYears=0;
+  S.rep=clamp(S.rep-(crisis?4:10));
+  S.tierBonus=clamp(S.tierBonus-4,30);
+  const last=S.rows[S.rows.length-1];
+  if(last) last.marks.push("🚪");
+  S.blockStart=S.age+1; S.blockYears=0; S.pendingMarks=[];
+  pushMilestone(crisis
+    ? {tone:"bad", ic:"🏚️", kick:"Se cayó la empresa", title:S.company.n,
+       badge:"Fin del área", badgeBg:"#2a1418", badgeCol:"#e08a94",
+       sub:"Entró en crisis y desarmó tu área. No fue tu culpa, pero el que se queda sin puesto sos vos.", cta:"Buscar trabajo"}
+    : {tone:"bad", ic:"🚪", kick:"Te echaron", title:"Fin del ciclo",
+       badge:areaById(S.area).n, badgeBg:"#2a1418", badgeCol:"#e08a94",
+       sub:`Tres años flojos en ${areaById(S.area).n.toLowerCase()} y el board decidió que el problema eras vos.`, cta:"Buscar trabajo"});
+  S.warn = crisis
+    ? `<b>La empresa se cayó.</b> ${S.company.n} entró en crisis y desarmó tu área. No es tu culpa, pero el que se queda sin puesto sos vos.`
+    : `<b>Te echaron.</b> Tres años flojos en ${areaById(S.area).n.toLowerCase()} y el board decidió que el problema eras vos.`;
+  // el mercado te trata peor: un tier menos y puestos que quizás no te sirven
+  const t=Math.max(1, accessibleTier()-1);
+  S.offers=makeOffers(t,3,S.company);
+  S.company=null; S.area=null; S.sinceMarket=0;
+  S.phase="offer"; render();
+}
+function flushRow(){
+  if(!S.blockYears) return;
+  S.rows.push({age:S.blockStart, years:S.blockYears, co:S.company, area:S.area,
+    rank:S.rank, ovr:computeOvr(), cap:S.company?S.company.cap:0,
+    rep:Math.round(S.rep), perf:S.perf, marks:S.pendingMarks});
+  S.blockStart=S.age+1; S.blockYears=0; S.pendingMarks=[];
+}
+function nextDecision(){
+  const cad={int:1,nor:2,exp:3}[S.pace];
+  const gap=S.age-S.lastEventAge;
+  const canEvent = gap>=3+cad;
+  const r=Math.random();
+  if(canEvent && r<.26){
+    const pool=EVENTS.filter(e=>(!e.min||S.age>=e.min)&&(!e.minOvr||computeOvr()>=e.minOvr));
+    // si ya estás arriba, las oportunidades grandes aparecen más seguido
+    const elite=pool.filter(e=>e.minOvr);
+    const pick = (elite.length && Math.random()<.45) ? rnd(elite) : rnd(pool);
+    if(pool.length){ S.choice={kind:"event",...pick}; S.phase="choice"; render(); return; }
+  }
+  if(canEvent && r<.34){
+    const opts=[...FOCI].sort(()=>Math.random()-.5).slice(0,2);
+    S.choice={kind:"focus",t:"Foco del período",s:"Todo lo que elijas te va a costar otra cosa.",o:opts};
+    S.phase="choice"; render(); return;
+  }
+  S.offers=makeOffers(accessibleTier(),2,S.company);
+  S.phase="offer"; render();
+}
+function resolveChoice(i){
+  S.flash=null;
+  const o=S.choice.o[i];
+  let r=o.roll[0],acc=0,x=Math.random()*100;
+  for(const cand of o.roll){ acc+=cand.p; if(x<=acc){ r=cand; break; } }
+  // la tirada se muestra: alterna entre los resultados y frena en el que salió
+  S.rolling={oi:i, ri:o.roll.indexOf(r), cur:0, spins:0};
+  S.phase="rolling";
+  render();
+  spinTick();
+}
+function spinTick(){
+  const R=S.rolling; if(!R) return;
+  const o=S.choice.o[R.oi], n=o.roll.length;
+  const cards=document.querySelectorAll(".offer.spinning .outcome");
+  cards.forEach((c,j)=>{
+    c.classList.remove("lit","win","lose");
+    if(j===R.cur){
+      const d=ovrDelta(o.roll[j].eff);
+      c.classList.add("lit", d>=0?"win":"lose");
+    }
+  });
+  R.spins++;
+  const total=9+R.ri;
+  if(R.spins>total && R.cur===R.ri){
+    setTimeout(()=>applyChoice(R.oi,R.ri),600);
+    return;
+  }
+  R.cur=(R.cur+1)%n;
+  setTimeout(spinTick, 70+R.spins*R.spins*1.6);
+}
+function applyChoice(oi,ri){
+  const o=S.choice.o[oi], r=o.roll[ri];
+  S.rolling=null;
+  const cross=o.lane&&o.lane!==S.lane;
+  const ovrAntes=computeOvr();
+  const mets=metrics(r);
+  applyEff(r.eff);
+  if(r.cash) S.cash+=r.cash;
+  if(r.cashMult&&S.company) S.cash+=S.company.cap*1e6*r.cashMult;
+  if(r.cap&&S.company) S.company.cap=Math.max(.05,S.company.cap*(1+r.cap));
+  if(r.layoffs) S.layoffs+=r.layoffs;
+  if(r.exit){S.exits++; if(!S.awards.includes("exit"))S.awards.push("exit");}
+  if(r.ipo&&!S.awards.includes("ipo"))S.awards.push("ipo");
+  if(r.oracle&&!S.awards.includes("oraculo"))S.awards.push("oraculo");
+  if(r.ceo) S.esCEO=true;
+  const last=S.rows[S.rows.length-1];
+  if(last){ if(r.mark) last.marks.push(r.mark); last.rep=Math.round(S.rep); if(S.company) last.cap=S.company.cap; }
+  if(r.head) S.press={outlet:rnd(OUTLETS),head:r.head,react:reaction(r,o)};
+  if(cross){
+    S.riesgo=clamp(S.riesgo+14); S.rep=clamp(S.rep-7);
+    if(S.press) S.press.react="Te saliste de tu propio libreto y eso, tarde o temprano, alguien lo anota.";
+  }
+  const dOvr=computeOvr()-ovrAntes;
+  S.flash={good:dOvr>=0, title:(o.chips[ri]||{}).l||o.n, mets};
+  S.choice=null; S.lastEventAge=S.age;
+  S.rank=rankOf(computeOvr());
+  if(S.riesgo>=88&&Math.random()<.35) return endGame("carcel");
+  advanceYear();
+}
+function reaction(r,o){
+  const d=(r.eff&&r.eff.rep)||0;
+  if(d>=14) return "La opinión pública te acompaña. Por ahora.";
+  if(d>=5) return "Buena repercusión, del tipo que no dura.";
+  if(d<=-18) return "Los comentarios están imposibles. Ya hay un hilo con capturas.";
+  if(d<=-5) return "Repercusión negativa moderada, se olvida en dos semanas.";
+  return "Nadie opinó demasiado, que a veces es lo mejor que puede pasar.";
+}
+function finalKind(){
+  if(S.extensiones>=4) return "eterno";
+  if(S.extensiones>=1) return "longevo";
+  if(S.awards.includes("oraculo")) return "substack";
+  if(S.rep>=82&&S.company&&S.company.t>=3) return "fama";
+  if(S.cash<0) return "bancarrota";
+  return "jubilacion";
+}
+function buyExtension(){
+  const cost=EXT_COSTS[Math.min(S.extensiones,EXT_COSTS.length-1)];
+  if(S.cash<cost) return;
+  S.cash-=cost; S.extensiones++;
+  S.vigencia=clamp(S.vigencia+28); S.riesgo=clamp(S.riesgo+4);
+  const e=EXT_NAMES[Math.min(S.extensiones-1,EXT_NAMES.length-1)];
+  S.press={outlet:"Instituto de Continuidad",head:`Accede a ${e.n.toLowerCase()} y continúa al frente de la compañía`,
+    react:"Los mercados lo celebraron. Tus nietos, un poco menos."};
+  S.phase="living"; nextDecision();
+}
+/* hitos: ascensos, despidos, caídas de empresa */
+function pushMilestone(m){ S.milestones.push(m); }
+function renderOverlay(){
+  const ov=document.getElementById("overlay");
+  if(!ov) return;
+  if(!S || !S.milestones || !S.milestones.length){ ov.innerHTML=""; return; }
+  const m=S.milestones[0];
+  ov.innerHTML=`<div class="overlay" onclick="closeMilestone(event)">
+    <div class="mile ${m.tone}" onclick="event.stopPropagation()">
+      <div class="rays"></div>
+      <div class="ic">${m.ic}</div>
+      <div class="kick">${m.kick}</div>
+      <h3>${m.title}</h3>
+      ${m.badge?`<div class="badge2" style="background:${m.badgeBg};color:${m.badgeCol}">${m.badge}</div>`:""}
+      <p class="sub">${m.sub}</p>
+      <button class="btn" onclick="closeMilestone(event,true)">${m.cta||"Seguir"}</button>
+    </div></div>`;
+}
+function closeMilestone(e,force){
+  if(e) e.stopPropagation();
+  S.milestones.shift();
+  renderOverlay();
+}
+function endGame(kind){ S.ended=true; S.endReason=kind; S.phase="end"; render(); }
+
+/* ================= LANDING ART ================= */
+const LANDING_ART=`<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+  <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1c3a28"/><stop offset="1" stop-color="#0f1a14"/></linearGradient></defs>
+  <rect width="320" height="240" fill="url(#lg)"/>
+  <g opacity=".35" fill="#3fb950">
+    <rect x="24" y="150" width="30" height="70"/><rect x="62" y="120" width="30" height="100"/>
+    <rect x="100" y="164" width="30" height="56"/><rect x="138" y="96" width="30" height="124"/>
+    <rect x="176" y="132" width="30" height="88"/><rect x="214" y="70" width="30" height="150"/>
+    <rect x="252" y="110" width="30" height="110"/></g>
+  <path d="M24 190L62 150 100 176 138 118 176 148 214 88 252 122 290 58" fill="none" stroke="#5fd07f" stroke-width="3"/>
+  <g fill="#e6ece9" font-family="Inter,sans-serif" font-weight="800">
+    <text x="26" y="52" font-size="34" opacity=".22">EBITDA</text>
+    <text x="150" y="34" font-size="22" opacity=".16">Q4</text>
+    <text x="196" y="212" font-size="18" opacity=".16">CEO</text></g>
+  <circle cx="290" cy="58" r="7" fill="#c9a227"/></svg>`;
+
+/* ================= RENDER ================= */
+function render(){
+  const b=document.getElementById("board"), f=document.getElementById("foot");
+  document.getElementById("gameName").textContent=GAME.name;
+  document.getElementById("gameTag").textContent=GAME.tagline;
+  document.title=GAME.name.toUpperCase()+" — "+GAME.tagline;
+  f.innerHTML="Todas las empresas, marcas y personas son ficticias. Cualquier parecido con la realidad es responsabilidad de la realidad.";
+  if(!S){
+    b.style.gridTemplateColumns="1fr";
+    b.innerHTML=`<div class="landing"><div class="art">${LANDING_ART}</div>
+      <div class="pitch"><div class="eyebrow">Minijuegos</div><h2>${GAME.hero}</h2><p>${GAME.pitch}</p>
+      <div class="paces">${PACES.map(p=>`<button class="pace ${PACE===p.id?'on':''}" onclick="PACE='${p.id}';render()">${p.n}</button>`).join("")}</div>
+      <div class="pacehint">${PACES.find(p=>p.id===PACE).d}</div>
+      <button class="btn" onclick="initSetup()">Comenzar carrera</button></div></div>`;
+    return;
+  }
+  if(S.phase==="setup"){ b.style.gridTemplateColumns="1fr"; b.innerHTML=renderSetup(); return; }
+  b.style.gridTemplateColumns="";
+  b.innerHTML=`<div>${S.phase==="end"?renderEnd():renderLeft()}</div><div>${renderTimeline()}</div>`;
+  tickOvr();
+  renderOverlay();
+}
+
+/* el OVR sube o baja de a uno, para que la decisión se sienta */
+function tickOvr(){
+  const target=computeOvr();
+  const el=document.getElementById("ovrNum");
+  if(!el){ S.displayOvr=target; return; }
+  const box=el.closest(".ovrblock");
+  if(S.displayOvr===undefined) S.displayOvr=target;
+  if(S.displayOvr===target){ if(box) box.classList.remove("rising","falling"); return; }
+  if(box) box.classList.add(target>S.displayOvr?"rising":"falling");
+  const step=()=>{
+    if(!document.getElementById("ovrNum")) return;
+    if(S.displayOvr===target){
+      if(box){ box.classList.remove("rising","falling","ticking"); }
+      return;
+    }
+    S.displayOvr += S.displayOvr<target?1:-1;
+    const n=document.getElementById("ovrNum");
+    n.textContent=S.displayOvr;
+    if(box){
+      box.style.background=`linear-gradient(160deg,${ovrColor(S.displayOvr)},#5c4614)`;
+      box.classList.add("ticking");
+      setTimeout(()=>box.classList.remove("ticking"),90);
+    }
+    setTimeout(step,70);
+  };
+  setTimeout(step,180);
+}
+
+function renderSetup(){
+  const ready=S.apellido.trim()&&S.lane&&S.origin;
+  const o=ORIGINS.find(x=>x.id===S.origin);
+  const preview=(S.origin&&S.lane)?avatarSVG():`<svg viewBox="0 0 100 120"><circle cx="50" cy="52" r="22" fill="#2a322e"/><path d="M50 78c-16 0-28 10-30 24h60c-2-14-14-24-30-24z" fill="#2a322e"/></svg>`;
+  return `<div class="setup"><h2>Definí tu perfil</h2>
+    <div class="setupgrid">
+      <div class="col"><h4>Identidad</h4>
+        <div class="avatar"><div class="frame">${preview}</div>
+          <div class="nm">${S.apellido.trim().toUpperCase()||"APELLIDO"}</div>
+          <div class="rl">${o?o.n.split(" ")[0].toUpperCase():"SIN ORIGEN"}</div></div>
+        <div class="field"><label>Apellido</label>
+          <input value="${S.apellido}" maxlength="14" placeholder=""
+            oninput="S.apellido=this.value;document.querySelector('.avatar .nm').textContent=this.value.trim().toUpperCase()||'APELLIDO';syncReady()"></div>
+        <div class="field"><label>Género</label><div class="toggle">
+          <button class="${S.gender==='H'?'on':''}" onclick="S.gender='H';render()">Hombre</button>
+          <button class="${S.gender==='M'?'on':''}" onclick="S.gender='M';render()">Mujer</button></div></div>
+        <div class="field"><label>Carril</label><div class="toggle">
+          <button class="${S.lane==='der'?'on der':''}" onclick="S.lane='der';render()">Derecha</button>
+          <button class="${S.lane==='izq'?'on izq':''}" onclick="S.lane='izq';render()">Izquierda</button>
+          <div class="hint">${S.lane==='izq'?"Cueste lo que cueste. Crecés más rápido y acumulás riesgo legal.":S.lane==='der'?"Todo legal. Crecés más lento pero dormís de noche.":"Derecha es todo legal. Izquierda es cueste lo que cueste."}</div>
+        </div></div>
+        <div class="field"><label>Ritmo elegido</label>
+          <div style="background:#111513;border:1px solid var(--line);border-radius:7px;padding:9px;text-align:center;font-size:.72rem;font-weight:700;color:var(--muted)">${PACES.find(p=>p.id===PACE).n}</div></div>
+      </div>
+      <div class="col"><h4>Origen</h4>
+        <div class="origins">${ORIGINS.map(x=>`
+          <div class="origin ${S.origin===x.id?'on':''}" tabindex="0" onclick="S.origin='${x.id}';render()">
+            <div class="ic">${x.ic}</div><div class="tx"><b>${x.n}</b><small>${x.d}</small></div><div class="ck">✓</div>
+          </div>`).join("")}</div>
+      </div>
+      <div class="col"><h4>Competencias</h4>
+        <div class="compbox"><h5>Con qué salís a la cancha</h5>
+          ${o?AREAS.map(a=>{
+            const v=o.comp[a.id], b=fitBand(v);
+            return `<div class="comprow"><div class="k">${a.n}</div>
+              <div class="bar"><div class="fill" style="width:${v}%;background:${v>=58?'#3fb950':v>=38?'#8a9c3f':v>=20?'#e0a030':'#d1495b'}"></div></div>
+              <div class="bd" style="color:${v>=58?'#5fd07f':v>=38?'#b0c060':v>=20?'#e0a030':'#e07a86'}">${b.l.split(" ")[0]}</div></div>`;
+          }).join(""):`<div class="compnote">Elegí un origen para ver con qué arrancás.</div>`}
+          ${o?`<div class="compnote">No elegís tu área: las empresas abren los puestos que necesitan. Vas a tener que aceptar alguno que te quede grande.</div>`:""}
+        </div>
+      </div>
+    </div>
+    <div class="setupfoot">
+      <button class="btn ghost" onclick="S=null;render()">Volver</button>
+      <button class="btn" id="go" ${ready?'':'disabled'} onclick="startCareer()">Confirmar perfil</button>
+    </div></div>`;
+}
+function syncReady(){const g=document.getElementById("go");if(g)g.disabled=!(S.apellido.trim()&&S.lane&&S.origin);}
+
+function renderLeft(){
+  const r=S.rank, ov=computeOvr();
+  const repShort=S.rep>=72?"Bien visto":S.rep>=42?"Neutro":S.rep>=20?"Cuestionado":"Villano";
+  return `
+    <div class="identity">
+      <div class="ovrblock" style="background:linear-gradient(160deg,${ovrColor(ov)},#5c4614);color:#12100c">
+        <small>OVR</small><b id="ovrNum">${S.displayOvr!==undefined?S.displayOvr:ov}</b><div class="rk">${r.n}</div></div>
+      <div class="avatarbox" onclick="openStats()">${avatarSVG()}<div class="tap">Ver stats</div></div>
+      <div class="namecard">
+        <div class="tags">
+          ${S.rank.band?`<span class="tag band">${S.rank.band}</span>`:""}
+          ${S.area?`<span class="tag role">${areaById(S.area).n}</span>`:""}
+        </div>
+        ${S.company?`<div class="company">${logo(S.company)}<span>${S.company.n}</span></div>`:`<div class="company none">Sin empleo</div>`}
+        <div class="agebox"><div class="lbl">Edad</div><div class="val">${S.age}</div></div>
+      </div>
+    </div>
+    <div class="hero-money">
+      <div><div class="lbl">Patrimonio</div><div class="val ${S.cash<0?'bad':''}">${money(S.cash)}</div></div>
+      <div style="text-align:right"><div class="lbl">Salario anual</div><div class="val salsm">${S.company?money(S.salary):"—"}</div></div>
+    </div>
+    <div class="miniline">
+      <span><span class="dot" style="background:${repColor(Math.round(S.rep))}"></span>Reputación: <b style="color:${repColor(Math.round(S.rep))}">${repShort}</b></span>
+      <span onclick="openStats()" style="cursor:pointer;text-decoration:underline;text-decoration-style:dotted;">más stats</span>
+    </div>
+    ${renderCase()}
+    ${S.flash?renderFlash():""}
+    ${S.warn?`<div class="warnbox">${S.warn}</div>`:""}
+    ${S.press?renderPress():""}${renderDecision()}`;
+}
+function openStats(){
+  const pop=document.getElementById("statspop");
+  if(!pop||!S) return;
+  const A=[["Visión","vision","#5f9ad0"],["Ejecución","ejecucion","#3fb950"],["Carisma","carisma","#e0a030"],["Rosca","rosca","#8a5fd0"]];
+  const p=S.perf, pc=p>=58?"#3fb950":p>=34?"#e0a030":"#d1495b";
+  const pl=p>=72?"Te destacás":p>=58?"Cumplís":p>=34?"Justito":"No das el ancho";
+  const r=Math.round(S.rep);
+  pop.innerHTML=`<div class="overlay" onclick="closeStats(event)">
+    <div class="statspop" onclick="event.stopPropagation()">
+      <h4>Radiografía</h4>
+      ${S.company?`<div class="row2"><div class="k">Rendimiento</div><div class="bar"><div class="fill" style="width:${p}%;background:${pc}"></div></div><div class="n" style="color:${pc}">${pl.split(' ')[0]}</div></div>`:""}
+      <div class="row2"><div class="k">Reputación</div><div class="bar"><div class="fill" style="width:${r}%;background:${repColor(r)}"></div></div><div class="n">${r}</div></div>
+      <div class="div"></div>
+      ${A.map(([l,k,c])=>`<div class="row2"><div class="k">${l}</div><div class="bar"><div class="fill" style="width:${S.stats[k]}%;background:${c}"></div></div><div class="n">${S.stats[k]}</div></div>`).join("")}
+      <div class="row2"><div class="k" style="color:var(--red)">Riesgo legal</div><div class="bar"><div class="fill" style="width:${S.riesgo}%;background:var(--red)"></div></div><div class="n">${S.riesgo}</div></div>
+      <div class="row2"><div class="k" style="color:#60d0c0">Vigencia</div><div class="bar"><div class="fill" style="width:${Math.round(S.vigencia)}%;background:#60d0c0"></div></div><div class="n">${Math.round(S.vigencia)}</div></div>
+      <div class="div"></div>
+      <div class="row2"><div class="k">Rondas</div><div class="n" style="width:auto">${S.rounds}</div></div>
+      <div class="row2"><div class="k">Despidos hechos</div><div class="n" style="width:auto">${S.layoffs}</div></div>
+      <button class="btn ghost close" onclick="closeStats(event)">Cerrar</button>
+    </div></div>`;
+}
+function closeStats(e){ if(e) e.stopPropagation(); const pop=document.getElementById("statspop"); if(pop) pop.innerHTML=""; }
+function renderFlash(){
+  const f=S.flash;
+  return `<div class="flash ${f.good?'good':'bad'}"><div class="fh">${f.title}</div>
+    <div class="fm">${f.mets.map(m=>`<span class="met ${m.c}">${m.t}</span>`).join("")}</div></div>`;
+}
+function renderPerf(){
+  const p=S.perf;
+  const c=p>=58?"#3fb950":p>=34?"#e0a030":"#d1495b";
+  const l=p>=72?"Te destacás":p>=58?"Cumplís":p>=34?"Justito":"No das el ancho";
+  return `<div class="perfbox"><span class="lbl">Rendimiento</span>
+    <div class="track"><div class="fill" style="width:${p}%;background:${c}"></div></div>
+    <span class="v" style="color:${c}">${l}</span></div>`;
+}
+function renderRep(){
+  const r=Math.round(S.rep);
+  const lbl=r>=88?"Ícono de la industria":r>=72?"Respetado":r>=56?"Bien visto":r>=42?"Neutro":r>=28?"Cuestionado":r>=14?"Polémico":"Villano de LinkedIn";
+  return `<div class="repbox"><div class="top"><span class="lbl">Reputación pública</span>
+      <span class="verdict" style="color:${repColor(r)}">${lbl} · ${r}</span></div>
+    <div class="track"><div class="fill" style="width:${r}%;background:${repColor(r)}"></div></div>
+    <div class="scale"><span>Villano</span><span>Neutro</span><span>Ícono</span></div></div>`;
+}
+function renderPress(){
+  return `<div class="press"><div class="outlet">${S.press.outlet}</div>
+    <div class="head">${S.press.head}</div><div class="react">${S.press.react}</div></div>`;
+}
+function renderCounters(){
+  return `<div class="counters">
+    <div class="counter"><div class="lbl">Market cap</div><div class="val" style="color:var(--money)">${S.company?capF(S.company.cap):"—"}</div></div>
+    <div class="counter"><div class="lbl">Rondas</div><div class="val">${S.rounds}</div></div>
+    <div class="counter"><div class="lbl">Despidos masivos</div><div class="val">${S.layoffs}</div></div></div>`;
+}
+function renderAttrs(){
+  const A=[["Visión","vision","#5f9ad0"],["Ejecución","ejecucion","#3fb950"],["Carisma","carisma","#e0a030"],["Rosca","rosca","#8a5fd0"]];
+  return `<div class="attrs">${A.map(([l,k,c])=>`<div class="attr"><div class="k">${l}</div>
+      <div class="bar"><div class="fill" style="width:${S.stats[k]}%;background:${c}"></div></div>
+      <div class="num">${S.stats[k]}</div></div>`).join("")}
+    <div class="attr"><div class="k" style="color:var(--red)">Riesgo legal</div>
+      <div class="bar"><div class="fill" style="width:${S.riesgo}%;background:var(--red)"></div></div>
+      <div class="num">${S.riesgo}</div></div>
+    <div class="attr"><div class="k" style="color:#60d0c0">Vigencia</div>
+      <div class="bar"><div class="fill" style="width:${Math.round(S.vigencia)}%;background:#60d0c0"></div></div>
+      <div class="num">${Math.round(S.vigencia)}</div></div></div>`;
+}
+function renderCase(){
+  if(!S.awards.length) return `<div class="case"><div class="empty">Sin reconocimientos</div></div>`;
+  return `<div class="case">${S.awards.map(a=>`<span class="badge ${a==='odiado'?'bad':''}">${AWARDS[a]}</span>`).join("")}</div>`;
+}
+function renderDecision(){
+  if(S.phase==="longevity") return renderLongevity();
+  if(S.phase==="rolling"){
+    const c=S.choice, o=c.o[S.rolling.oi];
+    return `<div class="decision"><h3>${c.t}</h3>
+      <div class="rolling-note">Definiendo…</div>
+      <div class="offers"><div class="offer spinning" style="grid-column:span 2">
+        <div class="kicker">${o.tag}</div><div class="ttl">${o.n}</div>
+        <div class="scene">${SCENES[o.scene]||""}</div>
+        <div class="outcomes">${o.roll.map((rl,j)=>{
+          const ch=o.chips[j]||{l:""}; const sp=splitMetrics(rl);
+          return `<div class="outcome"><div class="oc-head"><span>${ch.l}</span><b>${rl.p}%</b></div>
+            <div class="oc-big">${sp.headline.map(m=>`<span class="num ${m.c}">${m.t}</span>`).join("")}</div>
+            ${sp.minor.length?`<div class="oc-minor">${sp.minor.map(m=>m.t).join(" · ")}</div>`:""}</div>`;
+        }).join("")}</div>
+      </div></div></div>`;
+  }
+  if(S.phase==="choice"){
+    const c=S.choice;
+    return `<div class="decision"><h3>${c.t}</h3><p class="sub">${c.s}</p>
+      <div class="offers">${c.o.map((o,i)=>{
+        const cross=o.lane&&o.lane!==S.lane; const ax=axisTag(o);
+        return `<div class="offer ${cross?'cross':''}" tabindex="0" onclick="resolveChoice(${i})">
+          <div class="kicker">${cross?'⚠ Cruzar la línea':o.tag}</div>
+          <div class="ttl">${o.n}</div>
+          ${ax&&!cross?`<div class="axis-tag ${ax.cls}">${ax.label}</div>`:""}
+          <div class="scene">${SCENES[o.scene]||""}</div>
+          <div class="outcomes">${o.roll.map((rl,j)=>{
+            const ch=o.chips[j]||{l:""}; const sp=splitMetrics(rl);
+            return `<div class="outcome">
+              <div class="oc-head"><span>${ch.l}</span><b>${rl.p}%</b></div>
+              <div class="oc-big">${sp.headline.map(m=>`<span class="num ${m.c}">${m.t}</span>`).join("")}</div>
+              ${sp.minor.length?`<div class="oc-minor">${sp.minor.map(m=>m.t).join(" · ")}</div>`:""}
+            </div>`;
+          }).join("")}
+            ${cross?`<div class="outcome cross-note"><div class="oc-head"><span>Va contra tu carril</span><b>seguro</b></div>
+              <div class="oc-minor">+14 riesgo · -7 reputación</div></div>`:""}</div>
+        </div>`;}).join("")}</div></div>`;
+  }
+  const tn={1:"Pyme",2:"Scale-up",3:"Corporación",4:"Multinacional",5:"Post-humana"};
+  return `<div class="decision">
+    <h3>${S.company?"Mercado laboral":(S.fired?"Buscando trabajo":"Primer trabajo")}</h3>
+    <p class="sub">${S.company
+      ? "Puestos abiertos en otras empresas. Fijate si el puesto te sirve, no solo el nombre."
+      : (S.fired?"Con lo que pasó, esto es lo que hay.":"Nadie empieza arriba. Y el puesto lo elige la empresa, no vos.")}</p>
+    <div class="offers">
+      ${S.offers.map((c,i)=>{
+        const b=fitBand(S.comp[c.area]);
+        const rp=rankOf(previewOvr(c.area,c.t));
+        const salOff=salaryFor(c,c.area,rp);
+        const cur=S.company?S.salary:0;
+        const diff=salOff-cur;
+        return `<div class="offer" tabindex="0" onclick="pickCompany(${i})">
+          <div class="kicker">${c.n}</div>
+          <div class="post">Puesto <b>${areaById(c.area).n}</b></div>
+          <div class="sig">${logo(c,'lg')}</div>
+          <div class="sal ${diff<0?'down':''}">${money(salOff)}<small>al año${S.company?(diff>=0?" · +"+money(diff):" · "+money(diff)):""}</small></div>
+          <div class="chips">
+            <div class="chip fit-${b.k}"><span>${b.l}</span><b>${areaById(c.area).s}</b></div>
+            <div class="chip rumor"><span>${c.rumor}</span><b>${tn[c.t]}</b></div>
+          </div></div>`;}).join("")}
+      ${S.company?`<div class="offer stay" tabindex="0" onclick="pickCompany(-1)">
+        <div class="kicker">Quedarte en</div><div class="ttl">${S.company.n}</div>
+        <div class="sig">${logo(S.company,'lg')}</div>
+        <div class="sal">${money(S.salary)}<small>al año, sueldo actual</small></div>
+        <div class="chips"><div class="chip neutral"><span>Seguís en ${areaById(S.area).n.toLowerCase()}</span><b>${capF(S.company.cap)}</b></div></div>
+      </div>`:""}
+    </div></div>`;
+}
+function renderLongevity(){
+  const i=Math.min(S.extensiones,EXT_COSTS.length-1);
+  const cost=EXT_COSTS[i], e=EXT_NAMES[i];
+  const canPay=S.cash>=cost, last=S.extensiones>=EXT_COSTS.length;
+  return `<div class="decision"><h3>${S.age} años</h3>
+    <p class="sub">${S.extensiones===0?"Llegaste a la edad en que la gente se retira. Vos podés hacer otra cosa, si te alcanza.":`Llevás ${S.extensiones} ${S.extensiones===1?"extensión":"extensiones"}. El cuerpo aguanta lo que el patrimonio banque.`}</p>
+    <div class="offers">
+      ${!last?`<div class="offer ${canPay?'':'blocked'}" tabindex="0" ${canPay?'onclick="buyExtension()"':''}>
+        <div class="kicker">${canPay?'Comprar':'No te alcanza'}</div><div class="ttl">${e.n}</div>
+        <div class="scene">${SCENES.ai}</div>
+        <div class="chips"><div class="chip good"><span>▲ ${e.d}</span><b>${money(cost)}</b></div>
+        <div class="chip bad"><span>▼ Vigencia en caída</span><b>${Math.round(S.vigencia)}</b></div></div></div>`:""}
+      <div class="offer" tabindex="0" onclick="endGame(finalKind())">
+        <div class="kicker">Cerrar la carrera</div><div class="ttl">Retirarte</div>
+        <div class="scene">${SCENES.clock}</div>
+        <div class="chips"><div class="chip neutral"><span>Patrimonio final</span><b>${money(S.cash)}</b></div></div></div>
+      ${S.extensiones>=4?`<div class="offer stay" tabindex="0" onclick="endGame('voluntario')">
+        <div class="kicker">Última decisión</div><div class="ttl">Terminar por elección propia</div>
+        <div class="scene">${SCENES.door}</div>
+        <div class="chips"><div class="chip neutral"><span>Ya no queda nada por demostrarle a nadie</span><b>—</b></div></div></div>`:""}
+    </div></div>`;
+}
+
+const ENDINGS={
+  carcel:{stamp:"Prisión preventiva",color:"#d1495b",bg:"#2a1418",verdict:"Caíste en cana",
+    obit:"El juzgado dispuso prisión preventiva mientras avanza la causa. Los mismos medios que te pusieron en la portada ahora usan tu foto de LinkedIn con un filtro gris. El documental sale el año que viene y no vas a cobrar un peso por él."},
+  bancarrota:{stamp:"Concurso de acreedores",color:"#e05f30",bg:"#2a1c14",verdict:"Bancarrota",
+    obit:"Apalancaste todo contra una idea que no cerró. Vendiste el auto, después el departamento, después las acciones que valían cero igual. Ahora explicás en un pódcast que fracasar es aprender."},
+  cancelado:{stamp:"Salida forzada",color:"#8a5fd0",bg:"#1e1828",verdict:"Te bajaron el pulgar",
+    obit:"No hubo causa penal ni nada parecido. Un día dejaron de invitarte a las reuniones, después dejaron de contestarte, y en la foto del directorio ya no estabas."},
+  substack:{stamp:"Fama internacional",color:"#c9a227",bg:"#2a2414",verdict:"El oráculo",
+    obit:"Predijiste el crack y nadie te lo va a dejar olvidar. Armaste tu propio newsletter, cobrás una fortuna por hablar quince minutos en conferencias, y hace años que no gestionás absolutamente nada. Es el mejor negocio que hiciste en tu vida."},
+  fama:{stamp:"Fama internacional",color:"#3fb950",bg:"#132a1c",verdict:"Referente global",
+    obit:"Terminaste siendo la cara visible de una industria entera. Te invitan a paneles donde nadie entiende del todo qué hacés, pero todos aplauden. Tu apellido ya es un adjetivo en las notas de negocios."},
+  jubilacion:{stamp:"Jubilación",color:"#6a7570",bg:"#1c2220",verdict:"Te jubilaste",
+    obit:"Ni cárcel, ni gloria, ni quiebra. Una carrera entera, un reloj de regalo, y ahora tenés cuarenta años por delante para revisar el celular a las siete de la mañana esperando un mail que no va a llegar nunca. La peor de todas."},
+  longevo:{stamp:"Retiro tardío",color:"#60d0c0",bg:"#12282a",verdict:"Te retiraste con prórroga",
+    obit:"Compraste tiempo y lo gastaste todo en reuniones. Nadie de los que empezaron con vos llegó a ver esto, y los que quedan te tratan con esa amabilidad rara que se le tiene a los muebles antiguos."},
+  eterno:{stamp:"Continuidad indefinida",color:"#c0c0c8",bg:"#20222a",verdict:"Seguís",
+    obit:"Sobreviviste a tus competidores, a tus socios, a tu industria y a dos revoluciones tecnológicas completas. Ya nadie recuerda qué hacía la primera empresa donde trabajaste. Vos tampoco, del todo."},
+  obsolescencia:{stamp:"Fuera de vigencia",color:"#8a7a5a",bg:"#232018",verdict:"Te quedaste afuera",
+    obit:"No hubo despido ni escándalo. El sector siguió avanzando y en algún momento dejaste de entender de qué hablaban en las reuniones. Todavía te llegan las invitaciones a las conferencias, por costumbre."},
+  voluntario:{stamp:"Decisión propia",color:"#8ab0d0",bg:"#182028",verdict:"Cerraste la persiana vos",
+    obit:"Después de más de dos siglos de trimestres, elegiste el momento de bajar la cortina en vez de esperar a que otro la bajara por vos. Es la única reunión de tu vida entera que empezó puntual y terminó cuando vos quisiste."},
+};
+function renderEnd(){
+  const e=ENDINGS[S.endReason]||ENDINGS.jubilacion;
+  if(!S.endApplied){
+    if(S.endReason==="carcel"){S.cash=S.cash*.2-800000;S.rep=clamp(S.rep-50);}
+    if(S.endReason==="cancelado"){S.cash=S.cash*.7;}
+    if(S.endReason==="bancarrota"){S.cash=Math.min(S.cash,-50000);}
+    if(S.endReason==="substack"){S.cash+=2500000;S.rep=clamp(S.rep+12);}
+    S.endApplied=true;
+  }
+  return `
+    <div class="identity">
+      <div class="ovrblock" style="background:${e.bg};color:${e.color};border:1px solid ${e.color}33">
+        <small>FINAL</small><b>${computeOvr()}</b><div class="rk">${S.age} años</div></div>
+      <div class="avatarbox">${avatarSVG()}</div>
+      <div class="namecard">
+        <div class="tags"><span class="tag role">${S.rank.n}</span>
+          <span class="tag lane-${S.lane}">${S.lane==='izq'?'Por izquierda':'Por derecha'}</span></div>
+        ${S.company?`<div class="company">${logo(S.company)}<span>${S.company.n}</span></div>`:`<div class="company none">Sin empleo</div>`}
+        <div class="agebox"><div class="lbl">Terminó a los</div><div class="val">${S.age}</div></div>
+      </div>
+    </div>
+    <div class="endcard">
+      <div class="stamp" style="background:${e.bg};color:${e.color}">${e.stamp}</div>
+      <div class="netfinal ${S.cash<0?'bad':''}">${money(S.cash)}</div>
+      <div class="netlbl">Patrimonio final</div>
+      <div class="verdict">${e.verdict}</div>
+      <p class="obit">${e.obit}</p>
+    </div>
+    ${renderRep()}${renderCase()}
+    <div style="text-align:center;margin-top:14px;"><button class="btn" onclick="initSetup()">Otra carrera</button></div>`;
+}
+function renderTimeline(){
+  const cad={int:1,nor:2,exp:3}[S.pace||'int'];
+  const rows=S.rows.map((r,i)=>`
+    <div class="row ${i===S.rows.length-1&&!S.ended?'now':''}" style="animation-delay:${Math.min(i*14,240)}ms">
+      <div class="age">${r.years>1?r.age+"-"+(r.age+r.years-1):r.age}</div>
+      <div class="co">${logo(r.co)}<span>${r.co?r.co.n:"—"}</span>
+        <span class="postag">${r.area?areaById(r.area).s:""}</span>
+        <div class="marks">${r.marks.join("")}</div></div>
+      <div class="ov" style="background:${ovrColor(r.ovr)}22;color:${ovrColor(r.ovr)}">${r.ovr}</div>
+      <div class="rank" style="color:${rankColor(r.rank.i)}">${r.rank.s}</div>
+      <div class="rp" style="background:${repColor(r.rep)}22;color:${repColor(r.rep)}">${r.rep}</div>
+      <div class="cap">${capF(r.cap)}</div>
+    </div>`).join("");
+  const ghosts=!S.ended?Array.from({length:Math.max(0,16-S.rows.length)},(_,i)=>`
+    <div class="row ghost"><div class="age">${(S.age||22)+1+i*cad}</div><div class="co"><span>—</span></div>
+    <div class="ov"></div><div class="rank"></div><div class="rp"></div><div class="cap"></div></div>`).join(""):"";
+  return `<div class="timeline">
+    <div class="thead"><span>Edad</span><span>Empresa y puesto</span><span>OVR</span><span>Cargo</span><span>Rep</span><span>Cap</span></div>
+    <div class="rows">${rows}${ghosts}</div></div>`;
+}
+
+render();
+</script>
 </body>
 </html>
+
