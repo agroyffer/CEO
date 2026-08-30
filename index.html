@@ -1,11 +1,3 @@
-
-Market_CAPo_v6.html
-
-Página
-1
-/
-1
-100 %
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -257,17 +249,27 @@ Página
     }
 
     /* Avatar Box */
+    
     .avatarbox {
       width: 62px;
       height: 76px;
       border-radius: 10px;
-      background: linear-gradient(165deg,#1f2533,#101420);
-      border: 1px solid var(--border);
+      background: #080c14;
+      border: 1.5px solid var(--border);
       overflow: hidden;
       flex-shrink: 0;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.6);
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.6), 0 3px 8px rgba(0,0,0,0.4);
       position: relative;
     }
+    .avatarbox img, .setup-avatar-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+      display: block;
+      filter: brightness(0.95) contrast(1.08);
+    }
+
     .avatarbox svg { width: 100%; height: 100%; display: block; }
 
     .player-meta {
@@ -1045,6 +1047,94 @@ Página
     }
     .end-stat .l { font-size: 0.55rem; text-transform: uppercase; color: var(--text-dim); font-weight: 800; }
     .end-stat .v { font-family: var(--font-num); font-size: 1.15rem; font-weight: 800; color: var(--text); margin-top: 3px; }
+  
+    /* Setup Avatar Preview Frame */
+    .setup-avatar-card {
+      background: #080c14;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 14px;
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
+      position: relative;
+    }
+    .setup-avatar-frame {
+      width: 96px;
+      height: 115px;
+      border-radius: 12px;
+      background: linear-gradient(165deg, #1f2533, #0f131f);
+      border: 1.5px solid var(--border);
+      overflow: hidden;
+      margin-bottom: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    .setup-avatar-frame svg { width: 100%; height: 100%; display: block; }
+    .setup-avatar-name {
+      font-family: var(--font-brand);
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.05em;
+    }
+    .setup-avatar-role {
+      font-size: 0.65rem;
+      color: var(--electric-blue);
+      font-weight: 700;
+    }
+
+    /* Sound Button in Masthead */
+    .sound-toggle-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-muted);
+      padding: 5px 9px;
+      font-size: 0.72rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+    .sound-toggle-btn:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+
+  
+    /* Event Outcome Card inside Modal */
+    .event-result-box {
+      background: linear-gradient(170deg, #102419, #08120d);
+      border: 2px solid var(--money);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      animation: flashIn 0.35s ease both;
+      box-shadow: 0 0 25px var(--money-glow);
+    }
+    .event-result-box.bad {
+      background: linear-gradient(170deg, #2d1016, #14080a);
+      border-color: var(--hot-pink);
+      box-shadow: 0 0 25px rgba(244, 63, 94, 0.4);
+    }
+    .event-result-box .tag-res {
+      font-size: 0.62rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+    .event-result-box.good .tag-res { background: rgba(16, 229, 117, 0.2); color: var(--money); }
+    .event-result-box.bad .tag-res { background: rgba(244, 63, 94, 0.2); color: var(--hot-pink); }
+    .event-result-box h3 { font-size: 1.1rem; font-weight: 900; color: #fff; line-height: 1.25; }
+    .event-result-box .metrics-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+
   </style>
 </head>
 <body>
@@ -1054,6 +1144,7 @@ Página
     <div class="logo-coin">$</div>
     <h1 id="gameName">Market CAPo</h1>
     <span class="tagline" id="gameTag">Como el Guitar Hero pero con más guitarra</span>
+    <button class="sound-toggle-btn" id="soundToggleBtn" onclick="toggleSound()">🔊 Sonido</button>
   </header>
 
   <!-- Mobile View Switcher (Solo visible en móviles <= 880px) -->
@@ -1091,6 +1182,65 @@ Página
   <div id="overlay"></div>
 
   <script>
+    
+    /* ================= SONIDOS RETRO / ARCADE CON WEB AUDIO API ================= */
+    let audioCtx = null;
+    let soundEnabled = true;
+    function playSfx(type){
+      if(!soundEnabled) return;
+      try {
+        if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        const now = audioCtx.currentTime;
+        if(type === 'click'){
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.05);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.05);
+          osc.start(now);
+          osc.stop(now + 0.05);
+        } else if(type === 'cash'){
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(587, now);
+          osc.frequency.setValueAtTime(880, now + 0.08);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.22);
+          osc.start(now);
+          osc.stop(now + 0.22);
+        } else if(type === 'levelUp'){
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523, now);
+          osc.frequency.setValueAtTime(659, now + 0.08);
+          osc.frequency.setValueAtTime(783, now + 0.16);
+          osc.frequency.setValueAtTime(1046, now + 0.24);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.45);
+          osc.start(now);
+          osc.stop(now + 0.45);
+        } else if(type === 'spin'){
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(220, now);
+          gain.gain.setValueAtTime(0.04, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.03);
+          osc.start(now);
+          osc.stop(now + 0.03);
+        }
+      } catch(e){}
+    }
+
+    function toggleSound(){
+      soundEnabled = !soundEnabled;
+      const btn = document.getElementById("soundToggleBtn");
+      if(btn) btn.textContent = soundEnabled ? '🔊 Sonido' : '🔇 Mute';
+    }
+
     /* ================= BASE DE DATOS Y HUMOR ORIGINAL ================= */
     const GAME = {
       name: "Market CAPo",
@@ -1243,96 +1393,172 @@ Página
       {min:92, n:"Chairman", s:"CHM"}
     ];
 
-    /* ================= IMÁGENES CINEMATOGRÁFICAS PARA EVENTOS ================= */
+
+
+    
+    /* ================= EVENTOS CRÍTICOS CON 1 SOLO EFECTO DIRECTO ================= */
+    
+    /* ================= 6 EVENTOS CRÍTICOS: DERECHA (🛡️) vs IZQUIERDA (⚡) ================= */
+    
+
+    
+    /* ================= 6 EVENTOS CRÍTICOS: DERECHA (🛡️) vs IZQUIERDA (⚡) ================= */
     const EVENT_IMAGES = {
-      cut: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80", // Financial chart down / crisis
-      party: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=800&q=80", // VIP Event / Cocktail
-      board: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80", // Skyscraper boardroom / Corporate tower
-      compliance: "https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=800&q=80", // Legal / Gavel / Courtroom
-      deal: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80" // Executive Suit / Handshake
+      cut: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80",
+      party: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=800&q=80",
+      board: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
+      compliance: "https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=800&q=80",
+      asado: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80",
+      pitch: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80"
     };
 
     const EVENTS = [
       {
-        t:"Runway de tres meses",
-        s:"La plata alcanza hasta marzo. Hay que tomar una decisión antes de que el board entre en pánico total.",
+        t: "Runway de tres meses: La Motosierra",
+        s: "La caja de la empresa se evapora hasta marzo. El directorio exige un plan de emergencia inmediato.",
         imgKey: "cut",
-        o:[
+        o: [
           {
-            n:"Recortar con cirugía", tag:"Gestión",
-            roll:[
-              {p:60, label:"Sale prolijo y aplauden", eff:{ovr:12, rep:4}, cash:-15000},
-              {p:40, label:"Exceso de motosierra y huelga", eff:{ovr:-14, carisma:-8, rep:-10}, layoffs:1}
+            n: "🛡️ Por Derecha: Ajuste Prolijo",
+            tag: "Vía Institucional",
+            laneChoice: "der",
+            roll: [
+              { p: 65, label: "El directorio aplaude la sobriedad técnica", type: "ovr", val: 12, isPositive: true },
+              { p: 35, label: "El ajuste fue tímido y la empresa se achica", type: "ovr", val: -8, isPositive: false }
             ]
           },
           {
-            n:"Vender activos / Humo", tag:"Finanzas",
-            roll:[
-              {p:55, label:"Caja fresca y aire", eff:{ovr:4, rep:2}, cash:180000},
-              {p:45, label:"Malventa a precio vil", eff:{ovr:-6, rep:-5}, cash:-80000}
+            n: "⚡ Por Izquierda: Dibujo y Venta de Humo",
+            tag: "Atajo Financiero",
+            laneChoice: "izq",
+            roll: [
+              { p: 50, label: "Caja fresca millonaria de un fondo incauto", type: "cash", val: 220000, isPositive: true },
+              { p: 50, label: "Escrache en redes por balances inflados", type: "ovr", val: -14, isPositive: false }
             ]
           }
         ]
       },
       {
-        t:"Vivir en eventos de Networking",
-        s:"Tres congresos en la misma semana. Si vas a todos, no producís pero te hacés ver en Puerto Madero.",
-        imgKey: "party",
-        o:[
-          {
-            n:"Puro Social & Canapés", tag:"Rosca",
-            roll:[
-              {p:60, label:"Contactos clave con fondos", eff:{rosca:16, carisma:8, rep:6}},
-              {p:40, label:"Te tildan de figuretti superficial", eff:{ejecucion:-8, rep:-4}}
-            ]
-          },
-          {
-            n:"Quedarse en la trinchera", tag:"Ejecución",
-            roll:[
-              {p:70, label:"Sprint entregado a tiempo", eff:{ejecucion:10, vision:4}},
-              {p:30, label:"Nadie se enteró de lo que hiciste", eff:{rosca:-6, rep:-2}}
-            ]
-          }
-        ]
-      },
-      {
-        t:"Guerra Política en el Directorio",
-        s:"El socio mayoritario quiere rajar al CEO y te pide tu voto en off a cambio de un puesto directivo.",
+        t: "Guerra Política en el Directorio",
+        s: "El socio mayoritario quiere eyectar al CEO fundador y te pide tu voto en la asamblea reservada.",
         imgKey: "board",
-        o:[
+        o: [
           {
-            n:"Jugar para el CEO", tag:"Rosca Fuerte",
-            roll:[
-              {p:50, label:"El CEO vence y te premia", eff:{rosca:14, ovr:8, rep:6}, cash:50000},
-              {p:50, label:"El CEO es eyectado y quedás marcado", eff:{rosca:-10, rep:-12, ovr:-8}}
+            n: "🛡️ Por Derecha: Apego a Estatutos",
+            tag: "Institucional",
+            laneChoice: "der",
+            roll: [
+              { p: 70, label: "Reconocen tu apego a la ley corporativa", type: "ovr", val: 10, isPositive: true },
+              { p: 30, label: "Te tildan de burócrata tibio sin huevos", type: "ovr", val: -6, isPositive: false }
             ]
           },
           {
-            n:"Hacerse el desentendido", tag:"Diplomacia",
-            roll:[
-              {p:70, label:"Sobrevivís ileso", eff:{vision:6, ejecucion:4}},
-              {p:30, label:"Ambos bandos desconfían de vos", eff:{rep:-6, rosca:-4}}
+            n: "⚡ Por Izquierda: Golpe de Estado Interno",
+            tag: "Rosca Pesada",
+            laneChoice: "izq",
+            roll: [
+              { p: 50, label: "¡Ascenso Inmediato a Director General!", type: "promote", isPositive: true },
+              { p: 50, label: "El golpe fracasa y te rajan con causa", type: "fire", isPositive: false }
             ]
           }
         ]
       },
       {
-        t:"Auditoría Sorpresa de Compliance",
-        s:"Auditores de traje gris revisan las facturas de 'gastos varios' y cenas en Puerto Madero.",
+        t: "Auditoría Sorpresa de Compliance & AFIP",
+        s: "Auditores de traje gris revisan gastos de representación, facturas y viáticos en Puerto Madero.",
         imgKey: "compliance",
-        o:[
+        o: [
           {
-            n:"Entregar todo transparente", tag:"Legal",
-            roll:[
-              {p:75, label:"Auditoría impecable", eff:{rep:10, ovr:4}},
-              {p:25, label:"Encuentran desprolijidades menores", eff:{rep:-8, cash:-25000}}
+            n: "🛡️ Por Derecha: Abrir los Libros",
+            tag: "Vía Legal",
+            laneChoice: "der",
+            roll: [
+              { p: 75, label: "Auditoría impecable y legajo blanqueado", type: "ovr", val: 14, isPositive: true },
+              { p: 25, label: "Observaciones formales y sumario", type: "ovr", val: -10, isPositive: false }
             ]
           },
           {
-            n:"Dibujar los números con creatividad", tag:"Alto Riesgo",
-            roll:[
-              {p:45, label:"Pasó como gasto operativo", eff:{rosca:16, ovr:10}, cash:60000},
-              {p:55, label:"Observaciones graves en el sumario", eff:{rep:-20, riesgo:15, ovr:-10}}
+            n: "⚡ Por Izquierda: Arreglo por Atrás",
+            tag: "Atajo Turbio",
+            laneChoice: "izq",
+            roll: [
+              { p: 50, label: "Expediente cajoneado y bono de bolsillo", type: "cash", val: 180000, isPositive: true },
+              { p: 50, label: "Causa penal federal y embargo de fondos", type: "cash", val: -160000, isPositive: false }
+            ]
+          }
+        ]
+      },
+      {
+        t: "El Asado de Fin de Año y el Escándalo",
+        s: "Fiesta descontrolada de la compañía en una quinta. El CEO se pasó de copas y filtraron videos.",
+        imgKey: "asado",
+        o: [
+          {
+            n: "🛡️ Por Derecha: Comunicado Corporativo Serio",
+            tag: "PR Institucional",
+            laneChoice: "der",
+            roll: [
+              { p: 70, label: "Blindaje de crisis ejemplar en LinkedIn", type: "ovr", val: 12, isPositive: true },
+              { p: 30, label: "El escándalo salpica al departamento", type: "ovr", val: -6, isPositive: false }
+            ]
+          },
+          {
+            n: "⚡ Por Izquierda: Operar la Filtración",
+            tag: "Rosca en Sombras",
+            laneChoice: "izq",
+            roll: [
+              { p: 50, label: "Vendés la primicia y cobrás sobresuelto", type: "cash", val: 140000, isPositive: true },
+              { p: 50, label: "Descubren la filtración y te echan de la firma", type: "fire", isPositive: false }
+            ]
+          }
+        ]
+      },
+      {
+        t: "Pitch a los VCs con Humo Líquido",
+        s: "Ronda Serie B con fondos de Silicon Valley. El producto no está listo pero exigen métricas.",
+        imgKey: "pitch",
+        o: [
+          {
+            n: "🛡️ Por Derecha: Mostrar Métricas Reales",
+            tag: "Honestidad",
+            laneChoice: "der",
+            roll: [
+              { p: 60, label: "Valoran la honestidad y cierran ronda conservadora", type: "ovr", val: 10, isPositive: true },
+              { p: 40, label: "Los VCs querían humo y se van con la competencia", type: "ovr", val: -8, isPositive: false }
+            ]
+          },
+          {
+            n: "⚡ Por Izquierda: Métricas Fantasía con IA Cuántica",
+            tag: "Venta de Fruta",
+            laneChoice: "izq",
+            roll: [
+              { p: 50, label: "¡Valuación récord y bono de éxito!", type: "cash", val: 260000, isPositive: true },
+              { p: 50, label: "Due diligence estricto descubre el engaño", type: "ovr", val: -16, isPositive: false }
+            ]
+          }
+        ]
+      },
+      {
+        t: "Vivir en eventos de Networking VIP",
+        s: "Semana repleta de cócteles en hoteles 5 estrellas. Piden que presentes un caso de éxito.",
+        imgKey: "party",
+        o: [
+          {
+            n: "🛡️ Por Derecha: Ponencia Técnica Sólida",
+            tag: "Especialista",
+            laneChoice: "der",
+            roll: [
+              { p: 70, label: "Reconocimiento académico y prestigio de mercado", type: "ovr", val: 14, isPositive: true },
+              { p: 30, label: "Presentación aburrida sin repercusión", type: "ovr", val: -5, isPositive: false }
+            ]
+          },
+          {
+            n: "⚡ Por Izquierda: Showman Figuretti",
+            tag: "Ego y Contactos",
+            laneChoice: "izq",
+            roll: [
+              { p: 55, label: "Contratación de consultoría privada millonaria", type: "cash", val: 150000, isPositive: true },
+              { p: 45, label: "Quedás como un chanta ante los líderes de industria", type: "ovr", val: -12, isPositive: false }
             ]
           }
         ]
@@ -1452,6 +1678,7 @@ Página
     }
 
     function executeWealthAction(actionId){
+      playSfx('cash');
       const act = WEALTH_ACTIONS.find(a => a.id === actionId);
       if(!act) return;
       
@@ -1513,88 +1740,253 @@ Página
       updateTimelineWidget();
     }
 
-    /* ================= PROCEDURAL AVATARS ================= */
-    function avatarSVG(){
-      if(!S) return '';
-      const o = S.origin || 'mba', lane = S.lane || 'strat', g = S.gender || 'H', lvl = (S.rank ? S.rank.i : 0);
-      const isSenior = S.age >= 50;
-      const isCEO = lvl >= 7;
-      const isCLevel = lvl === 6;
-      const isManager = lvl >= 3 && lvl <= 5;
-      const badState = S.badYears > 0;
-
-      const skin = "#d9a879", skinS = "#c08f61";
-      
-      let suit = "#334155";
-      let shirt = lane === "aggr" ? "#0f172a" : "#f8fafc";
-      let tie = lane === "aggr" ? "#f43f5e" : (lvl >= 6 ? "#ffd700" : "#10e575");
-      let pocketSquare = '';
-      let watchGold = '';
-      let lanyard = '';
-
-      if(isCEO){
-        suit = "#0b0f19";
-        tie = "#ffd700";
-        pocketSquare = `<polygon points="34,76 38,72 42,76" fill="#ffd700"/>`;
-        watchGold = `<rect x="75" y="92" width="6" height="4" rx="1" fill="#ffd700" stroke="#000" stroke-width="0.5"/>`;
-      } else if(isCLevel){
-        suit = "#182238";
-        tie = "#38bdf8";
-        pocketSquare = `<polygon points="34,76 38,73 42,76" fill="#fff"/>`;
-      } else if(isManager){
-        suit = "#243248";
-        tie = "#10e575";
-      } else {
-        suit = "#1e293b";
-        tie = "none";
-        lanyard = `<path d="M42 66L50 82L58 66" fill="none" stroke="#a855f7" stroke-width="1.8"/><rect x="46" y="82" width="8" height="11" rx="1.5" fill="#fff" stroke="#222" stroke-width="0.5"/><rect x="48" y="85" width="4" height="2" fill="#a855f7"/>`;
-      }
-
-      let baseHair = {mba:"#3a2a1c", calle:"#18181b", trust:"#d97706", tecnico:"#334155"}[o] || "#18181b";
-      let hair = isSenior ? (baseHair === "#d97706" ? "#cbd5e1" : "#94a3b8") : baseHair;
-      
-      let hairSVG = '';
-      if(o === "mba") {
-        hairSVG = `<path d="M28 34c0-11 8-18 22-18s22 7 22 18c0 3-1 5-1 5-2-6-9-9-21-9s-19 3-21 9c0 0-1-2-1-5z" fill="${hair}"/>`;
-      } else if(o === "calle") {
-        hairSVG = `<path d="M26 36c0-12 9-20 24-20s24 8 24 20H26z" fill="${isSenior?'#94a3b8':'#10e575'}"/><path d="M24 36h52v5H24z" fill="#047857"/><path d="M74 36h16v4c0 1-1 2-2 2H74z" fill="#065f46"/>`;
-      } else if(o === "trust") {
-        hairSVG = `<path d="M28 36c0-12 9-19 22-19s22 7 22 19c0 2-1 4-1 4-1-8-8-12-13-9-4 2-9 2-14-1-5-3-13 0-15 10 0 0-1-2-1-4z" fill="${hair}"/>`;
-      } else {
-        hairSVG = `<path d="M24 40c0-14 10-24 26-24s26 10 26 24v3H24z" fill="#475569"/><path d="M31 39c0-11 7-18 19-18s19 7 19 18c0 0-6-6-19-6s-19 6-19 6z" fill="${hair}"/>`;
-      }
-
-      const femaleHair = g === 'M' ? `<path d="M24 40c0 16 2 26 4 32h9c-3-8-4-18-4-28zM76 40c0 16-2 26-4 32h-9c3-8 4-18 4-28z" fill="${hair}"/>` : '';
-      const glasses = (o === "mba" || o === "tecnico") ? `<g fill="none" stroke="#38bdf8" stroke-width="2"><circle cx="41" cy="49" r="7"/><circle cx="59" cy="49" r="7"/><path d="M48 49h4M34 47l-4-1M66 47l4-1"/></g>` : '';
-
-      let mouth = `<path d="M44 62h12" stroke="${skinS}" stroke-width="2" fill="none" stroke-linecap="round"/>`;
-      let eyebags = '';
-      if(computeOvr() >= 65){
-        mouth = `<path d="M43 60c4 4 10 4 14 0" stroke="${skinS}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
-      } else if(badState){
-        mouth = `<path d="M44 63c4-2 8-2 12 0" stroke="${skinS}" stroke-width="2" fill="none" stroke-linecap="round"/>`;
-        eyebags = `<path d="M37 53c2 2 6 2 8 0M55 53c2 2 6 2 8 0" stroke="#713f12" stroke-width="1.2" fill="none" opacity="0.6"/>`;
-      }
-
-      return `
+    
+    
+    
+    
+    
+    
+    /* ================= SISTEMA DE AVATARES FIJOS Y CYBORG TRANSHUMANO ================= */
+    const ARG_FIXED_AVATARS = {
+      // 1. Hombre MBA Wachoski (Cheto de Palermo con chaleco inflable y termo Stanley)
+      H_mba: `
         <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
-          ${hairSVG}
-          <path d="M50 74c-14 0-26 8-28 20l-2 26h60l-2-26c-2-12-14-20-28-20z" fill="${suit}"/>
-          <path d="M50 74l-9 4 9 16 9-16z" fill="${shirt}"/>
-          ${tie !== 'none' ? `<path d="M50 80l-4 4 4 14 4-14z" fill="${tie}"/>` : ''}
-          ${pocketSquare}
-          ${lanyard}
-          ${watchGold}
-          <path d="M44 66h12v10c0 3-12 3-12 0z" fill="${skinS}"/>
-          <ellipse cx="50" cy="48" rx="21" ry="23" fill="${skin}"/>
-          ${femaleHair}
-          <circle cx="41" cy="49" r="2.2" fill="#18181b"/>
-          <circle cx="59" cy="49" r="2.2" fill="#18181b"/>
-          ${eyebags}
-          ${mouth}
-          ${glasses}
+          <defs>
+            <linearGradient id="g_chaleco_fix" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0284c7"/><stop offset="100%" stop-color="#0369a1"/></linearGradient>
+            <linearGradient id="g_face_mba_fix" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fde2d2"/><stop offset="100%" stop-color="#f2bba5"/></linearGradient>
+          </defs>
+          <path d="M50 72c-15 0-27 8-29 24l-3 24h64l-3-24c-2-16-14-24-29-24z" fill="#1e293b"/>
+          <path d="M36 78c-4 8-6 20-6 30h40c0-10-2-22-6-30-5 2-10 3-14 3s-9-1-14-3z" fill="url(#g_chaleco_fix)" stroke="#075985" stroke-width="1.2"/>
+          <line x1="50" y1="81" x2="50" y2="108" stroke="#075985" stroke-width="2"/>
+          <polygon points="50,72 40,78 50,90 60,78" fill="#e0f2fe"/>
+          <rect x="44" y="62" width="12" height="12" fill="#e2a890"/>
+          <ellipse cx="50" cy="46" rx="20" ry="22" fill="url(#g_face_mba_fix)"/>
+          <path d="M28 36c0-12 9-18 22-18s22 6 22 18c0 4-1 6-1 6-3-6-10-8-21-8s-18 2-21 8c0 0-1-2-1-6z" fill="#2e1c14"/>
+          <path d="M30 26c6-4 14-5 20-5s14 1 20 5c-4-3-10-4-20-4s-16 1-20 4z" fill="#4a3022"/>
+          <rect x="33" y="42" width="14" height="10" rx="3" fill="none" stroke="#0f172a" stroke-width="2.2"/>
+          <rect x="53" y="42" width="14" height="10" rx="3" fill="none" stroke="#0f172a" stroke-width="2.2"/>
+          <line x1="47" y1="46" x2="53" y2="46" stroke="#0f172a" stroke-width="2.2"/>
+          <circle cx="40" cy="47" r="2.2" fill="#0284c7"/>
+          <circle cx="60" cy="47" r="2.2" fill="#0284c7"/>
+          <path d="M43 59c3 3 11 3 14 0" stroke="#b45309" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <rect x="74" y="80" width="10" height="25" rx="3" fill="#047857" stroke="#022c22" stroke-width="1"/>
+          <rect x="76" y="76" width="6" height="4" fill="#94a3b8"/>
         </svg>
-      `;
+      `,
+
+      // 2. Mujer MBA Wachoski (Consultora Big 4 con blazer y café)
+      M_mba: `
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g_blazer_m_fix" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#475569"/><stop offset="100%" stop-color="#1e293b"/></linearGradient>
+          </defs>
+          <path d="M50 72c-15 0-27 8-29 24l-3 24h64l-3-24c-2-16-14-24-29-24z" fill="url(#g_blazer_m_fix)"/>
+          <polygon points="50,72 40,78 50,92 60,78" fill="#fdf4ff"/>
+          <rect x="44" y="62" width="12" height="12" fill="#e2a890"/>
+          <ellipse cx="50" cy="46" rx="19" ry="21" fill="#fde2d2"/>
+          <path d="M24 38c0-14 12-24 26-24s26 10 26 24c0 12-2 28-5 40h-6c3-10 4-24 3-34 0-10-7-16-18-16s-18 6-18 16c-1 10 0 24 3 34h-6c-3-12-5-28-5-40z" fill="#3b1d11"/>
+          <polygon points="32,42 46,41 44,49 34,48" fill="none" stroke="#a855f7" stroke-width="2"/>
+          <polygon points="54,41 68,42 66,48 56,49" fill="none" stroke="#a855f7" stroke-width="2"/>
+          <line x1="46" y1="44" x2="54" y2="44" stroke="#a855f7" stroke-width="2"/>
+          <circle cx="39" cy="45.5" r="2.2" fill="#0284c7"/>
+          <circle cx="61" cy="45.5" r="2.2" fill="#0284c7"/>
+          <path d="M44 59c3 2.5 9 2.5 12 0" stroke="#e11d48" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+      `,
+
+      // 3. Hombre Calle (Pícaro de Warnes con campera de cuero y cadenita)
+      H_calle: `
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g_cuero_fix" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#27272a"/><stop offset="100%" stop-color="#09090b"/></linearGradient>
+            <linearGradient id="g_face_calle_fix" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fcd3bd"/><stop offset="100%" stop-color="#e89d7d"/></linearGradient>
+          </defs>
+          <path d="M50 72c-15 0-27 8-29 24l-3 24h64l-3-24c-2-16-14-24-29-24z" fill="url(#g_cuero_fix)"/>
+          <polygon points="50,72 38,80 50,96 62,80" fill="#f8fafc"/>
+          <path d="M43 78c3 8 11 8 14 0" stroke="#fbbf24" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <rect x="42" y="62" width="16" height="12" fill="#d98c6c"/>
+          <ellipse cx="50" cy="46" rx="21" ry="23" fill="url(#g_face_calle_fix)"/>
+          <path d="M33 48c0 10 7 19 17 19s17-9 17-19c-3 1-8 2-17 2s-14-1-17-2z" fill="#78350f" opacity="0.35"/>
+          <path d="M26 36L30 18L42 24L52 14L64 22L74 16L74 36z" fill="#18181b"/>
+          <ellipse cx="40" cy="46" rx="2.5" ry="3" fill="#18181b"/>
+          <path d="M57 47c2-2 6-2 8 0" stroke="#18181b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M43 59c4 1 10 4 14 1" stroke="#9a3412" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        </svg>
+      `,
+
+      // 4. Mujer Calle (Comerciante audaz con argollas doradas)
+      M_calle: `
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g_campera_f_fix" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#dc2626"/><stop offset="100%" stop-color="#991b1b"/></linearGradient>
+          </defs>
+          <path d="M50 72c-15 0-27 8-29 24l-3 24h64l-3-24c-2-16-14-24-29-24z" fill="url(#g_campera_f_fix)"/>
+          <polygon points="50,72 40,78 50,92 60,78" fill="#18181b"/>
+          <circle cx="28" cy="50" r="4.5" fill="none" stroke="#fbbf24" stroke-width="1.8"/>
+          <circle cx="72" cy="50" r="4.5" fill="none" stroke="#fbbf24" stroke-width="1.8"/>
+          <rect x="44" y="62" width="12" height="12" fill="#e89d7d"/>
+          <ellipse cx="50" cy="46" rx="19" ry="21" fill="#fcd3bd"/>
+          <circle cx="50" cy="20" r="9" fill="#18181b"/>
+          <path d="M28 36c4-8 12-14 22-14s18 6 22 14c-4-4-10-6-22-6s-18 2-22 6z" fill="#18181b"/>
+          <path d="M30 40c4 4 10 5 20 5s16-1 20-5c-3 8-9 10-20 10s-17-2-20-10z" fill="#18181b"/>
+          <circle cx="39" cy="46" r="2.5" fill="#78350f"/>
+          <circle cx="61" cy="46" r="2.5" fill="#78350f"/>
+          <path d="M43 59c3 3 11 3 14 0" stroke="#b91c1c" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        </svg>
+      `,
+
+      // 5. Hombre Trust Fund (Rugbier de Newman con suéter atado al cuello)
+      H_trust: `
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g_sueter_fix" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#15803d"/><stop offset="100%" stop-color="#166534"/></linearGradient>
+            <linearGradient id="g_face_trust_fix" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fed7aa"/><stop offset="100%" stop-color="#fba876"/></linearGradient>
+          </defs>
+          <path d="M50 72c-15 0-27 8-29 24l-3 24h64l-3-24c-2-16-14-24-29-24z" fill="#fbcfe8"/>
+          <path d="M32 74c6 6 12 12 18 18 6-6 12-12 18-18-4-4-10-6-18-6s-14 2-18 6z" fill="url(#g_sueter_fix)"/>
+          <path d="M44 88c2 4 4 10 4 16h4c0-6 2-12 4-16z" fill="#166534"/>
+          <rect x="42" y="62" width="16" height="12" fill="#f59e6b"/>
+          <ellipse cx="50" cy="46" rx="21" ry="22" fill="url(#g_face_trust_fix)"/>
+          <path d="M26 38c0-14 10-24 26-24s26 8 26 22l-6-2c0-8-8-12-20-12s-18 4-20 12z" fill="#eab308"/>
+          <path d="M30 20c8-6 16-7 24-5l6 4c-6-3-14-3-22 1z" fill="#fef08a"/>
+          <circle cx="39" cy="46" r="2.5" fill="#38bdf8"/>
+          <circle cx="61" cy="46" r="2.5" fill="#38bdf8"/>
+          <path d="M44 59c3 3 10 3 13 0" stroke="#c2410c" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        </svg>
+      `,
+
+      // 6. Mujer Trust Fund (Milipili con campera puffer y pañuelo)
+      M_trust: `
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g_chaleco_f_fix" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f43f5e"/><stop offset="100%" stop-color="#be123c"/></linearGradient>
+          </defs>
+          <path d="M50 72c-15 0-27 8-29 24l-3 24h64l-3-24c-2-16-14-24-29-24z" fill="url(#g_chaleco_f_fix)"/>
+          <polygon points="50,72 40,78 50,92 60,78" fill="#ffffff"/>
+          <path d="M42 74c3 4 13 4 16 0-3 6-13 6-16 0z" fill="#fde047"/>
+          <rect x="44" y="62" width="12" height="12" fill="#fba876"/>
+          <ellipse cx="50" cy="46" rx="19" ry="21" fill="#fed7aa"/>
+          <rect x="34" y="24" width="14" height="7" rx="2" fill="#09090b" stroke="#ffd700" stroke-width="1"/>
+          <rect x="52" y="24" width="14" height="7" rx="2" fill="#09090b" stroke="#ffd700" stroke-width="1"/>
+          <line x1="48" y1="27" x2="52" y2="27" stroke="#ffd700" stroke-width="1.5"/>
+          <path d="M22 38c0-14 12-24 28-24s28 10 28 24c0 14-4 36-8 46h-7c4-10 6-26 5-36 0-10-7-16-18-16s-18 6-18 16c-1 10 1 26 5 36h-7c-4-10-8-32-8-46z" fill="#fbbf24"/>
+          <circle cx="39" cy="46" r="2.5" fill="#38bdf8"/>
+          <circle cx="61" cy="46" r="2.5" fill="#38bdf8"/>
+          <path d="M44 59c3 2 9 2 12 0" stroke="#be123c" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+      `,
+
+      // 7. Hombre Técnico que se Cansó (Dev Senior con auriculares y remera)
+      H_tecnico: `
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g_hoodie_fix" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#312e81"/><stop offset="100%" stop-color="#1e1b4b"/></linearGradient>
+            <linearGradient id="g_face_tec_fix" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fde2d2"/><stop offset="100%" stop-color="#e2a890"/></linearGradient>
+          </defs>
+          <path d="M50 72c-15 0-27 8-29 24l-3 24h64l-3-24c-2-16-14-24-29-24z" fill="url(#g_hoodie_fix)"/>
+          <text x="50" y="98" text-anchor="middle" font-family="monospace" font-size="7" font-weight="900" fill="#38bdf8">&lt;/&gt;</text>
+          <path d="M30 68c0-10 10-14 20-14s20 4 20 14" stroke="#e11d48" stroke-width="4" fill="none"/>
+          <rect x="25" y="66" width="8" height="14" rx="3" fill="#18181b" stroke="#e11d48" stroke-width="1.5"/>
+          <rect x="67" y="66" width="8" height="14" rx="3" fill="#18181b" stroke="#e11d48" stroke-width="1.5"/>
+          <rect x="44" y="62" width="12" height="10" fill="#d49a80"/>
+          <ellipse cx="50" cy="46" rx="20" ry="22" fill="url(#g_face_tec_fix)"/>
+          <path d="M34 50c2 2 6 2 8 0M58 50c2 2 6 2 8 0" stroke="#713f12" stroke-width="1.5" fill="none" opacity="0.6"/>
+          <path d="M24 40c0-15 12-25 28-25s28 10 28 25l-4-4c0-10-8-15-24-15s-24 5-24 15z" fill="#334155"/>
+          <path d="M30 36l6-12 8 8 8-10 8 12-10-4-6 6-6-6z" fill="#334155"/>
+          <circle cx="38" cy="46" r="6.5" fill="rgba(56,189,248,0.15)" stroke="#38bdf8" stroke-width="2"/>
+          <circle cx="62" cy="46" r="6.5" fill="rgba(56,189,248,0.15)" stroke="#38bdf8" stroke-width="2"/>
+          <line x1="44.5" y1="46" x2="55.5" y2="46" stroke="#38bdf8" stroke-width="2"/>
+          <line x1="45" y1="60" x2="55" y2="60" stroke="#9a3412" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      `,
+
+      // 8. Mujer Técnica que se Cansó (Lead Dev con mechas violetas y taza térmica)
+      M_tecnico: `
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g_hoodie_f_fix" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#064e3b"/></linearGradient>
+          </defs>
+          <path d="M50 72c-15 0-27 8-29 24l-3 24h64l-3-24c-2-16-14-24-29-24z" fill="url(#g_hoodie_f_fix)"/>
+          <text x="50" y="98" text-anchor="middle" font-family="monospace" font-size="7" font-weight="900" fill="#34d399">git push -f</text>
+          <rect x="44" y="62" width="12" height="12" fill="#e2a890"/>
+          <ellipse cx="50" cy="46" rx="19" ry="21" fill="#fde2d2"/>
+          <path d="M24 38c0-14 12-24 26-24s26 10 26 24c0 10-3 20-6 26h-7c2-5 4-13 4-20 0-10-7-16-17-16s-17 6-17 16c0 7 2 15 4 20h-7c-3-6-6-16-6-26z" fill="#0284c7"/>
+          <path d="M30 36l6-10 8 6 8-8 8 10-10-3-6 5-6-5z" fill="#a855f7"/>
+          <rect x="32" y="42" width="15" height="10" rx="3" fill="none" stroke="#38bdf8" stroke-width="2"/>
+          <rect x="53" y="42" width="15" height="10" rx="3" fill="none" stroke="#38bdf8" stroke-width="2"/>
+          <line x1="47" y1="46" x2="53" y2="46" stroke="#38bdf8" stroke-width="2"/>
+          <circle cx="39.5" cy="47" r="2.2" fill="#10e575"/>
+          <circle cx="60.5" cy="47" r="2.2" fill="#10e575"/>
+          <path d="M44 60c3 2 8 2 12 0" stroke="#059669" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+      `,
+
+      // ================= CYBORG TRANSHUMANO (Sólo al comprar Extensión Biológica) =================
+      H_transhumano: `
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g_cybersuit" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#090d16"/><stop offset="100%" stop-color="#020408"/></linearGradient>
+            <linearGradient id="g_chrome_face" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e2e8f0"/><stop offset="50%" stop-color="#94a3b8"/><stop offset="100%" stop-color="#64748b"/></linearGradient>
+          </defs>
+          <!-- Traje Obsidiana Cuántico -->
+          <path d="M50 72c-15 0-27 8-29 24l-3 24h64l-3-24c-2-16-14-24-29-24z" fill="url(#g_cybersuit)" stroke="#06b6d4" stroke-width="1.5"/>
+          <line x1="50" y1="74" x2="50" y2="115" stroke="#38bdf8" stroke-width="2"/>
+          <path d="M36 84l14 12 14-12" stroke="#a855f7" stroke-width="1.5" fill="none"/>
+          <!-- Cuello Biónico -->
+          <rect x="44" y="62" width="12" height="12" fill="#334155" stroke="#38bdf8" stroke-width="1"/>
+          <!-- Cabeza Sintética con Placas de Titanio -->
+          <ellipse cx="50" cy="46" rx="20" ry="22" fill="url(#g_chrome_face)"/>
+          <path d="M50 24v44M30 46h40" stroke="#0ea5e9" stroke-width="0.8" opacity="0.6"/>
+          <!-- Pelo Holográfico Platino -->
+          <path d="M28 36c0-12 9-18 22-18s22 6 22 18l-5-4c0-8-8-12-17-12s-17 4-17 12z" fill="#38bdf8" opacity="0.85"/>
+          <!-- Implante Ocular Cibernético Neón -->
+          <circle cx="40" cy="47" r="4" fill="#090d16" stroke="#00f0ff" stroke-width="1.8"/>
+          <circle cx="40" cy="47" r="1.8" fill="#00f0ff" filter="drop-shadow(0 0 3px #00f0ff)"/>
+          <circle cx="60" cy="47" r="4" fill="#090d16" stroke="#ffd700" stroke-width="1.8"/>
+          <circle cx="60" cy="47" r="1.8" fill="#ffd700" filter="drop-shadow(0 0 3px #ffd700)"/>
+          <!-- Visor / HUD de Datos Neuronal -->
+          <path d="M28 42h44v10H28z" fill="rgba(56,189,248,0.15)" stroke="#38bdf8" stroke-width="1.2" rx="2"/>
+          <line x1="32" y1="47" x2="68" y2="47" stroke="#38bdf8" stroke-width="0.8" stroke-dasharray="2 2"/>
+          <!-- Boca Inexpresiva Implacable -->
+          <line x1="45" y1="60" x2="55" y2="60" stroke="#00f0ff" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      `,
+
+      M_transhumano: `
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g_cybersuit_f" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1e1b4b"/><stop offset="100%" stop-color="#090d16"/></linearGradient>
+            <linearGradient id="g_chrome_f" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f1f5f9"/><stop offset="50%" stop-color="#cbd5e1"/><stop offset="100%" stop-color="#94a3b8"/></linearGradient>
+          </defs>
+          <path d="M50 72c-15 0-27 8-29 24l-3 24h64l-3-24c-2-16-14-24-29-24z" fill="url(#g_cybersuit_f)" stroke="#a855f7" stroke-width="1.5"/>
+          <polygon points="50,72 40,80 50,94 60,80" fill="#090d16" stroke="#00f0ff" stroke-width="1"/>
+          <rect x="44" y="62" width="12" height="12" fill="#334155" stroke="#a855f7" stroke-width="1"/>
+          <ellipse cx="50" cy="46" rx="19" ry="21" fill="url(#g_chrome_f)"/>
+          <path d="M24 38c0-14 12-24 26-24s26 10 26 24c0 10-3 22-6 30h-6c3-8 4-18 3-26 0-8-7-14-17-14s-17 6-17 14c-1 8 0 18 3 26h-6c-3-8-6-20-6-30z" fill="#c084fc" opacity="0.85"/>
+          <!-- Implantes Neón Dual -->
+          <circle cx="39" cy="46" r="3.8" fill="#090d16" stroke="#a855f7" stroke-width="1.8"/>
+          <circle cx="39" cy="46" r="1.6" fill="#a855f7" filter="drop-shadow(0 0 3px #a855f7)"/>
+          <circle cx="61" cy="46" r="3.8" fill="#090d16" stroke="#00f0ff" stroke-width="1.8"/>
+          <circle cx="61" cy="46" r="1.6" fill="#00f0ff" filter="drop-shadow(0 0 3px #00f0ff)"/>
+          <line x1="44" y1="59" x2="56" y2="59" stroke="#c084fc" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      `
+    };
+
+    function avatarSVG(customState = null){
+      const st = customState || S;
+      if(!st) return '';
+      const g = st.gender || 'H';
+      
+      // Si el jugador compró la extensión biológica / transhumana, se transforma en Cyborg
+      if(st.isTranshumano || (st.extensiones && st.extensiones > 0)){
+        const cyberKey = `${g}_transhumano`;
+        return ARG_FIXED_AVATARS[cyberKey] || ARG_FIXED_AVATARS['H_transhumano'];
+      }
+
+      const o = st.origin || 'mba';
+      const fixedKey = `${g}_${o}`;
+      return ARG_FIXED_AVATARS[fixedKey] || ARG_FIXED_AVATARS['H_mba'];
     }
 
     /* ================= LOGICA DE ESTADO ================= */
@@ -1624,12 +2016,47 @@ Página
       return `<div class="company-logo ${sm?'sm':''}" style="background:#222e48; color:#fff; font-weight:900;">${co.ini}</div>`;
     }
 
+                
+    /* ================= CÁLCULO DE OVR CON SOFT-CAP EN 80+ ================= */
     function computeOvr(){
-      if(!S) return 30;
+      if(!S) return 36;
       const s = S.stats || {vision:10, ejecucion:10, carisma:10, rosca:10};
-      const c = S.area ? (S.comp[S.area]||20) : 20;
-      return clamp(26 + c*0.35 + s.vision*0.12 + s.ejecucion*0.12 + s.carisma*0.10 + s.rosca*0.11 + (S.tierBonus||0));
+      const compValues = Object.values(S.comp || {ven:20, pro:20, fin:20, ope:20, mkt:20, leg:20});
+      const maxComp = Math.max(...compValues, 20);
+      const curComp = S.area ? (S.comp[S.area] || 20) : 20;
+      const statTotal = (s.vision + s.ejecucion + s.carisma + s.rosca) * 0.12;
+      const expYears = (S.age && S.age >= 22) ? (S.age - 22) : 0;
+      const expBonus = expYears * 0.28;
+      const tierBonus = (S.tierBonus || 0);
+      const penalties = (S.ovrPenalties || 0);
+
+      let rawOvr = 22 + maxComp * 0.22 + curComp * 0.10 + statTotal + expBonus + tierBonus - penalties;
+      
+      // Soft-Cap estricto en OVR 80+: cada punto por encima de 80 cuesta el triple de maestría
+      if(rawOvr > 80){
+        rawOvr = 80 + (rawOvr - 80) * 0.35;
+      }
+      return clamp(rawOvr);
     }
+
+    function previewOvr(area, tier){
+      if(!S) return 36;
+      const s = S.stats || {vision:10, ejecucion:10, carisma:10, rosca:10};
+      const compValues = Object.values(S.comp || {ven:20, pro:20, fin:20, ope:20, mkt:20, leg:20});
+      const maxComp = Math.max(...compValues, (S.comp && S.comp[area]) || 20);
+      const statTotal = (s.vision + s.ejecucion + s.carisma + s.rosca) * 0.12;
+      const expYears = (S.age && S.age >= 22) ? (S.age - 22) : 0;
+      const expBonus = expYears * 0.28;
+      const tierBonus = Math.max(S.tierBonus || 0, Math.min((tier - 1) * 3.0, 12));
+      const penalties = (S.ovrPenalties || 0);
+
+      let rawOvr = 22 + maxComp * 0.22 + ((S.comp && S.comp[area])||20) * 0.10 + statTotal + expBonus + tierBonus - penalties;
+      if(rawOvr > 80){
+        rawOvr = 80 + (rawOvr - 80) * 0.35;
+      }
+      return clamp(rawOvr);
+    }
+
 
     function previewOvr(area, tier){
       if(!S) return 30;
@@ -1679,21 +2106,31 @@ Página
       renderApp();
     }
 
-    function startCareer(){
+            function startCareer(){
       const o = ORIGINS.find(x => x.id === S.origin) || ORIGINS[0];
       const st = {...o.stats}, comp = {};
-      for(const k in o.comp) comp[k] = clamp(o.comp[k] + rndInt(-4, 4));
+      for(const k in o.comp) comp[k] = clamp(o.comp[k] + rndInt(-3, 3));
       for(const k in st) st[k] = clamp(st[k] + rndInt(-2, 2));
+
+      const inputEl = document.getElementById("setupInputApellido");
+      let finalName = "";
+      if(inputEl && inputEl.value.trim()) {
+        finalName = inputEl.value.trim().toUpperCase();
+      } else if(S.apellido && S.apellido.trim() && S.apellido.trim() !== 'EJECUTIVO') {
+        finalName = S.apellido.trim().toUpperCase();
+      } else {
+        const sampleNames = ["JAVIER", "SANTIAGO", "MARTÍN", "FACUNDO", "CAMILA", "LUCÍA", "MATÍAS", "VALENTINA", "JOAQUÍN", "SOFÍA"];
+        finalName = rnd(sampleNames);
+      }
 
       S = {
         ...S,
-        apellido: S.apellido.trim() || "APELLIDO",
+        apellido: finalName,
         phase: "offer",
         stats: st,
         comp,
         area: null,
-        riesgo: S.lane === "aggr" ? 14 : 4,
-        rep: o.rep - (S.lane === "aggr" ? 6 : 0),
+        rep: o.rep,
         tierBonus: 0,
         age: 22,
         cash: o.cash,
@@ -1708,11 +2145,16 @@ Página
         exits: 0,
         badYears: 0,
         extensiones: 0,
-        lastEventAge: 18, // Cooldown de eventos para evitar popups seguidos
+        lastEventAge: 18,
+        crisis40Triggered: false,
         purchasedOnce: {},
         cooldowns: {},
         equityCompanies: [],
         firedCompanies: [],
+        eventsTriggeredCount: 0,
+        derechaChoices: 0,
+        izquierdaChoices: 0,
+        cyclesInCurrentCompany: 0,
         offers: makeOffers(1, 3)
       };
 
@@ -1740,24 +2182,45 @@ Página
       return base;
     }
 
+        
+    
     function pickCompany(i){
       S.flash = null;
       if(i !== -1){
         const c = S.offers[i];
         S.company = {...c};
         S.area = c.area;
-        S.tierBonus = (c.t - 1) * 4;
+        S.cyclesInCurrentCompany = 1;
+        
+        // Tier boost según la escala real de la empresa
+        const tierBoost = Math.min((c.t - 1) * 3.5, 14);
+        S.tierBonus = Math.max(S.tierBonus || 0, tierBoost);
         S.salary = salaryFor(S.company, S.area, rankOf(computeOvr()));
         S.badYears = 0;
         if(c.t >= 3) unlockTrophy('unicornio');
       } else {
-        // Quedarse en la actual
-        S.salary = Math.round(S.salary * 1.06);
+        // Quedarse en la misma empresa
+        S.cyclesInCurrentCompany = (S.cyclesInCurrentCompany || 1) + 1;
+        const currentTier = S.company ? S.company.t : 1;
+
+        // Si te quedás demasiado tiempo estancado en una Pyme/Garaje (Tier 1/2), el techo te frena
+        if(currentTier <= 1 && S.cyclesInCurrentCompany > 3){
+          S.salary = Math.min(S.salary, 32000); // Techo de Pyme
+          S.flash = { good: false, title: "Estancamiento: Esta Pyme no tiene más presupuesto para sueldos altos.", ovrDelta: 0, cashDelta: 0 };
+        } else if(currentTier <= 2 && S.cyclesInCurrentCompany > 4){
+          S.salary = Math.min(S.salary, 75000); // Techo de Scaleup
+          S.flash = { good: false, title: "Techo de cristal: Para seguir creciendo necesitás saltar a un Unicornio Tier 3+.", ovrDelta: 0, cashDelta: 0 };
+        } else {
+          S.salary = Math.round(S.salary * 1.05);
+          if(S.comp && S.area) S.comp[S.area] = clamp((S.comp[S.area]||20) + 1);
+        }
       }
 
       S.rank = rankOf(computeOvr());
       advanceYear();
     }
+
+
 
     function trackPeaks(){
       const cur = computeOvr();
@@ -1768,48 +2231,147 @@ Página
       if(S.rank.i >= 7) unlockTrophy('ceo');
     }
 
-    function unlockTrophy(k){
-      if(S && S.trophies && !S.trophies[k]){
-        S.trophies[k] = true;
+    
+    
+    function resetAllTrophies(){
+      if(confirm("¿Estás seguro de que querés reiniciar toda la colección de logros guardados?")){
+        localStorage.removeItem("market_capo_meta_trophies");
+        renderApp();
       }
     }
 
-    function advanceYear(){
+    /* ================= META-PROGRESIÓN DE TROFEOS PERSISTENTES ================= */
+    const ALL_TROPHIES = [
+      { id: "ascenso", n: "Primer Gran Ascenso", d: "Alcanzá el cargo de Gerente o superior.", ic: "🎖️" },
+      { id: "unicornio", n: "Fichaje Unicornio", d: "Entrá a una corporación Tier 3 o superior.", ic: "🦄" },
+      { id: "clevel", n: "Sillón C-Level", d: "Alcanzá un puesto C-Level (CFO, CTO, CMO, COO, etc.).", ic: "👔" },
+      { id: "ceo", n: "Rey del Directorio", d: "Llegá a ser CEO de una corporación.", ic: "👑" },
+      { id: "chairman", n: "Chairman Supremo", d: "Alcanzá el rango máximo de Chairman (OVR 90+).", ic: "🏛️" },
+      { id: "millonario", n: "Club del Millón", d: "Acumulá más de $1,000,000 en patrimonio.", ic: "💰" },
+      { id: "magnate", n: "Vida de Magnate", d: "Comprate un deportivo importado y penthouse.", ic: "🏎️" },
+      { id: "transhumano", n: "Inmortalidad Corporativa", d: "Comprá una extensión biológica transhumana.", ic: "🧬" },
+      { id: "timba", n: "Lobo de la Timba", d: "Ganale a la ruleta de riesgo cripto / startup.", ic: "🎲" },
+      { id: "compliance", n: "Inmunidad Penal", d: "Blanqueá tu expediente con el bufete de compliance.", ic: "⚖️" },
+      { id: "equity", n: "Socio Accionista", d: "Comprá un paquete de acciones de la empresa.", ic: "📈" },
+      { id: "purga", n: "Inmune a la Purga", d: "Llegá a la jubilación sin ser despedido jamás.", ic: "🚪" }
+    ];
+
+    function getUnlockedTrophies(){
+      try {
+        const stored = localStorage.getItem("market_capo_meta_trophies");
+        return stored ? JSON.parse(stored) : {};
+      } catch(e){
+        return {};
+      }
+    }
+
+    function saveUnlockedTrophy(id){
+      try {
+        const current = getUnlockedTrophies();
+        current[id] = true;
+        localStorage.setItem("market_capo_meta_trophies", JSON.stringify(current));
+      } catch(e){}
+    }
+
+    function unlockTrophy(k){
+      if(S && S.trophies){
+        S.trophies[k] = true;
+      }
+      saveUnlockedTrophy(k);
+    }
+
+                    function advanceYear(){
       const stepYears = {int:1, nor:2, exp:4}[S.pace] || 1;
+      const prevAge = S.age;
       S.age += stepYears;
 
-      const c = S.comp[S.area] || 25;
-      const gen = (S.stats.vision + S.stats.ejecucion + S.stats.carisma + S.stats.rosca) / 4;
-      const exigencia = (S.company ? S.company.t : 1) * 6 + S.rank.i * 1.5;
-      const perf = clamp(32 + c*0.55 + gen*0.4 + rndInt(-10, 10) - exigencia);
+      // ================= LA CRISIS DE LOS 40 (50/50 RESET) =================
+      if(prevAge < 40 && S.age >= 40 && !S.crisis40Triggered){
+        S.crisis40Triggered = true;
+        const survivesCrisis = Math.random() < 0.50;
 
-      if(perf >= 52){
-        S.comp[S.area] = clamp((S.comp[S.area]||25) + rndInt(1, 3));
-        S.stats.ejecucion = clamp(S.stats.ejecucion + 1);
+        if(!survivesCrisis){
+          if(S.company) S.firedCompanies.push(S.company.n);
+          S.company = null;
+          S.area = null;
+          S.ovrPenalties = (S.ovrPenalties || 0) + 12;
+          S.tierBonus = 0;
+          S.badYears = 0;
+          S.rep = clamp(S.rep - 15);
+          S.cash = Math.min(S.cash, 40000);
+
+          S.milestones.push({
+            tone: "bad",
+            ic: "📉",
+            kick: "Crisis de los 40",
+            title: "El Gran Quiebre",
+            sub: "Te comió la reestructuración corporativa de mediana edad. Perdiste tu puesto de mando y tu OVR cayó. Tenés que volver a remarla desde abajo en Pymes.",
+            cta: "Reinventarse desde Cero"
+          });
+          S.offers = makeOffers(1, 3);
+          S.phase = "offer";
+          renderApp();
+          return;
+        } else {
+          S.tierBonus = clamp((S.tierBonus || 0) + 6, 34);
+          S.milestones.push({
+            tone: "good",
+            ic: "🛡️",
+            kick: "Crisis de los 40",
+            title: "Consagración Ejecutiva",
+            sub: "Superaste la gran purga de los 40 con éxito. Tu liderazgo quedó blindado ante los ojos del mercado.",
+            cta: "Seguir en la Cima"
+          });
+        }
+      }
+
+      const c = (S.comp && S.comp[S.area]) || 25;
+      const coTier = S.company ? S.company.t : 1;
+      const gen = (S.stats.vision + S.stats.ejecucion + S.stats.carisma + S.stats.rosca) / 4;
+      
+      const exigencia = coTier * 7.5 + S.rank.i * 1.8;
+      const perf = clamp(36 + c * 0.38 + gen * 0.28 + rndInt(-8, 8) - exigencia);
+
+      if(perf >= 42){
+        const skillGain = Math.max(1, Math.round(0.9 * stepYears * (1 + (coTier - 1) * 0.18)));
+        S.comp[S.area] = clamp((S.comp[S.area]||20) + skillGain);
+        S.stats.ejecucion = clamp(S.stats.ejecucion + Math.max(1, Math.round(0.35 * stepYears)));
+        S.stats.vision = clamp(S.stats.vision + Math.max(1, Math.round(0.25 * stepYears)));
+        S.stats.rosca = clamp(S.stats.rosca + Math.max(1, Math.round(0.25 * stepYears)));
         S.badYears = 0;
       } else {
         S.badYears++;
-        S.rep = clamp(S.rep - 2);
+        S.rep = clamp(S.rep - 1.5);
       }
 
-      S.rep = clamp(S.rep + 1);
-      S.salary = Math.round(S.salary*0.75 + salaryFor(S.company, S.area, S.rank)*0.25);
-      S.cash += Math.round(S.salary * 0.18 * stepYears);
+      // Costo de vida ejecutivo real
+      const rankMultiplier = 1 + S.rank.i * 0.15;
+      S.salary = Math.round(S.salary * 0.75 + salaryFor(S.company, S.area, S.rank) * 0.25);
+      const costOfLiving = (7000 + S.rank.i * 3500 + (coTier - 1) * 4500) * stepYears;
+      const netSavings = Math.round(S.salary * 0.24 * stepYears - costOfLiving * 0.30);
+      S.cash += netSavings;
 
       const prevRank = S.rank.i;
       S.rank = rankOf(computeOvr());
       trackPeaks();
 
+            let promotionOccurred = false;
       if(S.rank.i > prevRank){
-        unlockTrophy('ascenso');
-        S.milestones.push({
-          tone: "good",
-          ic: "🎖️",
-          kick: "Ascenso Corporativo",
-          title: S.rank.n,
-          sub: `Has alcanzado el cargo de ${S.rank.n} en ${S.company ? S.company.n : 'el mercado'}.`,
-          cta: "Asumir Puesto"
-        });
+        promotionOccurred = true;
+        S.badYears = 0;
+        if(S.rank.i >= 4) unlockTrophy('ascenso'); // Requiere Director (OVR 50+)
+        if(S.rank.i >= 6 && computeOvr() >= 75) unlockTrophy('clevel');
+        if(S.rank.i >= 7 && computeOvr() >= 82) unlockTrophy('ceo');
+        if(S.rank.i >= 8 && computeOvr() >= 92) unlockTrophy('chairman');
+        playSfx('levelUp');
+        
+        // Notificación sutil en flash sin popup bloqueante
+        S.flash = {
+          good: true,
+          title: `🎉 ¡Ascendido a ${S.rank.n} de ${areaById(S.area).n}!`,
+          ovrDelta: 0,
+          cashDelta: 0
+        };
       }
 
       // Registro en Timeline
@@ -1825,29 +2387,34 @@ Página
 
       // Condiciones de Derrota
       if(S.cash < -800000) return endGame("Bancarrota Financiera");
-      if(S.riesgo >= 85 && Math.random() < 0.15) return endGame("Procesamiento Judicial");
-      if(S.badYears >= 3) {
+
+      // Despido desafiante
+      if(!promotionOccurred && S.badYears >= 3){
         if(S.company) S.firedCompanies.push(S.company.n);
         const firedFrom = S.company ? S.company.n : 'la empresa';
         S.company = null;
         S.area = null;
         S.rep = clamp(S.rep - 12);
+        S.ovrPenalties = (S.ovrPenalties || 0) + 6;
+        S.tierBonus = Math.max(0, (S.tierBonus || 0) - 4);
+        S.badYears = 0;
+
         S.milestones.push({
           tone: "bad",
           ic: "⚠️",
           kick: "Despido Ejecutivo",
-          title: "Te Eyectaron del Board",
-          sub: `El directorio de ${firedFrom} rescindió tu contrato por bajo rendimiento. Quedás vetado de la firma.`,
+          title: "Te Eyectaron del Directorio",
+          sub: `El directorio de ${firedFrom} rescindió tu contrato por bajo rendimiento. El golpe a tu currículum te cuesta -6 OVR y quedás vetado.`,
           cta: "Buscar Nuevo Laburo"
         });
-        S.offers = makeOffers(Math.max(1, accessibleTier()-1), 3);
+        S.offers = makeOffers(Math.max(1, accessibleTier() - 1), 3);
         S.phase = "offer";
         renderApp();
         return;
       }
 
-      // Condición de Jubilación / Longevidad
-      const retireTarget = RETIRE_AGES[Math.min(S.extensiones, RETIRE_AGES.length-1)];
+      // Condición de Jubilación
+      const retireTarget = RETIRE_AGES[Math.min(S.extensiones, RETIRE_AGES.length - 1)];
       if(S.age >= retireTarget){
         const nextCost = EXT_COSTS[S.extensiones];
         if(nextCost && S.cash >= nextCost){
@@ -1855,13 +2422,35 @@ Página
           renderApp();
           return;
         } else {
-          return endGame("Jubilación Dorada");
+          return endGame(S.cash >= 0 ? "Jubilación Dorada" : "Jubilación con Deudas");
         }
       }
 
-      // Pacing Inteligente de Eventos: Mínimo 4-5 años de espacio entre popups para no cortar el ritmo
+      // Pacing Inteligente y Estricto de Eventos
+      const maxEventsByPace = { exp: 1, nor: 2, int: 3 }[S.pace] || 2;
+      S.eventsTriggeredCount = S.eventsTriggeredCount || 0;
       const yearsSinceLastEvent = S.age - (S.lastEventAge || 0);
-      if(yearsSinceLastEvent >= (3 + stepYears) && Math.random() < 0.28 && EVENTS.length){
+
+      let shouldTriggerEvent = false;
+      if(!promotionOccurred && S.eventsTriggeredCount < maxEventsByPace && EVENTS.length){
+        if(S.pace === "exp"){
+          if(S.eventsTriggeredCount === 0 && S.age >= 44 && S.age <= 48){
+            shouldTriggerEvent = true;
+          }
+        } else if(S.pace === "nor"){
+          if(yearsSinceLastEvent >= 12 && Math.random() < 0.35){
+            shouldTriggerEvent = true;
+          }
+        } else {
+          if(yearsSinceLastEvent >= 10 && Math.random() < 0.30){
+            shouldTriggerEvent = true;
+          }
+        }
+      }
+
+      if(shouldTriggerEvent){
+        S.eventsTriggeredCount++;
+        S.lastEventAge = S.age;
         S.choice = {...rnd(EVENTS)};
         S.phase = "choice";
       } else {
@@ -1876,6 +2465,7 @@ Página
       const cost = EXT_COSTS[S.extensiones];
       S.cash -= cost;
       S.extensiones++;
+      S.isTranshumano = true;
       unlockTrophy('transhumano');
       S.milestones.push({
         tone: "gold",
@@ -1892,6 +2482,10 @@ Página
 
     function resolveChoice(i){
       const o = S.choice.o[i];
+      if(o.laneChoice === 'izq') S.izquierdaChoices = (S.izquierdaChoices || 0) + 1;
+      else S.derechaChoices = (S.derechaChoices || 0) + 1;
+      if(o.laneChoice === 'izq') S.izquierdaChoices = (S.izquierdaChoices || 0) + 1;
+      else S.derechaChoices = (S.derechaChoices || 0) + 1;
       const rollItem = o.roll[Math.random() < (o.roll[0].p/100) ? 0 : 1];
       const rollIdx = o.roll.indexOf(rollItem);
       
@@ -1917,7 +2511,10 @@ Página
         if(S.rolling.spins > 10 && S.rolling.cur === S.rolling.targetIdx){
           // Aplicar Efectos
           const eff = rollItem.eff || {};
-          if(eff.ovr) S.tierBonus = clamp(S.tierBonus + eff.ovr, 34);
+          if(eff.ovr) {
+            if(eff.ovr > 0) S.tierBonus = clamp((S.tierBonus||0) + eff.ovr, 34);
+            else S.ovrPenalties = (S.ovrPenalties||0) + Math.abs(eff.ovr);
+          }
           if(eff.rep) S.rep = clamp(S.rep + eff.rep);
           if(eff.riesgo) S.riesgo = clamp(S.riesgo + eff.riesgo);
           for(const k in eff){
@@ -1941,6 +2538,7 @@ Página
         }
 
         S.rolling.cur = (S.rolling.cur + 1) % o.roll.length;
+        playSfx('spin');
         setTimeout(tick, 90 + S.rolling.spins * 12);
       };
       tick();
@@ -1998,29 +2596,22 @@ Página
       `;
     }
 
-    function buildSetupHTML(){
+                function buildSetupHTML(){
       const o = ORIGINS.find(x => x.id === S.origin) || ORIGINS[0];
       return `
-        <div class="setup-wrap">
+        <div class="setup-wrap" style="max-width:580px;">
           <h2>Definí tu Perfil Ejecutivo</h2>
-          <div class="setup-grid">
+          <div class="setup-grid" style="grid-template-columns: 1fr 1fr;">
             <div>
               <div class="field-block">
-                <label>Apellido</label>
-                <input value="${S.apellido}" maxlength="14" placeholder="TU APELLIDO" oninput="S.apellido=this.value;">
+                <label>Nombre del Ejecutivo</label>
+                <input id="setupInputApellido" value="${S.apellido}" maxlength="16" placeholder="Escribí tu nombre o apodo..." oninput="S.apellido=this.value.trim();">
               </div>
-              <div class="field-block">
+              <div class="field-block" style="margin-top:14px;">
                 <label>Género</label>
                 <div class="toggle-group">
                   <button class="${S.gender==='H'?'on':''}" onclick="S.gender='H';renderApp()">Hombre</button>
                   <button class="${S.gender==='M'?'on':''}" onclick="S.gender='M';renderApp()">Mujer</button>
-                </div>
-              </div>
-              <div class="field-block">
-                <label>Carril de Carrera</label>
-                <div class="toggle-group">
-                  <button class="${S.lane==='strat'?'on strat':''}" onclick="S.lane='strat';renderApp()">Estratégico</button>
-                  <button class="${S.lane==='aggr'?'on aggr':''}" onclick="S.lane='aggr';renderApp()">Agresivo</button>
                 </div>
               </div>
             </div>
@@ -2039,9 +2630,9 @@ Página
               </div>
             </div>
           </div>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:18px; border-top:1px solid var(--border); padding-top:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; border-top:1px solid var(--border); padding-top:14px;">
             <button class="btn ghost" onclick="S=null;renderApp()">Volver</button>
-            <button class="btn" id="startBtn" onclick="startCareer()">Confirmar Perfil</button>
+            <button class="btn" id="startBtn" onclick="startCareer()">Comenzar Carrera</button>
           </div>
         </div>
       `;
@@ -2051,7 +2642,7 @@ Página
       const ov = computeOvr();
       const o = ORIGINS.find(x => x.id === S.origin) || ORIGINS[0];
       return `
-        <article class="player-card">
+                <article class="player-card">
           <div class="card-hero">
             <div class="ovr-gold-badge" id="ovrBadge">
               <small>OVR</small>
@@ -2059,21 +2650,19 @@ Página
               <span class="pos-pill">${S.rank ? S.rank.n : 'Pasante'}</span>
             </div>
             <div class="avatarbox">
-              ${avatarSVG()}
+              ${avatarSVG(S)}
             </div>
             <div class="player-meta">
               <div class="tags-row">
-                <span class="badge-tag ${S.lane==='strat'?'lane-strat':'lane-aggr'}">${S.lane==='strat'?'🛡️ ESTRATÉGICO':'⚡ AGRESIVO'}</span>
                 ${S.area ? `<span class="badge-tag role">${areaById(S.area).n}</span>` : ''}
               </div>
               <div class="company-headline ${!S.company?'none':''}">
                 ${companyLogo(S.company)}
                 <span>${S.company ? S.company.n : 'Sin Empleo Actual'}</span>
               </div>
-              <div class="exp-sub">${S.apellido ? S.apellido.toUpperCase() : 'APELLIDO'} • ${S.age} años • ${o.n}</div>
+              <div class="exp-sub">${S.apellido} • ${S.age} años • ${o.n}</div>
             </div>
           </div>
-          
           <div class="kpi-board">
             <div class="kpi-cell">
               <div class="l">Patrimonio</div>
@@ -2152,7 +2741,7 @@ Página
       `;
     }
 
-    function buildDecisionHTML(){
+        function buildDecisionHTML(){
       if(S.phase === "longevity"){
         const nextCost = EXT_COSTS[S.extensiones];
         return `
@@ -2178,7 +2767,7 @@ Página
         `;
       }
 
-      // Mercado Laboral
+      // Mercado Laboral con Cargo Ofertado Claro
       return `
         <div class="decisions-box">
           <div class="box-header">
@@ -2187,14 +2776,16 @@ Página
           </div>
           <div class="contract-grid">
             ${S.offers.map((co, i) => {
-              const sal = salaryFor(co, co.area, rankOf(previewOvr(co.area, co.t)));
+              const offeredRank = rankOf(previewOvr(co.area, co.t));
+              const cargoName = `${offeredRank.n} de ${areaById(co.area).n}`;
+              const sal = salaryFor(co, co.area, offeredRank);
               const diff = sal - (S.company ? S.salary : 0);
               return `
                 <div class="contract-card" onclick="pickCompany(${i})">
                   <span class="card-kicker">Aceptar Oferta en</span>
                   ${companyLogo(co)}
                   <div class="company-name">${co.n}</div>
-                  <span class="co-sector">${areaById(co.area).n} • Tier ${co.t}</span>
+                  <span class="co-sector" style="color:var(--gold); font-weight:800; font-size:0.70rem;">💼 ${cargoName}</span>
                   <div class="salary-pill ${diff<0?'down':''}">${money(sal)} / año</div>
                 </div>
               `;
@@ -2203,8 +2794,8 @@ Página
               <div class="contract-card stay-option" onclick="pickCompany(-1)">
                 <span class="card-kicker">Quedarte en</span>
                 <div class="company-name">${S.company.n} (Puesto Actual)</div>
-                <span class="co-sector">Mantener puesto y ganar aumento por antigüedad</span>
-                <div class="salary-pill">${money(Math.round(S.salary*1.06))} / año</div>
+                <span class="co-sector" style="color:var(--electric-blue); font-size:0.68rem;">Conservar puesto de ${S.rank.n} de ${areaById(S.area).n}</span>
+                <div class="salary-pill">${money(Math.round(S.salary*1.05))} / año</div>
               </div>
             ` : ''}
           </div>
@@ -2212,17 +2803,45 @@ Página
       `;
     }
 
+
+
     /* ================= MODAL DE EVENTO POPUP IMPACTANTE ================= */
+    
+    /* ================= MANEJO ROBUSTO DE EVENTOS Y RULETA ================= */
+    
+    /* ================= RESOLUCIÓN CON EFECTO ÚNICO TRANSPARENTE ================= */
+    let pendingEventResult = null;
+
     function renderEventModal(){
       const container = document.getElementById("eventModalContainer");
       if(!container) return;
-      if(!S || (S.phase !== "choice" && S.phase !== "rolling") || !S.choice){
+      if(!S || (S.phase !== "choice" && S.phase !== "rolling" && S.phase !== "event_result") || !S.choice){
         container.innerHTML = "";
         return;
       }
 
       const c = S.choice;
       const imgUrl = EVENT_IMAGES[c.imgKey] || EVENT_IMAGES.deal;
+
+      if(S.phase === "event_result" && pendingEventResult){
+        const res = pendingEventResult;
+        const isGood = res.isPositive;
+        container.innerHTML = `
+          <div class="event-modal-backdrop">
+            <div class="event-modal">
+              <div class="event-result-box ${isGood ? 'good' : 'bad'}">
+                <span class="tag-res">${isGood ? '✨ ÉXITO ROTUNDO' : '⚠️ GOLPE ADVERSO'}</span>
+                <h3>${res.label}</h3>
+                <div class="metrics-row">
+                  <span class="met ${isGood ? 'up' : 'down'}">${res.metricText}</span>
+                </div>
+                <button class="btn" style="margin-top:8px; width:100%;" onclick="finishEventAndAdvance()">CONTINUAR CARRERA</button>
+              </div>
+            </div>
+          </div>
+        `;
+        return;
+      }
 
       container.innerHTML = `
         <div class="event-modal-backdrop">
@@ -2243,18 +2862,25 @@ Página
                   <div class="card-kicker">${opt.tag}</div>
                   <div class="company-name" style="font-size:0.92rem;">${opt.n}</div>
                   <div class="outcomes">
-                    ${opt.roll.map(rl => `
-                      <div class="outcome">
-                        <div class="oc-head">
-                          <span>${rl.label}</span>
-                          <b>${rl.p}%</b>
+                    ${opt.roll.map((rl, j) => {
+                      let tagText = "";
+                      if(rl.type === "ovr") tagText = `${rl.val > 0 ? '+' : ''}${rl.val} OVR`;
+                      else if(rl.type === "cash") tagText = `${rl.val > 0 ? '+' : ''}${money(rl.val)}`;
+                      else if(rl.type === "promote") tagText = "🎖️ ASCENSO DIRECTO";
+                      else if(rl.type === "fire") tagText = "⚠️ DESPIDO INMEDIATO";
+
+                      return `
+                        <div class="outcome outcome-slot-${j}">
+                          <div class="oc-head">
+                            <span>${rl.label}</span>
+                            <b>${rl.p}%</b>
+                          </div>
+                          <div class="oc-big">
+                            <span class="num ${rl.isPositive ? 'up' : 'down'}">${tagText}</span>
+                          </div>
                         </div>
-                        <div class="oc-big">
-                          ${ovrDelta(rl.eff) !== 0 ? `<span class="num ${ovrDelta(rl.eff)>0?'up':'down'}">${ovrDelta(rl.eff)>0?'+':''}${ovrDelta(rl.eff)} OVR</span>` : ''}
-                          ${rl.cash ? `<span class="num ${rl.cash>0?'up':'down'}">${rl.cash>0?'+':''}${money(rl.cash)}</span>` : ''}
-                        </div>
-                      </div>
-                    `).join('')}
+                      `;
+                    }).join('')}
                   </div>
                 </div>
               `).join('')}
@@ -2264,10 +2890,95 @@ Página
       `;
     }
 
-    function closeEventModal(){
-      const container = document.getElementById("eventModalContainer");
-      if(container) container.innerHTML = "";
+    function resolveChoice(i){
+      const o = S.choice.o[i];
+      if(o.laneChoice === 'izq') S.izquierdaChoices = (S.izquierdaChoices || 0) + 1;
+      else S.derechaChoices = (S.derechaChoices || 0) + 1;
+      if(o.laneChoice === 'izq') S.izquierdaChoices = (S.izquierdaChoices || 0) + 1;
+      else S.derechaChoices = (S.derechaChoices || 0) + 1;
+      const isFirstWon = Math.random() < (o.roll[0].p / 100);
+      const rollIdx = isFirstWon ? 0 : 1;
+      const rollItem = o.roll[rollIdx];
+      
+      S.rolling = { oi: i, targetIdx: rollIdx, cur: 0, spins: 0 };
+      S.phase = "rolling";
+      
+      document.querySelectorAll(".event-card").forEach(c => c.classList.add("spinning"));
+
+      const tick = () => {
+        const cards = document.querySelectorAll(".event-card");
+        if(cards.length > i){
+          const outcomes = cards[i].querySelectorAll(".outcome");
+          outcomes.forEach((el, j) => {
+            el.classList.remove("lit", "win", "lose");
+            if(j === S.rolling.cur){
+              el.classList.add("lit", o.roll[j].isPositive ? "win" : "lose");
+            }
+          });
+        }
+
+        S.rolling.spins++;
+        if(S.rolling.spins > 10 && S.rolling.cur === S.rolling.targetIdx){
+          let metricText = "";
+          // Aplicar ÚNICO efecto sin mezclas
+          if(rollItem.type === "ovr"){
+            if(rollItem.val > 0) S.tierBonus = clamp((S.tierBonus||0) + rollItem.val, 34);
+            else S.ovrPenalties = (S.ovrPenalties||0) + Math.abs(rollItem.val);
+            metricText = `${rollItem.val > 0 ? '+' : ''}${rollItem.val} OVR`;
+          } else if(rollItem.type === "cash"){
+            S.cash += rollItem.val;
+            metricText = `${rollItem.val > 0 ? '+' : ''}${money(rollItem.val)}`;
+          } else if(rollItem.type === "promote"){
+            S.tierBonus = clamp((S.tierBonus||0) + 10, 34);
+            S.rank = rankOf(computeOvr() + 10);
+            metricText = "🎖️ Ascendido a " + S.rank.n;
+            unlockTrophy('ascenso');
+          } else if(rollItem.type === "fire"){
+            S.ovrPenalties = (S.ovrPenalties||0) + 6;
+            if(S.company) S.firedCompanies.push(S.company.n);
+            S.company = null;
+            S.area = null;
+            metricText = "⚠️ Contrato Rescindido (-6 OVR)";
+          }
+
+          pendingEventResult = {
+            isPositive: rollItem.isPositive,
+            label: rollItem.label,
+            metricText: metricText
+          };
+
+          S.phase = "event_result";
+          playSfx(rollItem.isPositive ? 'cash' : 'click');
+          renderEventModal();
+          return;
+        }
+
+        S.rolling.cur = (S.rolling.cur + 1) % o.roll.length;
+        playSfx('spin');
+        setTimeout(tick, 90 + S.rolling.spins * 14);
+      };
+      tick();
     }
+
+    function finishEventAndAdvance(){
+      if(pendingEventResult){
+        S.flash = {
+          good: pendingEventResult.isPositive,
+          title: pendingEventResult.label,
+          ovrDelta: 0,
+          cashDelta: 0
+        };
+      }
+      pendingEventResult = null;
+      S.lastEventAge = S.age;
+      S.choice = null;
+      S.rolling = null;
+      closeEventModal();
+      advanceYear();
+    }
+
+
+    function closeEventModal(){ const container = document.getElementById('eventModalContainer'); if(container) container.innerHTML = ''; }
 
     function buildTimelineHTML(){
       const rows = (S.rows||[]).map((r, i) => `
@@ -2305,33 +3016,131 @@ Página
       `;
     }
 
+    
+    /* ================= PANTALLA DE RESULTADOS / ENDGAME DEFINITIVA ================= */
     function buildEndHTML(){
+      const unlockedMeta = getUnlockedTrophies();
+      const unlockedCount = ALL_TROPHIES.filter(t => unlockedMeta[t.id]).length;
+      
+            // Calificación Realista y Desafiante de Carrera
+      let scoreGrade = "B";
+      let scoreTitle = "Ejecutivo Promedio";
+      let scoreColor = "var(--electric-blue)";
+
+      if(S.cash < 0){
+        // Si terminás con patrimonio negativo, es quiebra o retiro con deuda
+        scoreGrade = "F";
+        scoreTitle = "Retiro en Quiebra y Endeudado";
+        scoreColor = "var(--hot-pink)";
+        S.endReason = "Jubilación con Deudas";
+      } else if(S.maxOvr >= 90 && S.cash >= 2000000){
+        scoreGrade = "S+";
+        scoreTitle = "Leyenda Inmortal de Wall Street";
+        scoreColor = "var(--gold)";
+        unlockTrophy('chairman');
+      } else if(S.maxOvr >= 75 && S.cash >= 600000){
+        scoreGrade = "A";
+        scoreTitle = "Tiburón del Directorio";
+        scoreColor = "var(--money)";
+      } else if(S.maxOvr >= 55 && S.cash >= 150000){
+        scoreGrade = "B";
+        scoreTitle = "Director Consolidado";
+        scoreColor = "var(--electric-blue)";
+      } else {
+        scoreGrade = "C";
+        scoreTitle = "Burócrata Corporativo Promedio";
+        scoreColor = "var(--cyber-amber)";
+      }
+
+      if(!S.firedCompanies || S.firedCompanies.length === 0){
+        unlockTrophy('purga');
+      }
+
+      // Historial resumido de empresas transitadas
+      const companiesWorked = {};
+      (S.rows || []).forEach(r => {
+        if(r.co && r.co.n) {
+          companiesWorked[r.co.n] = (companiesWorked[r.co.n] || 0) + 1;
+        }
+      });
+
       return `
-        <div class="end-wrap">
-          <h2 style="font-size:2rem; font-weight:900; color:var(--gold);">FIN DE LA CARRERA</h2>
-          <p style="font-size:1.1rem; color:#fff; font-weight:700;">${S.endReason.toUpperCase()}</p>
-          <div class="end-stat-grid">
+        <div class="end-wrap" style="max-width:760px; margin:0 auto; padding: 24px 16px;">
+          
+          <div style="background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(16,229,117,0.05)); border: 1.5px solid var(--gold); border-radius: 20px; padding: 20px; width: 100%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.6);">
+            <span style="font-size: 0.65rem; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold);">Reporte Final de Carrera</span>
+            <h2 style="font-family: var(--font-brand); font-size: 2.2rem; font-weight: 900; color: #fff; margin: 4px 0;">${S.endReason ? S.endReason.toUpperCase() : 'CARRERA FINALIZADA'}</h2>
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.4); padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); margin-top: 4px;">
+              <span style="font-size: 1.3rem; font-weight: 900; color: ${scoreColor}; font-family: var(--font-num);">${scoreGrade}</span>
+              <span style="font-size: 0.82rem; font-weight: 800; color: #fff;">${scoreTitle}</span>
+            </div>
+          </div>
+
+          <!-- 4 KPIs Clave -->
+          <div class="end-stat-grid" style="width:100%; margin: 14px 0;">
             <div class="end-stat">
               <div class="l">OVR Máximo</div>
               <div class="v" style="color:var(--gold);">${S.maxOvr}</div>
             </div>
             <div class="end-stat">
               <div class="l">Rango Máximo</div>
-              <div class="v" style="font-size:0.95rem;">${S.maxRank ? S.maxRank.n : 'Pasante'}</div>
+              <div class="v" style="font-size:0.92rem;">${S.maxRank ? S.maxRank.n : 'Pasante'}</div>
             </div>
             <div class="end-stat">
               <div class="l">Patrimonio Final</div>
-              <div class="v green">${money(S.cash)}</div>
+              <div class="v ${S.cash<0?'red':'green'}">${money(S.cash)}</div>
             </div>
             <div class="end-stat">
               <div class="l">Edad de Retiro</div>
               <div class="v">${S.age} años</div>
             </div>
           </div>
-          <button class="btn" onclick="initSetup()">Comenzar Nueva Carrera</button>
+
+          <!-- Meta-Progresión de Trofeos Persistentes (localStorage) -->
+          <div style="background: var(--card-inner); border: 1px solid var(--border); border-radius: 16px; padding: 16px; width: 100%; text-align: left;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+              <h3 style="font-family: var(--font-brand); font-size: 0.92rem; font-weight: 900; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; gap: 6px;">
+                🏆 Colección Global de Logros
+              </h3>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-family: var(--font-num); font-size: 0.75rem; font-weight: 800; color: var(--money); background: rgba(16,229,117,0.12); padding: 3px 9px; border-radius: 10px;">${unlockedCount} / ${ALL_TROPHIES.length} Desbloqueados</span>
+                <button class="btn ghost" style="padding:4px 8px; font-size:0.6rem;" onclick="resetAllTrophies()">🗑️ Reiniciar</button>
+              </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px;">
+              ${ALL_TROPHIES.map(t => {
+                const isUnlocked = !!unlockedMeta[t.id];
+                return `
+                  <div style="background: ${isUnlocked ? 'linear-gradient(135deg, rgba(255,215,0,0.15), rgba(16,229,117,0.05))' : '#080c14'}; border: 1px solid ${isUnlocked ? 'var(--gold)' : 'var(--border)'}; border-radius: 12px; padding: 10px; opacity: ${isUnlocked ? '1' : '0.4'}; transition: all 0.2s;">
+                    <div style="font-size: 1.4rem; margin-bottom: 4px;">${t.ic}</div>
+                    <div style="font-size: 0.76rem; font-weight: 800; color: ${isUnlocked ? '#fff' : 'var(--text-dim)'};">${t.n}</div>
+                    <div style="font-size: 0.62rem; color: var(--text-muted); line-height: 1.3; margin-top: 2px;">${t.d}</div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+
+          <!-- Resumen de Empresas Transitadas -->
+          <div style="background: var(--card-inner); border: 1px solid var(--border); border-radius: 16px; padding: 14px; width: 100%; text-align: left; margin-top: 12px;">
+            <h3 style="font-family: var(--font-brand); font-size: 0.85rem; font-weight: 900; text-transform: uppercase; color: var(--electric-blue); margin-bottom: 8px;">
+              🏢 Currículum Vitae (Empresas Transitadas)
+            </h3>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              ${Object.keys(companiesWorked).map(coName => `
+                <span style="background: #080c14; border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; font-size: 0.72rem; font-weight: 700; color: #fff;">
+                  ${coName} <small style="color:var(--text-muted);">(${companiesWorked[coName]} ciclos)</small>
+                </span>
+              `).join('')}
+            </div>
+          </div>
+
+          <button class="btn" style="margin-top:18px; width:100%; max-width:340px; padding:14px;" onclick="initSetup()">COMENZAR NUEVA CARRERA</button>
         </div>
       `;
     }
+
 
     function mountGameLayout(){
       const b = document.getElementById("board");
@@ -2465,4 +3274,3 @@ Página
   </script>
 </body>
 </html>
-Mostrando Market_CAPo_v6.html.
