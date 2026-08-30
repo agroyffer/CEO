@@ -2,12 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Market CAPo - Simulador de Carrera Corporativa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Market CAPo - Mobile Edition</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@600;700;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
+
     :root {
       --bg: #07090e;
       --card-bg: #0f1422;
@@ -17,7 +18,7 @@
       --border-light: rgba(255, 255, 255, 0.08);
       --border-glow: rgba(56, 189, 248, 0.25);
       
-      /* Neones y Colores */
+      /* Neones y Acentos */
       --money: #10e575;
       --money-glow: rgba(16, 229, 117, 0.35);
       --electric-blue: #38bdf8;
@@ -37,9 +38,16 @@
       --font-num: 'JetBrains Mono', monospace;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      -webkit-tap-highlight-color: transparent; 
+    }
 
-    body {
+    html, body {
+      width: 100%;
+      min-height: 100vh;
       background-color: var(--bg);
       background-image: 
         radial-gradient(circle at 15% 10%, rgba(168, 85, 247, 0.12) 0%, transparent 45%),
@@ -47,28 +55,36 @@
         linear-gradient(180deg, #07090e 0%, #040508 100%);
       color: var(--text);
       font-family: var(--font-body);
-      min-height: 100vh;
-      padding: 14px 12px 48px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      padding: env(safe-area-inset-top, 10px) 10px env(safe-area-inset-bottom, 36px);
       display: flex;
       flex-direction: column;
       align-items: center;
-      -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
 
-    /* Masthead */
+    /* Masthead Móvil Compacto */
     .masthead {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-      justify-content: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 1140px;
+      margin-bottom: 12px;
+      padding: 0 4px;
+    }
+    .masthead-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
     .masthead .logo-coin {
-      width: 32px;
-      height: 32px;
-      border-radius: 9px;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
       background: linear-gradient(135deg, #10e575, #059669);
       display: flex;
       align-items: center;
@@ -76,200 +92,240 @@
       color: #042f1a;
       font-family: var(--font-brand);
       font-weight: 900;
-      font-size: 1.15rem;
-      box-shadow: 0 0 16px var(--money-glow), inset 0 2px 4px rgba(255,255,255,0.4);
+      font-size: 1.1rem;
+      box-shadow: 0 0 14px var(--money-glow);
+      flex-shrink: 0;
     }
     .masthead h1 {
       font-family: var(--font-brand);
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       font-weight: 900;
       letter-spacing: -0.01em;
       background: linear-gradient(90deg, #ffffff, #94a3b8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      white-space: nowrap;
     }
     .masthead .tagline {
-      font-size: 0.65rem;
-      font-weight: 700;
-      color: var(--electric-blue);
-      background: rgba(56, 189, 248, 0.1);
-      padding: 3px 9px;
-      border-radius: 16px;
-      border: 1px solid rgba(56, 189, 248, 0.25);
-    }
-
-    /* Layout Principal Desktop vs Mobile */
-    .board {
-      width: 100%;
-      max-width: 1140px;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 18px;
-      display: grid;
-      grid-template-columns: minmax(340px, 480px) 1fr;
-      gap: 18px;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.06);
-      align-items: start;
-    }
-
-    /* Desktop View: 2 Columnas fijas, SIN pestañas móviles */
-    @media (min-width: 881px) {
-      .mobile-nav { display: none !important; }
-      .tab-panel { display: flex !important; flex-direction: column; width: 100%; }
-      .board { grid-template-columns: minmax(350px, 460px) 1fr; }
-    }
-
-    /* Mobile View: Pestañas activas */
-    @media (max-width: 880px) {
-      .board { grid-template-columns: 1fr; padding: 12px; }
-      .mobile-nav { display: grid !important; }
-      .tab-panel.is-hidden-mobile { display: none !important; }
-    }
-
-    .mobile-nav {
       display: none;
+    }
+    @media (min-width: 540px) {
+      .masthead .tagline {
+        display: inline-block;
+        font-size: 0.62rem;
+        font-weight: 700;
+        color: var(--electric-blue);
+        background: rgba(56, 189, 248, 0.1);
+        padding: 3px 8px;
+        border-radius: 14px;
+        border: 1px solid rgba(56, 189, 248, 0.25);
+      }
+    }
+    .sound-toggle-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-muted);
+      padding: 6px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+    .sound-toggle-btn:active {
+      transform: scale(0.95);
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* Mobile Segmented Control Tabs */
+    .mobile-nav {
+      display: grid;
       width: 100%;
       max-width: 1140px;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      gap: 6px;
+      background: #090e18;
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
       margin-bottom: 12px;
     }
     .tab-btn {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
+      background: transparent;
+      border: none;
       color: var(--text-muted);
-      padding: 11px;
+      padding: 10px 6px;
       font-family: var(--font-body);
       font-weight: 800;
-      font-size: 0.82rem;
-      border-radius: 10px;
+      font-size: 0.78rem;
+      border-radius: 9px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      transition: all 0.2s;
+      transition: all 0.18s ease;
     }
     .tab-btn.active {
       background: linear-gradient(135deg, var(--neon-purple), #6366f1);
       color: #fff;
-      border-color: rgba(255,255,255,0.3);
       box-shadow: 0 4px 14px rgba(168, 85, 247, 0.35);
+    }
+
+    /* Tab Switcher Logic */
+    @media (max-width: 880px) {
+      .tab-panel.is-hidden-mobile { display: none !important; }
+      .board { grid-template-columns: 1fr !important; padding: 10px !important; }
+    }
+    @media (min-width: 881px) {
+      .mobile-nav { display: none !important; }
+      .tab-panel { display: flex !important; flex-direction: column; width: 100%; }
+      .board { grid-template-columns: minmax(350px, 460px) 1fr !important; padding: 18px !important; }
+    }
+
+    /* Layout Principal */
+    .board {
+      width: 100%;
+      max-width: 1140px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 12px;
+      display: grid;
+      gap: 14px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.06);
+      align-items: start;
     }
 
     /* Columna Izquierda */
     .left-col {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
       width: 100%;
     }
 
-    /* Ficha del Ejecutivo */
+    /* Ficha Ejecutiva Compacta y Ergonómica */
     .player-card {
       background: var(--card-inner);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 14px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05);
+      gap: 10px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.35);
       position: relative;
       overflow: hidden;
     }
-    .player-card::before {
-      content: '';
-      position: absolute;
-      top: -40px;
-      right: -40px;
-      width: 130px;
-      height: 130px;
-      background: radial-gradient(circle, rgba(168, 85, 247, 0.22), transparent 70%);
-      pointer-events: none;
-    }
-
     .card-hero {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       align-items: center;
     }
 
-    /* OVR Gold Badge */
+    
+    /* OVR Badge Color Scale (Bronce -> Plata -> Esmeralda -> Zafiro -> Oro -> Sayayin) */
     .ovr-gold-badge {
-      width: 80px;
-      height: 102px;
-      border-radius: 14px;
-      background: linear-gradient(145deg, #ffd700 0%, #ff9900 60%, #b36b00 100%);
-      color: #261500;
+      width: 70px;
+      height: 78px;
+      border-radius: 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       position: relative;
       flex-shrink: 0;
-      box-shadow: 0 6px 20px rgba(255, 170, 0, 0.3), inset 0 2px 4px rgba(255,255,255,0.6);
-      border: 2px solid rgba(255,255,255,0.4);
-      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
-    }
-    .ovr-gold-badge.rising {
-      transform: scale(1.06);
-      box-shadow: 0 0 25px var(--money-glow), 0 0 10px var(--money);
-      border-color: var(--money);
-    }
-    .ovr-gold-badge.falling {
-      transform: scale(0.95);
-      box-shadow: 0 0 25px rgba(244, 63, 94, 0.4), 0 0 10px var(--hot-pink);
-      border-color: var(--hot-pink);
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     .ovr-gold-badge small {
       font-family: var(--font-brand);
       font-size: 0.58rem;
       font-weight: 900;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.10em;
+      opacity: 0.85;
     }
     .ovr-gold-badge b {
       font-family: var(--font-num);
-      font-size: 2.2rem;
+      font-size: 2.1rem;
       line-height: 0.95;
-      font-weight: 800;
-      text-shadow: 0 1px 2px rgba(255,255,255,0.5);
-    }
-    .ovr-gold-badge .pos-pill {
-      font-size: 0.50rem;
       font-weight: 900;
-      text-transform: uppercase;
-      background: rgba(0,0,0,0.4);
-      color: #fff;
-      padding: 2px 6px;
-      border-radius: 6px;
-      margin-top: 3px;
-      letter-spacing: 0.04em;
     }
 
-    /* Avatar Box */
-    
+    /* 0 - 40 OVR: Bronce / Cobrizo Pasas Manteca */
+    .ovr-badge.ovr-bronce {
+      background: linear-gradient(145deg, #a16207, #78350f 60%, #451a03 100%);
+      color: #fef3c7;
+      border: 1.5px solid #d97706;
+      box-shadow: 0 4px 14px rgba(120, 53, 15, 0.4), inset 0 1px 2px rgba(255,255,255,0.3);
+    }
+
+    /* 41 - 55 OVR: Plata / Acero Analista & Jefe */
+    .ovr-badge.ovr-plata {
+      background: linear-gradient(145deg, #e2e8f0, #94a3b8 60%, #475569 100%);
+      color: #0f172a;
+      border: 1.5px solid #ffffff;
+      box-shadow: 0 4px 14px rgba(148, 163, 184, 0.4), inset 0 2px 4px rgba(255,255,255,0.8);
+    }
+
+    /* 56 - 69 OVR: Esmeralda / Verde Neón Gerente */
+    .ovr-badge.ovr-esmeralda {
+      background: linear-gradient(145deg, #34d399, #059669 60%, #064e3b 100%);
+      color: #022c22;
+      border: 1.5px solid #6ee7b7;
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.45), inset 0 2px 4px rgba(255,255,255,0.6);
+    }
+
+    /* 70 - 84 OVR: Zafiro / Azul Eléctrico Director & VP */
+    .ovr-badge.ovr-zafiro {
+      background: linear-gradient(145deg, #38bdf8, #2563eb 60%, #1e3a8a 100%);
+      color: #ffffff;
+      border: 1.5px solid #93c5fd;
+      box-shadow: 0 4px 18px rgba(37, 99, 235, 0.5), inset 0 2px 4px rgba(255,255,255,0.6);
+    }
+
+    /* 85 - 89 OVR: Oro Puro C-Level */
+    .ovr-badge.ovr-oro {
+      background: linear-gradient(145deg, #ffd700 0%, #f59e0b 60%, #b45309 100%);
+      color: #3d2100;
+      border: 2px solid #fffbeb;
+      box-shadow: 0 4px 20px rgba(245, 158, 11, 0.6), inset 0 2px 4px rgba(255,255,255,0.8);
+    }
+
+    /* 90+ OVR: ¡SUPER SAYAYIN GLOW! (Aura de Ki Plasma) */
+    .ovr-badge.ovr-sayayin {
+      background: linear-gradient(135deg, #ffffff 0%, #fff700 30%, #ffaa00 70%, #ff5500 100%) !important;
+      color: #000000 !important;
+      border: 2.5px solid #ffffff !important;
+      animation: sayayinAura 1.4s infinite alternate ease-in-out !important;
+    }
+    @keyframes sayayinAura {
+      0% {
+        box-shadow: 0 0 25px #ffd700, 0 0 50px #ffaa00, 0 0 80px rgba(255,215,0,0.8), inset 0 0 15px #ffffff;
+        transform: scale(1.02);
+      }
+      100% {
+        box-shadow: 0 0 45px #fffb00, 0 0 90px #ff5500, 0 0 130px rgba(255,255,255,0.95), inset 0 0 25px #ffffff;
+        transform: scale(1.07);
+      }
+    }
+
+
+    /* Avatar Box Satírico */
     .avatarbox {
-      width: 62px;
-      height: 76px;
+      width: 58px;
+      height: 72px;
       border-radius: 10px;
       background: #080c14;
       border: 1.5px solid var(--border);
       overflow: hidden;
       flex-shrink: 0;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.6), 0 3px 8px rgba(0,0,0,0.4);
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.6);
       position: relative;
     }
-    .avatarbox img, .setup-avatar-frame img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center 20%;
-      display: block;
-      filter: brightness(0.95) contrast(1.08);
-    }
-
     .avatarbox svg { width: 100%; height: 100%; display: block; }
 
     .player-meta {
@@ -278,27 +334,25 @@
     }
     .tags-row {
       display: flex;
-      gap: 5px;
-      margin-bottom: 4px;
+      gap: 4px;
+      margin-bottom: 3px;
       flex-wrap: wrap;
     }
     .badge-tag {
-      font-size: 0.56rem;
+      font-size: 0.54rem;
       font-weight: 800;
       text-transform: uppercase;
       padding: 2px 6px;
-      border-radius: 5px;
-      letter-spacing: 0.04em;
+      border-radius: 4px;
+      letter-spacing: 0.03em;
     }
-    .badge-tag.lane-strat { background: rgba(56, 189, 248, 0.15); color: var(--electric-blue); border: 1px solid rgba(56, 189, 248, 0.3); }
-    .badge-tag.lane-aggr { background: rgba(244, 63, 94, 0.15); color: var(--hot-pink); border: 1px solid rgba(244, 63, 94, 0.3); }
     .badge-tag.role { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
 
     .company-headline {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 1.12rem;
+      gap: 7px;
+      font-size: 1.05rem;
       font-weight: 800;
       margin-bottom: 2px;
     }
@@ -312,9 +366,12 @@
       font-style: italic;
     }
     .exp-sub {
-      font-size: 0.70rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
       font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     /* 3 KPIs Board */
@@ -323,88 +380,43 @@
       grid-template-columns: repeat(3, 1fr);
       background: #0b0f19;
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 9px 4px;
+      border-radius: 10px;
+      padding: 8px 4px;
       text-align: center;
     }
     .kpi-cell:not(:last-child) { border-right: 1px solid rgba(255,255,255,0.06); }
-    .kpi-cell .l { font-size: 0.50rem; text-transform: uppercase; font-weight: 800; color: var(--text-dim); letter-spacing: 0.05em; }
-    .kpi-cell .v { font-family: var(--font-num); font-size: 1.02rem; font-weight: 800; margin-top: 2px; }
+    .kpi-cell .l { font-size: 0.48rem; text-transform: uppercase; font-weight: 800; color: var(--text-dim); letter-spacing: 0.05em; }
+    .kpi-cell .v { font-family: var(--font-num); font-size: 0.96rem; font-weight: 800; margin-top: 2px; }
     .kpi-cell .v.green { color: var(--money); text-shadow: 0 0 10px var(--money-glow); }
     .kpi-cell .v.red { color: var(--hot-pink); }
     .kpi-cell .v.blue { color: var(--electric-blue); }
     .kpi-cell .v.amber { color: var(--cyber-amber); }
 
-    /* Vitrina de Trofeos */
-    .trophy-rack {
-      background: linear-gradient(180deg, #111728, #0c101d);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 7px 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-    }
-    .trophy-rack .title {
-      font-family: var(--font-brand);
-      font-size: 0.58rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      letter-spacing: 0.08em;
-    }
-    .trophy-rack .slots {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-    .trophy-item {
-      width: 26px;
-      height: 26px;
-      border-radius: 6px;
-      background: #080c14;
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
-      transition: all 0.2s;
-    }
-    .trophy-item.unlocked {
-      background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(255, 153, 0, 0.1));
-      border-color: var(--gold);
-      box-shadow: 0 0 10px rgba(255, 215, 0, 0.35);
-      cursor: help;
-    }
-    .trophy-item.locked {
-      filter: grayscale(1);
-      opacity: 0.20;
-    }
+    
 
-    /* Comodines / Uso de Patrimonio - Drawer Compacto */
+    /* Comodines / Uso de Patrimonio - Acordeón Discreto */
     .wealth-drawer {
       background: var(--card-inner);
       border: 1px solid var(--border);
-      border-radius: 14px;
+      border-radius: 12px;
       overflow: hidden;
-      transition: all 0.25s ease;
+      transition: all 0.2s ease;
     }
     .wealth-drawer-trigger {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 14px;
+      padding: 9px 12px;
       cursor: pointer;
       user-select: none;
       background: linear-gradient(90deg, rgba(255, 215, 0, 0.05), transparent);
     }
-    .wealth-drawer-trigger:hover {
-      background: linear-gradient(90deg, rgba(255, 215, 0, 0.10), transparent);
+    .wealth-drawer-trigger:active {
+      background: linear-gradient(90deg, rgba(255, 215, 0, 0.12), transparent);
     }
     .wealth-drawer-trigger .title {
       font-family: var(--font-brand);
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       font-weight: 800;
       color: var(--gold);
       display: flex;
@@ -412,7 +424,7 @@
       gap: 6px;
     }
     .wealth-drawer-trigger .arrow {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--text-dim);
       transition: transform 0.2s ease;
     }
@@ -422,14 +434,14 @@
     }
     .wealth-drawer-content {
       display: none;
-      padding: 0 10px 10px;
+      padding: 0 8px 8px;
       border-top: 1px solid rgba(255,255,255,0.04);
     }
     .wealth-drawer.open .wealth-drawer-content {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      padding-top: 10px;
+      gap: 6px;
+      padding-top: 8px;
     }
     @media (max-width: 520px) {
       .wealth-drawer.open .wealth-drawer-content { grid-template-columns: 1fr; }
@@ -437,70 +449,56 @@
     .wealth-card {
       background: #080c14;
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 9px;
+      border-radius: 9px;
+      padding: 8px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
       cursor: pointer;
-      transition: all 0.18s ease;
-      position: relative;
+      transition: all 0.15s ease;
     }
-    .wealth-card:hover {
-      transform: translateY(-2px);
+    .wealth-card:active {
+      transform: scale(0.98);
       border-color: var(--gold);
-      box-shadow: 0 6px 16px rgba(255, 215, 0, 0.2);
     }
     .wealth-card.disabled {
-      opacity: 0.4;
+      opacity: 0.38;
       cursor: not-allowed;
-      pointer-events: none;
-    }
-    .wealth-card.on-cooldown {
-      border-color: #3b2a1a;
-      background: #140e0b;
-    }
-    .wealth-card.purchased-once {
-      border-color: #1a3b26;
-      background: #0b1710;
-      opacity: 0.8;
       pointer-events: none;
     }
     .wealth-card-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 4px;
     }
-    .wealth-card-top .ic { font-size: 1rem; }
+    .wealth-card-top .ic { font-size: 0.95rem; }
     .wealth-cost {
       font-family: var(--font-num);
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       font-weight: 800;
       color: var(--hot-pink);
       background: rgba(244, 63, 94, 0.12);
       padding: 2px 6px;
       border-radius: 8px;
-      border: 1px solid rgba(244, 63, 94, 0.25);
     }
     .wealth-status-badge {
-      font-size: 0.52rem;
+      font-size: 0.50rem;
       font-weight: 800;
       text-transform: uppercase;
       padding: 2px 5px;
-      border-radius: 6px;
+      border-radius: 5px;
     }
     .wealth-status-badge.cooldown { background: rgba(251, 191, 36, 0.15); color: var(--cyber-amber); }
     .wealth-status-badge.purchased { background: rgba(16, 229, 117, 0.15); color: var(--money); }
-    .wealth-title { font-size: 0.74rem; font-weight: 800; color: #fff; }
-    .wealth-desc { font-size: 0.58rem; color: var(--text-muted); line-height: 1.3; }
-    .wealth-perk { font-size: 0.55rem; font-weight: 800; color: var(--money); margin-top: 1px; }
+    .wealth-title { font-size: 0.72rem; font-weight: 800; color: #fff; }
+    .wealth-desc { font-size: 0.56rem; color: var(--text-muted); line-height: 1.25; }
+    .wealth-perk { font-size: 0.54rem; font-weight: 800; color: var(--money); margin-top: 1px; }
 
-    /* Flash Notification */
+    /* Flash Banner */
     .flash {
       border-radius: 10px;
-      padding: 10px 12px;
-      animation: flashIn 0.4s cubic-bezier(.2,1.4,.4,1) both;
+      padding: 9px 12px;
+      animation: flashIn 0.35s cubic-bezier(.2,1.4,.4,1) both;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
     .flash.good {
@@ -512,7 +510,7 @@
       border: 1px solid rgba(244, 63, 94, 0.4);
     }
     .flash .fh {
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 800;
       display: flex;
       align-items: center;
@@ -520,48 +518,39 @@
     }
     .flash.good .fh { color: var(--money); }
     .flash.bad .fh { color: var(--hot-pink); }
-    .flash .fm { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
-    .flash .met {
-      font-size: 0.55rem;
-      font-weight: 800;
-      padding: 2px 7px;
-      border-radius: 12px;
-      font-family: var(--font-num);
-    }
-    .flash .met.up { background: #132f1f; color: #5fd07f; }
-    .flash .met.down { background: #351319; color: #e07a86; }
-    @keyframes flashIn { from { opacity: 0; transform: translateY(-8px) scale(0.98); } to { opacity: 1; transform: none; } }
+    @keyframes flashIn { from { opacity: 0; transform: translateY(-6px) scale(0.98); } to { opacity: 1; transform: none; } }
 
     /* Sección Mercado Laboral */
     .decisions-box {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
     .box-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 2px;
+      padding: 0 2px;
     }
     .box-header h2 {
       font-family: var(--font-brand);
-      font-size: 0.95rem;
+      font-size: 0.90rem;
       font-weight: 900;
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
     .box-header .status {
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       color: var(--electric-blue);
       font-weight: 700;
     }
 
-    /* Grilla de Ofertas de Trabajo */
+    /* Grilla de Ofertas */
     .contract-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 8px;
     }
     @media (max-width: 520px) {
       .contract-grid { grid-template-columns: 1fr; }
@@ -571,61 +560,58 @@
       background: var(--card-inner);
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 13px 10px;
+      padding: 12px 10px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 6px;
-      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      gap: 5px;
+      transition: all 0.15s ease;
       position: relative;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.25);
     }
-    .contract-card:hover {
-      transform: translateY(-4px) scale(1.02);
+    .contract-card:active {
+      transform: scale(0.98);
       border-color: var(--electric-blue);
-      box-shadow: 0 10px 22px rgba(56, 189, 248, 0.25);
+      box-shadow: 0 6px 16px rgba(56, 189, 248, 0.25);
     }
-    .contract-card:active { transform: translateY(0) scale(0.99); }
-    
     .contract-card.stay-option {
       grid-column: 1 / -1;
       background: linear-gradient(180deg, #11182a, #0d1220);
       border: 1.5px dashed var(--border);
     }
-    .contract-card.stay-option:hover {
+    .contract-card.stay-option:active {
       border-color: var(--money);
-      box-shadow: 0 8px 20px var(--money-glow);
     }
 
     .card-kicker {
-      font-size: 0.54rem;
+      font-size: 0.52rem;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       color: var(--text-muted);
     }
     .company-name {
-      font-size: 0.96rem;
+      font-size: 0.94rem;
       font-weight: 800;
       color: #fff;
     }
     .co-sector {
-      font-size: 0.64rem;
-      color: var(--electric-blue);
-      font-weight: 700;
+      font-size: 0.66rem;
+      color: var(--gold);
+      font-weight: 800;
     }
     .salary-pill {
       font-family: var(--font-num);
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       font-weight: 800;
       color: var(--money);
       background: rgba(16, 229, 117, 0.12);
-      padding: 4px 10px;
-      border-radius: 16px;
+      padding: 3px 9px;
+      border-radius: 14px;
       border: 1px solid rgba(16, 229, 117, 0.25);
-      margin-top: 3px;
+      margin-top: 2px;
     }
     .salary-pill.down {
       color: var(--hot-pink);
@@ -633,7 +619,7 @@
       border-color: rgba(244, 63, 94, 0.25);
     }
 
-    /* Modal Heroico de Decisiones Críticas / Eventos con Arte Cinematográfico */
+    /* Modal de Decisiones Críticas Móvil */
     .event-modal-backdrop {
       position: fixed;
       inset: 0;
@@ -644,80 +630,76 @@
       align-items: center;
       justify-content: center;
       z-index: 70;
-      padding: 16px;
+      padding: 12px;
       animation: ovIn 0.25s ease both;
     }
     .event-modal {
-      max-width: 540px;
+      max-width: 500px;
       width: 100%;
+      max-height: 92vh;
+      overflow-y: auto;
       background: linear-gradient(170deg, #172136 0%, #0c101c 100%);
       border: 1.5px solid var(--cyber-amber);
-      border-radius: 22px;
-      padding: 22px 20px;
+      border-radius: 20px;
+      padding: 18px 14px;
       box-shadow: 0 25px 60px rgba(0,0,0,0.85), 0 0 35px rgba(251, 191, 36, 0.25);
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      animation: mileIn 0.35s cubic-bezier(.175,1.885,.32,1) both;
+      gap: 10px;
+      animation: mileIn 0.3s cubic-bezier(.175,1.885,.32,1) both;
       position: relative;
     }
     .event-modal-badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-size: 0.58rem;
+      gap: 5px;
+      font-size: 0.55rem;
       font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.10em;
       color: var(--cyber-amber);
       background: rgba(251, 191, 36, 0.12);
-      padding: 4px 10px;
-      border-radius: 20px;
+      padding: 3px 8px;
+      border-radius: 16px;
       border: 1px solid rgba(251, 191, 36, 0.3);
       align-self: flex-start;
     }
-    
-    /* Contenedor de Imagen de Alto Impacto */
     .event-art-box {
       width: 100%;
-      height: 140px;
-      border-radius: 14px;
+      height: 120px;
+      border-radius: 12px;
       overflow: hidden;
       background: #080c14;
       border: 1px solid var(--border);
       position: relative;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
     }
     .event-art-box img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
-      filter: brightness(0.85) contrast(1.15);
     }
     .event-art-box .art-overlay {
       position: absolute;
       inset: 0;
       background: linear-gradient(180deg, transparent 40%, rgba(12, 16, 28, 0.95) 100%);
     }
-
     .event-modal h2 {
       font-family: var(--font-brand);
-      font-size: 1.3rem;
+      font-size: 1.15rem;
       font-weight: 900;
       color: #fff;
       line-height: 1.2;
     }
     .event-modal p {
-      font-size: 0.84rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
-      line-height: 1.45;
+      line-height: 1.4;
     }
-
     .event-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 8px;
       margin-top: 4px;
     }
     @media (max-width: 480px) {
@@ -726,67 +708,90 @@
     .event-card {
       background: #090e18;
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px 10px;
+      border-radius: 12px;
+      padding: 10px 8px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      transition: all 0.2s;
+      gap: 5px;
+      transition: all 0.15s ease;
     }
-    .event-card:hover {
+    .event-card:active {
+      transform: scale(0.98);
       border-color: var(--cyber-amber);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(251, 191, 36, 0.25);
     }
     .event-card.spinning {
       border-color: var(--cyber-amber);
       pointer-events: none;
     }
     .event-card.spinning .outcome { filter: blur(1px) opacity(0.5); }
-    .event-card.spinning .outcome.lit { filter: none; transform: scale(1.04); z-index: 2; }
+    .event-card.spinning .outcome.lit { filter: none; transform: scale(1.03); z-index: 2; }
 
-    .outcomes { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+    .outcomes { display: flex; flex-direction: column; gap: 5px; margin-top: 3px; }
     .outcome {
       background: #060910;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 7px 8px;
-      transition: all 0.15s ease;
+      border-radius: 7px;
+      padding: 6px 7px;
+      transition: all 0.12s ease;
     }
     .outcome.lit.win {
       background: #0d291b;
       border-color: var(--money);
-      box-shadow: 0 0 16px var(--money-glow);
+      box-shadow: 0 0 14px var(--money-glow);
     }
     .outcome.lit.lose {
       background: #2b0e14;
       border-color: var(--hot-pink);
-      box-shadow: 0 0 16px rgba(244, 63, 94, 0.4);
+      box-shadow: 0 0 14px rgba(244, 63, 94, 0.4);
     }
     .oc-head {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      font-size: 0.58rem;
+      font-size: 0.55rem;
       font-weight: 700;
       color: var(--text-muted);
-      margin-bottom: 3px;
+      margin-bottom: 2px;
     }
     .oc-head b { font-family: var(--font-num); color: var(--cyber-amber); }
-    .oc-big {
-      display: flex;
-      align-items: baseline;
-      justify-content: center;
-      gap: 8px;
-    }
     .oc-big .num {
       font-family: var(--font-num);
-      font-size: 0.92rem;
+      font-size: 0.88rem;
       font-weight: 800;
     }
     .oc-big .num.up { color: var(--money); }
     .oc-big .num.down { color: var(--hot-pink); }
+
+    .event-result-box {
+      background: linear-gradient(170deg, #102419, #08120d);
+      border: 2px solid var(--money);
+      border-radius: 16px;
+      padding: 16px 14px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      animation: flashIn 0.35s ease both;
+      box-shadow: 0 0 25px var(--money-glow);
+    }
+    .event-result-box.bad {
+      background: linear-gradient(170deg, #2d1016, #14080a);
+      border-color: var(--hot-pink);
+      box-shadow: 0 0 25px rgba(244, 63, 94, 0.4);
+    }
+    .event-result-box .tag-res {
+      font-size: 0.58rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 3px 9px;
+      border-radius: 10px;
+    }
+    .event-result-box.good .tag-res { background: rgba(16, 229, 117, 0.2); color: var(--money); }
+    .event-result-box.bad .tag-res { background: rgba(244, 63, 94, 0.2); color: var(--hot-pink); }
+    .event-result-box h3 { font-size: 1.05rem; font-weight: 900; color: #fff; line-height: 1.25; }
 
     /* Timeline Panel */
     .timeline-panel-wrap {
@@ -798,21 +803,21 @@
       background: var(--card-inner);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 14px;
+      padding: 10px;
       min-height: 480px;
       max-height: 640px;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.35);
     }
     .timeline-head {
       display: grid;
-      grid-template-columns: 46px 1fr 48px 48px 65px;
-      padding: 8px 10px;
-      font-size: 0.58rem;
+      grid-template-columns: 42px 1fr 44px 44px 58px;
+      padding: 7px 8px;
+      font-size: 0.54rem;
       font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       color: var(--text-dim);
       border-bottom: 1px solid var(--border);
       background: #111728;
@@ -825,54 +830,52 @@
       display: flex;
       flex-direction: column;
       gap: 2px;
-      padding-right: 4px;
+      padding-right: 2px;
     }
-    .timeline-scroll::-webkit-scrollbar { width: 5px; }
-    .timeline-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+    .timeline-scroll::-webkit-scrollbar { width: 4px; }
+    .timeline-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
 
     .t-row {
       display: grid;
-      grid-template-columns: 46px 1fr 48px 48px 65px;
-      padding: 9px 10px;
-      font-size: 0.76rem;
+      grid-template-columns: 42px 1fr 44px 44px 58px;
+      padding: 8px 8px;
+      font-size: 0.72rem;
       align-items: center;
-      border-radius: 8px;
-      transition: background 0.15s;
+      border-radius: 7px;
+      transition: background 0.12s;
     }
     .t-row span:nth-child(n+3) { text-align: right; }
-    .t-row .age-num { font-family: var(--font-num); font-size: 0.72rem; font-weight: 700; color: var(--text-muted); }
+    .t-row .age-num { font-family: var(--font-num); font-size: 0.68rem; font-weight: 700; color: var(--text-muted); }
     .t-row .ovr-num { font-family: var(--font-num); font-weight: 800; color: var(--gold); }
-    .t-row .co-badge { display: flex; align-items: center; gap: 7px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .t-row .co-badge { display: flex; align-items: center; gap: 6px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     
     .t-row.past { background: rgba(255,255,255,0.02); }
-    .t-row.past:hover { background: rgba(255,255,255,0.05); }
     .t-row.current {
       background: linear-gradient(90deg, rgba(16, 229, 117, 0.15), transparent);
       border-left: 3px solid var(--money);
       font-weight: 800;
     }
     .t-row.future {
-      opacity: 0.22;
+      opacity: 0.20;
       color: var(--text-dim);
     }
 
     /* Logo Emblems SVG */
     .company-logo {
-      width: 34px;
-      height: 34px;
-      border-radius: 9px;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.4);
       overflow: hidden;
       position: relative;
     }
     .company-logo.sm {
-      width: 22px;
-      height: 22px;
-      border-radius: 6px;
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
     }
     .company-logo svg {
       width: 100%;
@@ -880,18 +883,18 @@
       display: block;
     }
 
-    /* Modales y Overlays */
+    /* Overlays / Modales */
     .overlay {
       position: fixed;
       inset: 0;
-      background: rgba(4, 6, 9, 0.75);
+      background: rgba(4, 6, 9, 0.78);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 80;
-      padding: 20px;
+      padding: 16px;
       animation: ovIn 0.3s ease both;
     }
     @keyframes ovIn { from { opacity: 0; } to { opacity: 1; } }
@@ -900,35 +903,31 @@
       max-width: 360px;
       width: 100%;
       border-radius: 18px;
-      padding: 26px 22px 20px;
+      padding: 24px 18px;
       text-align: center;
       border: 1px solid var(--border);
       background: linear-gradient(165deg, #182238, #0d121f);
       box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
-      animation: mileIn 0.45s cubic-bezier(.175,1.885,.32,1) both;
+      animation: mileIn 0.4s cubic-bezier(.175,1.885,.32,1) both;
       position: relative;
-      overflow: hidden;
     }
-    @keyframes mileIn { from { opacity: 0; transform: translateY(30px) scale(0.94); } to { opacity: 1; transform: none; } }
-    
+    @keyframes mileIn { from { opacity: 0; transform: translateY(20px) scale(0.96); } to { opacity: 1; transform: none; } }
     .mile.good { border-color: #2c7a4b; box-shadow: 0 0 50px rgba(16, 229, 117, 0.25); }
     .mile.bad { border-color: #8b2635; box-shadow: 0 0 50px rgba(244, 63, 94, 0.25); }
-    .mile.gold { border-color: #b38600; box-shadow: 0 0 60px rgba(255, 215, 0, 0.35); }
-    
-    .mile .ic { font-size: 2.8rem; line-height: 1; margin-bottom: 10px; }
-    .mile .kick { font-size: 0.52rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 5px; }
-    .mile h3 { font-size: 1.55rem; font-weight: 900; letter-spacing: -0.02em; margin-bottom: 6px; }
-    .mile .sub { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 18px; }
+    .mile .ic { font-size: 2.5rem; line-height: 1; margin-bottom: 8px; }
+    .mile .kick { font-size: 0.50rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 4px; }
+    .mile h3 { font-size: 1.45rem; font-weight: 900; margin-bottom: 6px; }
+    .mile .sub { font-size: 0.76rem; color: var(--text-muted); line-height: 1.45; margin-bottom: 16px; }
 
-    /* Botones */
+    /* Botones Táctiles */
     .btn {
       background: var(--money);
       color: #042f1a;
       border: none;
       border-radius: 9px;
-      padding: 12px 22px;
+      padding: 12px 20px;
       font-family: inherit;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 800;
       letter-spacing: 0.05em;
       text-transform: uppercase;
@@ -936,69 +935,68 @@
       transition: all 0.15s ease;
       box-shadow: 0 4px 12px rgba(16, 229, 117, 0.25);
     }
-    .btn:hover { filter: brightness(1.15); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(16, 229, 117, 0.35); }
-    .btn:active { transform: translateY(0); }
+    .btn:active {
+      transform: scale(0.97);
+    }
     .btn:disabled { background: #1c2638; color: var(--text-dim); cursor: not-allowed; box-shadow: none; }
     .btn.ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); box-shadow: none; }
-    .btn.ghost:hover { background: #182238; color: #fff; }
+    .btn.ghost:active { background: #182238; color: #fff; }
 
-    /* Setup Forms */
+    /* Setup Screens */
     .setup-wrap {
       width: 100%;
-      max-width: 680px;
+      max-width: 600px;
       margin: 0 auto;
       background: var(--card-inner);
       border: 1px solid var(--border);
       border-radius: 18px;
-      padding: 24px;
+      padding: 18px 14px;
       box-shadow: 0 12px 30px rgba(0,0,0,0.5);
     }
-    .setup-wrap h2 { font-size: 1.3rem; font-weight: 900; margin-bottom: 16px; text-align: center; }
-    .setup-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 18px; }
-    @media (max-width: 640px) { .setup-grid { grid-template-columns: 1fr; } }
+    .setup-wrap h2 { font-size: 1.2rem; font-weight: 900; margin-bottom: 14px; text-align: center; }
+    .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 600px) { .setup-grid { grid-template-columns: 1fr; } }
     
-    .field-block { margin-bottom: 12px; }
-    .field-block label { display: block; font-size: 0.52rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; font-weight: 800; }
+    .field-block { margin-bottom: 10px; }
+    .field-block label { display: block; font-size: 0.50rem; letter-spacing: 0.10em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 5px; font-weight: 800; }
     .field-block input {
       width: 100%; background: #080c14; border: 1px solid var(--border); border-radius: 8px;
-      color: var(--text); padding: 10px; font-family: inherit; font-size: 0.88rem; font-weight: 700; text-align: center;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.4); outline: none; transition: border-color 0.2s;
+      color: var(--text); padding: 10px; font-family: inherit; font-size: 0.85rem; font-weight: 700; text-align: center;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.4); outline: none;
     }
     .field-block input:focus { border-color: var(--electric-blue); }
     
     .toggle-group { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
     .toggle-group button {
       background: #080c14; border: 1px solid var(--border); border-radius: 8px; color: var(--text-muted);
-      padding: 10px 4px; font-family: inherit; font-size: 0.72rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+      padding: 9px 4px; font-family: inherit; font-size: 0.70rem; font-weight: 700; cursor: pointer; transition: all 0.15s;
     }
     .toggle-group button.on { background: #fff; color: #000; border-color: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.2); }
-    .toggle-group button.on.aggr { background: var(--hot-pink); color: #fff; border-color: var(--hot-pink); box-shadow: 0 0 10px rgba(244,63,94,0.3); }
-    .toggle-group button.on.strat { background: var(--money); color: #042f1a; border-color: var(--money); box-shadow: 0 0 10px rgba(16,229,117,0.3); }
 
-    .origin-list { display: flex; flex-direction: column; gap: 8px; }
+    .origin-list { display: flex; flex-direction: column; gap: 6px; }
     .origin-card {
-      display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 10px;
-      background: #080c14; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: flex-start; gap: 8px; padding: 8px 10px; border-radius: 9px;
+      background: #080c14; border: 1px solid var(--border); cursor: pointer; transition: all 0.15s;
     }
-    .origin-card:hover { transform: translateY(-2px); border-color: var(--text-dim); }
+    .origin-card:active { border-color: var(--electric-blue); }
     .origin-card.on { background: #111a2d; border-color: var(--electric-blue); box-shadow: 0 4px 12px rgba(56,189,248,0.2); }
-    .origin-card .ic { font-size: 1.2rem; }
-    .origin-card .tx b { font-size: 0.8rem; font-weight: 700; display: block; margin-bottom: 2px; }
-    .origin-card .tx small { font-size: 0.64rem; color: var(--text-muted); line-height: 1.35; display: block; }
+    .origin-card .ic { font-size: 1.1rem; }
+    .origin-card .tx b { font-size: 0.76rem; font-weight: 700; display: block; margin-bottom: 2px; }
+    .origin-card .tx small { font-size: 0.60rem; color: var(--text-muted); line-height: 1.3; display: block; }
 
-    /* Landing Screen */
+    /* Landing */
     .landing-card {
       text-align: center;
-      padding: 32px 18px;
+      padding: 24px 14px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       width: 100%;
     }
     .landing-card h2 {
       font-family: var(--font-brand);
-      font-size: 2.1rem;
+      font-size: 1.9rem;
       font-weight: 900;
       letter-spacing: -0.02em;
       background: linear-gradient(135deg, #ffffff, #94a3b8);
@@ -1006,157 +1004,218 @@
       -webkit-text-fill-color: transparent;
     }
     .landing-card p {
-      font-size: 0.90rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
-      max-width: 480px;
-      line-height: 1.55;
+      max-width: 440px;
+      line-height: 1.5;
     }
-
-    /* Pacing Selector */
-    .paces-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 4px; }
+    .paces-row { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 4px; }
     .pace-pill {
       background: #080c14; border: 1px solid var(--border); color: var(--text-muted);
-      border-radius: 20px; padding: 7px 16px; font-size: 0.74rem; font-weight: 700; cursor: pointer; transition: 0.2s;
+      border-radius: 16px; padding: 6px 14px; font-size: 0.72rem; font-weight: 700; cursor: pointer;
     }
-    .pace-pill.on { background: var(--electric-blue); color: #041726; border-color: var(--electric-blue); box-shadow: 0 0 10px rgba(56,189,248,0.3); }
+    .pace-pill.on { background: var(--electric-blue); color: #041726; border-color: var(--electric-blue); }
 
-    /* Endgame Screen */
-    .end-wrap {
-      text-align: center;
-      padding: 28px 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      width: 100%;
-    }
+    /* Endgame Stats */
     .end-stat-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
+      gap: 8px;
       width: 100%;
-      max-width: 580px;
       margin: 10px 0;
     }
     @media (max-width: 580px) { .end-stat-grid { grid-template-columns: 1fr 1fr; } }
     .end-stat {
       background: #080c14;
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 8px;
+      border-radius: 10px;
+      padding: 10px 6px;
+      text-align: center;
     }
-    .end-stat .l { font-size: 0.55rem; text-transform: uppercase; color: var(--text-dim); font-weight: 800; }
-    .end-stat .v { font-family: var(--font-num); font-size: 1.15rem; font-weight: 800; color: var(--text); margin-top: 3px; }
+    .end-stat .l { font-size: 0.50rem; text-transform: uppercase; color: var(--text-dim); font-weight: 800; }
+    .end-stat .v { font-family: var(--font-num); font-size: 1.05rem; font-weight: 800; color: var(--text); margin-top: 2px; }
+
   
-    /* Setup Avatar Preview Frame */
-    .setup-avatar-card {
+    /* Fired Modal in Flames */
+    .mile.fire-flames {
+      background: linear-gradient(170deg, #3b0a0f 0%, #1f0408 50%, #0d0204 100%);
+      border: 2.5px solid #ff4500;
+      box-shadow: 0 0 35px #ff2200, 0 0 70px rgba(255, 69, 0, 0.6), inset 0 0 30px rgba(255, 69, 0, 0.4);
+      position: relative;
+      overflow: hidden;
+      animation: flameShake 0.4s ease both, flamePulse 2s infinite ease-in-out;
+    }
+    .mile.fire-flames::before {
+      content: '';
+      position: absolute;
+      inset: -20px;
+      background: radial-gradient(circle at 50% 120%, rgba(255, 120, 0, 0.4) 0%, rgba(255, 30, 0, 0.2) 50%, transparent 80%);
+      pointer-events: none;
+      animation: flameFlicker 1.5s infinite alternate ease-in-out;
+    }
+    .mile.fire-flames h3 {
+      color: #ff5500;
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-shadow: 0 0 15px #ff3300, 0 0 30px #ff0000;
+      margin-bottom: 8px;
+    }
+    .mile.fire-flames .kick {
+      color: #ff9900;
+      font-weight: 900;
+      letter-spacing: 0.25em;
+    }
+    .mile.fire-flames .sub {
+      color: #fed7aa;
+      font-size: 0.85rem;
+      line-height: 1.45;
+    }
+    .mile.fire-flames .btn {
+      background: linear-gradient(135deg, #ff4500, #dc2626);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(255, 69, 0, 0.6);
+      border: 1px solid #ff7733;
+    }
+    .mile.fire-flames .btn:active {
+      transform: scale(0.97);
+    }
+    @keyframes flameShake {
+      0% { transform: scale(0.9) rotate(-2deg); }
+      50% { transform: scale(1.02) rotate(2deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    @keyframes flameFlicker {
+      0% { opacity: 0.7; transform: scaleY(0.95); }
+      100% { opacity: 1; transform: scaleY(1.08); }
+    }
+    @keyframes flamePulse {
+      0%, 100% { box-shadow: 0 0 35px #ff2200, 0 0 70px rgba(255, 69, 0, 0.5); }
+      50% { box-shadow: 0 0 50px #ff5500, 0 0 90px rgba(255, 120, 0, 0.75); }
+    }
+
+    /* Redesigned Compact Wealth Power-up Cards (Zero Clutter) */
+    .wealth-grid-v19 {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .wealth-card-v19 {
       background: #080c14;
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px;
+      border-radius: 10px;
+      padding: 8px 6px;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      margin-bottom: 14px;
-      box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
+      gap: 3px;
+      cursor: pointer;
+      transition: all 0.15s ease;
       position: relative;
     }
-    .setup-avatar-frame {
-      width: 96px;
-      height: 115px;
-      border-radius: 12px;
-      background: linear-gradient(165deg, #1f2533, #0f131f);
-      border: 1.5px solid var(--border);
-      overflow: hidden;
-      margin-bottom: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    .wealth-card-v19:active {
+      transform: scale(0.97);
+      border-color: var(--gold);
+      box-shadow: 0 0 12px var(--gold-glow);
     }
-    .setup-avatar-frame svg { width: 100%; height: 100%; display: block; }
-    .setup-avatar-name {
-      font-family: var(--font-brand);
-      font-size: 0.85rem;
+    .wealth-card-v19.disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    .wealth-card-v19.on-cooldown {
+      border-color: #3b2a1a;
+      background: #120c09;
+    }
+    .wealth-card-v19.purchased-once {
+      border-color: #1a3b26;
+      background: #09140e;
+      opacity: 0.75;
+      pointer-events: none;
+    }
+    .wealth-card-v19 .ic {
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+    .wealth-card-v19 .title {
+      font-size: 0.72rem;
       font-weight: 800;
       color: #fff;
-      letter-spacing: 0.05em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
     }
-    .setup-avatar-role {
-      font-size: 0.65rem;
-      color: var(--electric-blue);
-      font-weight: 700;
+    .wealth-card-v19 .gain-tag {
+      font-family: var(--font-num);
+      font-size: 0.68rem;
+      font-weight: 900;
+      color: var(--money);
     }
-
-    /* Sound Button in Masthead */
-    .sound-toggle-btn {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--border);
+    .wealth-card-v19 .cost-pill {
+      font-family: var(--font-num);
+      font-size: 0.60rem;
+      font-weight: 800;
+      color: var(--hot-pink);
+      background: rgba(244, 63, 94, 0.12);
+      padding: 1px 6px;
       border-radius: 8px;
-      color: var(--text-muted);
-      padding: 5px 9px;
-      font-size: 0.72rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      transition: all 0.2s;
+      border: 1px solid rgba(244, 63, 94, 0.25);
+      margin-top: 1px;
     }
-    .sound-toggle-btn:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+    .wealth-card-v19 .status-badge {
+      font-size: 0.50rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 1px 5px;
+      border-radius: 5px;
+      margin-top: 1px;
+    }
+    .wealth-card-v19 .status-badge.cooldown { background: rgba(251, 191, 36, 0.15); color: var(--cyber-amber); }
+    .wealth-card-v19 .status-badge.purchased { background: rgba(16, 229, 117, 0.15); color: var(--money); }
 
   
-    /* Event Outcome Card inside Modal */
-    .event-result-box {
-      background: linear-gradient(170deg, #102419, #08120d);
-      border: 2px solid var(--money);
-      border-radius: 16px;
-      padding: 16px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      animation: flashIn 0.35s ease both;
-      box-shadow: 0 0 25px var(--money-glow);
+    
+    /* Rayo Titilante cuando hay opciones disponibles */
+    .rayo-icon {
+      display: inline-block;
+      transition: transform 0.2s;
     }
-    .event-result-box.bad {
-      background: linear-gradient(170deg, #2d1016, #14080a);
-      border-color: var(--hot-pink);
-      box-shadow: 0 0 25px rgba(244, 63, 94, 0.4);
+    .rayo-icon.titilar {
+      animation: rayoBlink 1.2s infinite ease-in-out;
     }
-    .event-result-box .tag-res {
-      font-size: 0.62rem;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      padding: 3px 10px;
-      border-radius: 12px;
+    @keyframes rayoBlink {
+      0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px #ffd700); transform: scale(1.3); }
+      50% { opacity: 0.25; filter: none; transform: scale(0.9); }
     }
-    .event-result-box.good .tag-res { background: rgba(16, 229, 117, 0.2); color: var(--money); }
-    .event-result-box.bad .tag-res { background: rgba(244, 63, 94, 0.2); color: var(--hot-pink); }
-    .event-result-box h3 { font-size: 1.1rem; font-weight: 900; color: #fff; line-height: 1.25; }
-    .event-result-box .metrics-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+
 
   </style>
 </head>
 <body>
 
-  <!-- Masthead -->
+  <!-- Masthead Compacto -->
   <header class="masthead">
-    <div class="logo-coin">$</div>
-    <h1 id="gameName">Market CAPo</h1>
-    <span class="tagline" id="gameTag">Como el Guitar Hero pero con más guitarra</span>
-    <button class="sound-toggle-btn" id="soundToggleBtn" onclick="toggleSound()">🔊 Sonido</button>
+    <div class="masthead-brand">
+      <div class="logo-coin">$</div>
+      <h1 id="gameName">Market CAPo</h1>
+      <span class="tagline" id="gameTag">Como el Guitar Hero pero con más guitarra</span>
+    </div>
+    <button class="sound-toggle-btn" id="soundToggleBtn" onclick="toggleSound()">🔇 Mute</button>
   </header>
 
-  <!-- Mobile View Switcher (Solo visible en móviles <= 880px) -->
-  <nav class="mobile-nav" id="mobileNav">
-    <button class="tab-btn active" id="tabGameBtn" onclick="switchTab('game')">💼 Puesto & Decisiones</button>
+  <!-- Mobile Segmented Control Nav -->
+  <nav class="mobile-nav" id="mobileNav" style="display:none;">
+    <button class="tab-btn active" id="tabGameBtn" onclick="switchTab('game')">💼 Puesto & Mercado</button>
     <button class="tab-btn" id="tabTimelineBtn" onclick="switchTab('timeline')">📈 Trayectoria (22-65)</button>
   </nav>
 
   <!-- Main Board Container -->
   <main class="board" id="board" style="grid-template-columns: 1fr;">
     <div class="landing-card" id="staticLanding">
-      <h2>Construí tu Carrera Corporativa</h2>
+      <h2>Hacete de abajo</h2>
       <p>Elegí tus orígenes y estilo. Conseguite un laburo honesto, aguantá los puestos que te toquen, año a año, hasta llegar al directorio o el corchazo.</p>
       
       <div id="driveNotice" style="background:rgba(56, 189, 248, 0.1); border:1px solid rgba(56, 189, 248, 0.25); border-radius:12px; padding:10px 14px; max-width:440px; margin: 4px auto 10px; font-size:0.74rem; color:#94a3b8; line-height:1.4;">
@@ -1182,22 +1241,26 @@
   <div id="overlay"></div>
 
   <script>
+
     
     /* ================= SONIDOS RETRO / ARCADE CON WEB AUDIO API ================= */
+    
+    /* ================= SUITE DE AUDIO ARCADE PROFESIONAL ================= */
     let audioCtx = null;
-    let soundEnabled = true;
+    let soundEnabled = false;
+
     function playSfx(type){
       if(!soundEnabled) return;
       try {
         if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if(audioCtx.state === 'suspended') audioCtx.resume();
 
+        const now = audioCtx.currentTime;
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.connect(gain);
         gain.connect(audioCtx.destination);
 
-        const now = audioCtx.currentTime;
         if(type === 'click'){
           osc.type = 'sine';
           osc.frequency.setValueAtTime(440, now);
@@ -1210,27 +1273,36 @@
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(587, now);
           osc.frequency.setValueAtTime(880, now + 0.08);
-          gain.gain.setValueAtTime(0.15, now);
-          gain.gain.linearRampToValueAtTime(0.01, now + 0.22);
+          osc.frequency.setValueAtTime(1174, now + 0.16);
+          gain.gain.setValueAtTime(0.16, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.28);
           osc.start(now);
-          osc.stop(now + 0.22);
+          osc.stop(now + 0.28);
         } else if(type === 'levelUp'){
           osc.type = 'sine';
           osc.frequency.setValueAtTime(523, now);
           osc.frequency.setValueAtTime(659, now + 0.08);
           osc.frequency.setValueAtTime(783, now + 0.16);
           osc.frequency.setValueAtTime(1046, now + 0.24);
-          gain.gain.setValueAtTime(0.18, now);
-          gain.gain.linearRampToValueAtTime(0.01, now + 0.45);
+          gain.gain.setValueAtTime(0.20, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.50);
           osc.start(now);
-          osc.stop(now + 0.45);
+          osc.stop(now + 0.50);
         } else if(type === 'spin'){
           osc.type = 'square';
-          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.setValueAtTime(240, now);
           gain.gain.setValueAtTime(0.04, now);
           gain.gain.linearRampToValueAtTime(0.01, now + 0.03);
           osc.start(now);
           osc.stop(now + 0.03);
+        } else if(type === 'bad'){
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(180, now);
+          osc.frequency.linearRampToValueAtTime(110, now + 0.3);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
         }
       } catch(e){}
     }
@@ -1241,6 +1313,7 @@
       if(btn) btn.textContent = soundEnabled ? '🔊 Sonido' : '🔇 Mute';
     }
 
+
     /* ================= BASE DE DATOS Y HUMOR ORIGINAL ================= */
     const GAME = {
       name: "Market CAPo",
@@ -1249,6 +1322,7 @@
       pitch: "Elegí tus orígenes y estilo. Conseguite un laburo honesto, aguantá los puestos que te toquen, año a año, hasta llegar al directorio o el corchazo."
     };
 
+    
     let PACE = "int";
     const PACES = [
       {id:"int", n:"Intensa", d:"Una decisión por año, para vivirla completa."},
@@ -1381,16 +1455,16 @@
       leg:{n:"CLO", s:"CLO", full:"Chief Legal Officer"}
     };
 
-    const RANKS = [
-      {min:0, n:"Pasante", s:"PAS"},
-      {min:18, n:"Analista", s:"ANL"},
-      {min:28, n:"Jefe de Área", s:"JEF"},
-      {min:40, n:"Gerente", s:"GER"},
-      {min:50, n:"Director", s:"DIR"},
-      {min:60, n:"VP", s:"VP"},
-      {min:70, n:"C-Level", s:"CXO"},
-      {min:82, n:"CEO", s:"CEO"},
-      {min:92, n:"Chairman", s:"CHM"}
+            const RANKS = [
+      {min:0, n:"Pasas manteca", s:"MANTECA", isUnpaid:true},
+      {min:41, n:"Analista", s:"ANL"},
+      {min:50, n:"Jefe de Área", s:"JEF"},
+      {min:60, n:"Gerente", s:"GER"},
+      {min:70, n:"Director", s:"DIR"},
+      {min:78, n:"VP", s:"VP"},
+      {min:85, n:"C-Level", s:"CXO"},
+      {min:90, n:"CEO", s:"CEO"},
+      {min:95, n:"Chairman", s:"CHM"}
     ];
 
 
@@ -1403,13 +1477,19 @@
 
     
     /* ================= 6 EVENTOS CRÍTICOS: DERECHA (🛡️) vs IZQUIERDA (⚡) ================= */
+    
+    /* ================= 12 EVENTOS CRÍTICOS SATÍRICOS ================= */
     const EVENT_IMAGES = {
       cut: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80",
       party: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=800&q=80",
       board: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
       compliance: "https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=800&q=80",
       asado: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80",
-      pitch: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80"
+      pitch: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80",
+      ai: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+      crypto: "https://images.unsplash.com/photo-1622979135225-d2ba269bc1df?auto=format&fit=crop&w=800&q=80",
+      linkedin: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80",
+      hr: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800&q=80"
     };
 
     const EVENTS = [
@@ -1419,18 +1499,16 @@
         imgKey: "cut",
         o: [
           {
-            n: "🛡️ Por Derecha: Ajuste Prolijo",
+            n: "Ajuste Técnico Prolijo",
             tag: "Vía Institucional",
-            laneChoice: "der",
             roll: [
               { p: 65, label: "El directorio aplaude la sobriedad técnica", type: "ovr", val: 12, isPositive: true },
               { p: 35, label: "El ajuste fue tímido y la empresa se achica", type: "ovr", val: -8, isPositive: false }
             ]
           },
           {
-            n: "⚡ Por Izquierda: Dibujo y Venta de Humo",
+            n: "Dibujo Contable y Venta de Fruta",
             tag: "Atajo Financiero",
-            laneChoice: "izq",
             roll: [
               { p: 50, label: "Caja fresca millonaria de un fondo incauto", type: "cash", val: 220000, isPositive: true },
               { p: 50, label: "Escrache en redes por balances inflados", type: "ovr", val: -14, isPositive: false }
@@ -1444,18 +1522,16 @@
         imgKey: "board",
         o: [
           {
-            n: "🛡️ Por Derecha: Apego a Estatutos",
+            n: "Apego a los Estatutos",
             tag: "Institucional",
-            laneChoice: "der",
             roll: [
               { p: 70, label: "Reconocen tu apego a la ley corporativa", type: "ovr", val: 10, isPositive: true },
               { p: 30, label: "Te tildan de burócrata tibio sin huevos", type: "ovr", val: -6, isPositive: false }
             ]
           },
           {
-            n: "⚡ Por Izquierda: Golpe de Estado Interno",
+            n: "Golpe de Estado Interno",
             tag: "Rosca Pesada",
-            laneChoice: "izq",
             roll: [
               { p: 50, label: "¡Ascenso Inmediato a Director General!", type: "promote", isPositive: true },
               { p: 50, label: "El golpe fracasa y te rajan con causa", type: "fire", isPositive: false }
@@ -1469,18 +1545,16 @@
         imgKey: "compliance",
         o: [
           {
-            n: "🛡️ Por Derecha: Abrir los Libros",
+            n: "Abrir los Libros y Cooperar",
             tag: "Vía Legal",
-            laneChoice: "der",
             roll: [
               { p: 75, label: "Auditoría impecable y legajo blanqueado", type: "ovr", val: 14, isPositive: true },
               { p: 25, label: "Observaciones formales y sumario", type: "ovr", val: -10, isPositive: false }
             ]
           },
           {
-            n: "⚡ Por Izquierda: Arreglo por Atrás",
+            n: "Arreglo por Atrás con el Inspector",
             tag: "Atajo Turbio",
-            laneChoice: "izq",
             roll: [
               { p: 50, label: "Expediente cajoneado y bono de bolsillo", type: "cash", val: 180000, isPositive: true },
               { p: 50, label: "Causa penal federal y embargo de fondos", type: "cash", val: -160000, isPositive: false }
@@ -1494,20 +1568,18 @@
         imgKey: "asado",
         o: [
           {
-            n: "🛡️ Por Derecha: Comunicado Corporativo Serio",
+            n: "Comunicado Corporativo Serio",
             tag: "PR Institucional",
-            laneChoice: "der",
             roll: [
               { p: 70, label: "Blindaje de crisis ejemplar en LinkedIn", type: "ovr", val: 12, isPositive: true },
-              { p: 30, label: "El escándalo salpica al departamento", type: "ovr", val: -6, isPositive: false }
+              { p: 30, label: "El escándalo salpica a tu departamento", type: "ovr", val: -6, isPositive: false }
             ]
           },
           {
-            n: "⚡ Por Izquierda: Operar la Filtración",
+            n: "Operar la Filtración en Medios",
             tag: "Rosca en Sombras",
-            laneChoice: "izq",
             roll: [
-              { p: 50, label: "Vendés la primicia y cobrás sobresuelto", type: "cash", val: 140000, isPositive: true },
+              { p: 50, label: "Vendés la primicia y cobrás sobresueldo", type: "cash", val: 140000, isPositive: true },
               { p: 50, label: "Descubren la filtración y te echan de la firma", type: "fire", isPositive: false }
             ]
           }
@@ -1519,46 +1591,88 @@
         imgKey: "pitch",
         o: [
           {
-            n: "🛡️ Por Derecha: Mostrar Métricas Reales",
+            n: "Mostrar Métricas Reales y Tracción",
             tag: "Honestidad",
-            laneChoice: "der",
             roll: [
               { p: 60, label: "Valoran la honestidad y cierran ronda conservadora", type: "ovr", val: 10, isPositive: true },
               { p: 40, label: "Los VCs querían humo y se van con la competencia", type: "ovr", val: -8, isPositive: false }
             ]
           },
           {
-            n: "⚡ Por Izquierda: Métricas Fantasía con IA Cuántica",
+            n: "Métricas Fantasía con IA Cuántica",
             tag: "Venta de Fruta",
-            laneChoice: "izq",
             roll: [
-              { p: 50, label: "¡Valuación récord y bono de éxito!", type: "cash", val: 260000, isPositive: true },
+              { p: 50, label: "¡Valuación récord y bono de éxito millonario!", type: "cash", val: 260000, isPositive: true },
               { p: 50, label: "Due diligence estricto descubre el engaño", type: "ovr", val: -16, isPositive: false }
             ]
           }
         ]
       },
       {
-        t: "Vivir en eventos de Networking VIP",
-        s: "Semana repleta de cócteles en hoteles 5 estrellas. Piden que presentes un caso de éxito.",
-        imgKey: "party",
+        t: "La Reestructuración por Inteligencia Artificial",
+        s: "El directorio quiere reemplazar al 40% del equipo operativo con agentes de IA autónomos.",
+        imgKey: "ai",
         o: [
           {
-            n: "🛡️ Por Derecha: Ponencia Técnica Sólida",
-            tag: "Especialista",
-            laneChoice: "der",
+            n: "Liderar la Automatización Implacable",
+            tag: "Eficiencia Fría",
             roll: [
-              { p: 70, label: "Reconocimiento académico y prestigio de mercado", type: "ovr", val: 14, isPositive: true },
-              { p: 30, label: "Presentación aburrida sin repercusión", type: "ovr", val: -5, isPositive: false }
+              { p: 65, label: "Ahorro récord y bono por productividad", type: "cash", val: 200000, isPositive: true },
+              { p: 35, label: "La IA alucina y el sistema colapsa", type: "ovr", val: -12, isPositive: false }
             ]
           },
           {
-            n: "⚡ Por Izquierda: Showman Figuretti",
-            tag: "Ego y Contactos",
-            laneChoice: "izq",
+            n: "Defender al Equipo Humano",
+            tag: "Liderazgo",
             roll: [
-              { p: 55, label: "Contratación de consultoría privada millonaria", type: "cash", val: 150000, isPositive: true },
-              { p: 45, label: "Quedás como un chanta ante los líderes de industria", type: "ovr", val: -12, isPositive: false }
+              { p: 70, label: "Te ganás la lealtad absoluta de la tropa", type: "ovr", val: 14, isPositive: true },
+              { p: 30, label: "El directorio te tilda de anticuado", type: "ovr", val: -7, isPositive: false }
+            ]
+          }
+        ]
+      },
+      {
+        t: "Carpetazo de Recursos Humanos",
+        s: "Aparecen tweets polémicos tuyos de hace diez años que se viralizan en grupos internos.",
+        imgKey: "hr",
+        o: [
+          {
+            n: "Disculpa Corporativa Impecable",
+            tag: "Gestión de Imagen",
+            roll: [
+              { p: 75, label: "El caso se desinfla y salís fortalecido", type: "ovr", val: 10, isPositive: true },
+              { p: 25, label: "Cancelación masiva en redes del sector", type: "ovr", val: -10, isPositive: false }
+            ]
+          },
+          {
+            n: "Contratar Hacker para Limpiar el Rastro",
+            tag: "Operación Sigilosa",
+            roll: [
+              { p: 55, label: "Huellas borradas y causa archivada", type: "cash", val: 120000, isPositive: true },
+              { p: 45, label: "El hackeo sale en las noticias y te despiden", type: "fire", isPositive: false }
+            ]
+          }
+        ]
+      },
+      {
+        t: "Pánico en la Criptocueva",
+        s: "El token de la fintech colapsa un 85% en una tarde por corrida bancaria.",
+        imgKey: "crypto",
+        o: [
+          {
+            n: "Dar la Cara y Contener el Pánico",
+            tag: "Manejo de Crisis",
+            roll: [
+              { p: 65, label: "Evitás el corralito y sos héroe del sector", type: "ovr", val: 16, isPositive: true },
+              { p: 35, label: "La estampida te pasa por encima", type: "ovr", val: -14, isPositive: false }
+            ]
+          },
+          {
+            n: "Comprar en la Caída con la Caja Fuerte",
+            tag: "Timba Financiera",
+            roll: [
+              { p: 50, label: "Rebote milagroso: ¡Ganancia histórica!", type: "cash", val: 320000, isPositive: true },
+              { p: 50, label: "Cero absoluto: Quiebra total de fondos", type: "cash", val: -180000, isPositive: false }
             ]
           }
         ]
@@ -1569,98 +1683,83 @@
     const EXT_COSTS = [1500000, 25000000, 400000000, 5000000000];
 
     /* ================= COMODINES CON REGLAS DE NO-REUTILIZACIÓN ================= */
-    const WEALTH_ACTIONS = [
+    
+    /* ================= COMODINES CON IMPACTO DIRECTO EN OVR O PATRIMONIO ================= */
+        const WEALTH_ACTIONS = [
       {
         id: "pr_lobby",
-        n: "Blindaje Mediático & PR",
-        desc: "Contratá una consultora para meter columnas en Infobae y ganar visibilidad.",
-        cost: 25000,
+        n: "Blindaje de Prensa",
         ic: "📰",
-        perk: "Reputación +14 • OVR +4",
+        cost: 25000,
+        ovrGain: 5,
+        cashGain: 0,
+        gainText: "+5 OVR",
         cooldownYears: 4,
-        eff: { rep: 14, ovr: 4, carisma: 6 },
-        feedback: "¡Campaña de prensa exitosa! Ahora sos panelista recurrente."
+        feedback: "¡Campaña en medios exitosa! Ganaste +5 OVR."
       },
       {
         id: "buy_rosca",
-        n: "Cena VIP & Rosca al Directorio",
-        desc: "Cenas en Puerto Madero y favores caros para comprar voluntades.",
-        cost: 45000,
+        n: "Rosca al Directorio",
         ic: "🍷",
-        perk: "Rosca +18 • OVR +6",
+        cost: 45000,
+        ovrGain: 8,
+        cashGain: 0,
+        gainText: "+8 OVR",
         cooldownYears: 3,
-        eff: { rosca: 18, ovr: 6, rep: 4 },
-        feedback: "Los directores comen de tu mano. Tu influencia interna se disparó."
+        feedback: "Lobby privado en Puerto Madero completado: Ganaste +8 OVR."
       },
       {
         id: "equity_stake",
-        n: "Comprar Equity de la Empresa",
-        desc: "Comprá un paquete accionario para forzar tu asiento en el directorio (1 vez por empresa).",
-        cost: 95000,
+        n: "Comprar Equity",
         ic: "📈",
-        perk: "Socio Accionista • OVR +10",
+        cost: 55000,
+        ovrGain: 7,
+        cashGain: 0,
+        gainText: "+7 OVR",
         oncePerCompany: true,
-        eff: { ovr: 10, rep: 8, vision: 10 },
-        customFn: (S) => { 
-          S.equityCompanies = S.equityCompanies || [];
-          if(S.company) S.equityCompanies.push(S.company.n);
-          S.tierBonus = clamp(S.tierBonus + 8, 34); 
-          if(S.rank.i < 6) S.rank = rankOf(computeOvr() + 10);
-        },
-        feedback: "¡Ahora sos socio accionista! Tu voz pesa en las asambleas."
+        feedback: "¡Ahora sos socio accionista! Ganaste +7 OVR."
       },
       {
         id: "crypto_gamble",
-        n: "Timba Cripto / Startup Ángel",
-        desc: "Apalancate con alto riesgo: 50% de triplicar o 50% de perderlo todo.",
-        cost: 30000,
+        n: "Timba Cripto",
         ic: "🎲",
-        perk: "50% chance: +$90K o -$30K",
+        cost: 30000,
+        ovrGain: 0,
+        cashGain: 0,
+        gainText: "+$90K / -$30K",
         cooldownYears: 2,
-        isGamble: true,
-        roll: [
-          { p: 50, label: "¡Pump & Dump triunfal!", cash: 90000, eff: { vision: 6 } },
-          { p: 50, label: "Rug pull total y liquidación", cash: -30000, eff: { rep: -4 } }
-        ]
+        isGamble: true
       },
       {
         id: "luxury_lifestyle",
-        n: "Alta Gama & Penthouse",
-        desc: "Deportivo alemán y piso en torre premium (Compra única en la vida).",
-        cost: 80000,
+        n: "Penthouse & Auto de Lujo",
         ic: "🏎️",
-        perk: "Carisma +16 • OVR +5 • Trofeo Magnate",
+        cost: 150000,
+        ovrGain: 18,
+        cashGain: 0,
+        gainText: "+18 OVR",
         usedOnce: true,
-        eff: { carisma: 16, ovr: 5, rep: 6 },
         trophy: "magnate",
-        feedback: "Llegás en deportivo a la oficina. El respeto visual es automático."
+        feedback: "Deportivo importado y piso en torre: ¡Ganaste +18 OVR de estatus!"
       },
       {
         id: "bribe_compliance",
-        n: "Arreglo con Compliance",
-        desc: "Bufete penalista para archivar causas y sellar expedientes incómodos.",
-        cost: 35000,
+        n: "Arreglo Compliance",
         ic: "⚖️",
-        perk: "Riesgo Judicial a 0 • Rep +6",
+        cost: 35000,
+        ovrGain: 6,
+        cashGain: 0,
+        gainText: "+6 OVR",
         cooldownYears: 4,
-        eff: { rep: 6 },
-        customFn: (S) => { S.riesgo = 0; },
-        feedback: "Expedientes sellados y causas archivadas. Riesgo judicial a cero."
+        feedback: "Expedientes sellados por penalistas: Ganaste +6 OVR."
       }
     ];
 
-    let wealthDrawerOpen = false;
-    function toggleWealthDrawer(){
-      wealthDrawerOpen = !wealthDrawerOpen;
-      const el = document.getElementById("wealthDrawer");
-      if(el){
-        if(wealthDrawerOpen) el.classList.add("open");
-        else el.classList.remove("open");
-      }
-    }
-
-    function checkWealthAvailability(act){
+        function checkWealthAvailability(act){
       if(!S) return { ok: false, reason: "No iniciado" };
+      if(S.usedWealthThisRound){
+        return { ok: false, status: "round_limit", reason: "Límite: 1 por ronda" };
+      }
       if(act.usedOnce && S.purchasedOnce && S.purchasedOnce[act.id]) {
         return { ok: false, status: "purchased", reason: "Ya Adquirido (Único)" };
       }
@@ -1678,7 +1777,6 @@
     }
 
     function executeWealthAction(actionId){
-      playSfx('cash');
       const act = WEALTH_ACTIONS.find(a => a.id === actionId);
       if(!act) return;
       
@@ -1693,42 +1791,47 @@
       S.cooldowns = S.cooldowns || {};
 
       if(act.usedOnce) S.purchasedOnce[act.id] = true;
+      if(act.oncePerCompany && S.company) {
+        S.equityCompanies = S.equityCompanies || [];
+        S.equityCompanies.push(S.company.n);
+      }
       if(act.cooldownYears) S.cooldowns[act.id] = S.age + act.cooldownYears;
+      S.usedWealthThisRound = true;
 
-      if(act.isGamble){
-        const isWin = Math.random() < 0.5;
-        const res = act.roll[isWin ? 0 : 1];
-        S.cash += res.cash;
-        if(res.eff){
-          for(const k in res.eff){
-            if(S.stats[k] !== undefined) S.stats[k] = clamp(S.stats[k] + res.eff[k]);
-          }
-        }
+            if(act.isGamble){
+        const isWin = Math.random() < 0.50;
+        const diff = isWin ? 90000 : -30000;
+        S.cash += diff;
+        if(isWin) unlockTrophy('timba');
+
         S.flash = {
           good: isWin,
-          title: res.label,
-          ovrDelta: isWin ? 6 : -4,
-          cashDelta: res.cash
+          title: isWin ? "¡Pegaste el Pump Cripto!" : "Rug pull y liquidación de fondos",
+          ovrDelta: 0,
+          cashDelta: diff
         };
       } else {
         S.cash -= act.cost;
-        if(act.eff){
-          if(act.eff.ovr) S.tierBonus = clamp(S.tierBonus + act.eff.ovr, 34);
-          if(act.eff.rep) S.rep = clamp(S.rep + act.eff.rep);
-          if(act.eff.riesgo) S.riesgo = clamp(S.riesgo + act.eff.riesgo);
-          for(const k in act.eff){
-            if(S.stats[k] !== undefined) S.stats[k] = clamp(S.stats[k] + act.eff[k]);
-          }
+        if(act.ovrGain) {
+          S.tierBonus = (S.tierBonus || 0) + act.ovrGain;
         }
-        if(act.customFn) act.customFn(S);
         if(act.trophy) unlockTrophy('magnate');
 
         S.flash = {
           good: true,
           title: act.feedback,
-          ovrDelta: act.eff && act.eff.ovr ? act.eff.ovr : 0,
+          ovrDelta: act.ovrGain || 0,
           cashDelta: -act.cost
         };
+      }
+
+      // Auto-colapsar el desplegable inmediatamente tras la compra
+      wealthDrawerOpen = false;
+      const drawerEl = document.getElementById("wealthDrawer");
+      if(drawerEl){
+        drawerEl.classList.remove("open");
+        const cnt = drawerEl.querySelector(".wealth-drawer-content");
+        if(cnt) cnt.style.display = "none";
       }
 
       trackPeaks();
@@ -1739,6 +1842,7 @@
       updateDecisionWidget();
       updateTimelineWidget();
     }
+
 
     
     
@@ -2018,7 +2122,14 @@
 
                 
     /* ================= CÁLCULO DE OVR CON SOFT-CAP EN 80+ ================= */
-    function computeOvr(){
+    
+    function costOfLivingFor(rank, tier){
+      const rIdx = (rank && rank.i !== undefined) ? rank.i : 0;
+      const t = tier || 1;
+      return Math.round(8000 + rIdx * 3200 + (t - 1) * 4200);
+    }
+
+        function computeOvr(){
       if(!S) return 36;
       const s = S.stats || {vision:10, ejecucion:10, carisma:10, rosca:10};
       const compValues = Object.values(S.comp || {ven:20, pro:20, fin:20, ope:20, mkt:20, leg:20});
@@ -2026,17 +2137,41 @@
       const curComp = S.area ? (S.comp[S.area] || 20) : 20;
       const statTotal = (s.vision + s.ejecucion + s.carisma + s.rosca) * 0.12;
       const expYears = (S.age && S.age >= 22) ? (S.age - 22) : 0;
-      const expBonus = expYears * 0.28;
-      const tierBonus = (S.tierBonus || 0);
+      
+      // Base orgánica de carrera
+      let organicOvr = 22 + maxComp * 0.22 + curComp * 0.10 + statTotal + expYears * 0.24;
+      if(organicOvr > 65){
+        organicOvr = 65 + (organicOvr - 65) * 0.50;
+      }
+      
+      // BONIFICACIONES PURAS 1:1: Comodines de patrimonio y decisiones (sin throttle)
+      const pureBonus = (S.tierBonus || 0);
       const penalties = (S.ovrPenalties || 0);
 
-      let rawOvr = 22 + maxComp * 0.22 + curComp * 0.10 + statTotal + expBonus + tierBonus - penalties;
+      const finalOvr = organicOvr + pureBonus - penalties;
+      return clamp(finalOvr);
+    }
+
+    function previewOvr(area, tier){
+      if(!S) return 36;
+      const s = S.stats || {vision:10, ejecucion:10, carisma:10, rosca:10};
+      const compValues = Object.values(S.comp || {ven:20, pro:20, fin:20, ope:20, mkt:20, leg:20});
+      const maxComp = Math.max(...compValues, (S.comp && S.comp[area]) || 20);
+      const curComp = (S.comp && S.comp[area]) || 20;
+      const statTotal = (s.vision + s.ejecucion + s.carisma + s.rosca) * 0.12;
+      const expYears = (S.age && S.age >= 22) ? (S.age - 22) : 0;
       
-      // Soft-Cap estricto en OVR 80+: cada punto por encima de 80 cuesta el triple de maestría
-      if(rawOvr > 80){
-        rawOvr = 80 + (rawOvr - 80) * 0.35;
+      let organicOvr = 22 + maxComp * 0.22 + curComp * 0.10 + statTotal + expYears * 0.24;
+      if(organicOvr > 65){
+        organicOvr = 65 + (organicOvr - 65) * 0.50;
       }
-      return clamp(rawOvr);
+      
+      const tierBoost = Math.min((tier - 1) * 3.5, 14);
+      const pureBonus = Math.max(S.tierBonus || 0, tierBoost);
+      const penalties = (S.ovrPenalties || 0);
+
+      const finalOvr = organicOvr + pureBonus - penalties;
+      return clamp(finalOvr);
     }
 
     function previewOvr(area, tier){
@@ -2066,11 +2201,14 @@
       return clamp(26 + c*0.35 + s.vision*0.12 + s.ejecucion*0.12 + s.carisma*0.10 + s.rosca*0.11 + tb);
     }
 
-    function salaryFor(co, area, rank){
-      if(!co) return 18000;
-      const base = 14000 * Math.pow(3.1, co.t-1);
+            function salaryFor(co, area, rank){
+      if(!co) return 0;
+      if(rank && (rank.isUnpaid || rank.n === "Pasas manteca" || rank.i === 0 || (rank.min !== undefined && rank.min === 0))) {
+        return 0;
+      }
+      const base = 16000 * Math.pow(2.8, co.t-1);
       const fit = 0.72 + (((S && S.comp && S.comp[area])||20)/100)*0.55;
-      const rankMult = 1 + ((rank && rank.i)||0)*0.16;
+      const rankMult = 1 + ((rank && rank.i)||1)*0.20;
       const repMult = S ? (0.8 + S.rep/300) : 1;
       return Math.round(base * rankMult * fit * repMult);
     }
@@ -2106,7 +2244,7 @@
       renderApp();
     }
 
-            function startCareer(){
+                function startCareer(){
       const o = ORIGINS.find(x => x.id === S.origin) || ORIGINS[0];
       const st = {...o.stats}, comp = {};
       for(const k in o.comp) comp[k] = clamp(o.comp[k] + rndInt(-3, 3));
@@ -2123,9 +2261,14 @@
         finalName = rnd(sampleNames);
       }
 
+      // Modificadores por Modo de Juego
+      const initCash = o.cash;
+      const initRiesgo = 4;
+
       S = {
         ...S,
         apellido: finalName,
+        
         phase: "offer",
         stats: st,
         comp,
@@ -2133,8 +2276,8 @@
         rep: o.rep,
         tierBonus: 0,
         age: 22,
-        cash: o.cash,
-        salary: 18000,
+        cash: initCash,
+        salary: 0,
         company: null,
         rows: [],
         milestones: [],
@@ -2152,6 +2295,7 @@
         equityCompanies: [],
         firedCompanies: [],
         eventsTriggeredCount: 0,
+        usedWealthThisRound: false,
         derechaChoices: 0,
         izquierdaChoices: 0,
         cyclesInCurrentCompany: 0,
@@ -2164,13 +2308,48 @@
       renderApp();
     }
 
-    function makeOffers(tier, n, exclude){
+        
+    
+    function ovrColorClass(ovr){
+      const v = Number(ovr) || 35;
+      if(v < 41) return "ovr-bronce";
+      if(v <= 55) return "ovr-plata";
+      if(v <= 69) return "ovr-esmeralda";
+      if(v <= 84) return "ovr-zafiro";
+      if(v <= 89) return "ovr-oro";
+      return "ovr-sayayin";
+    }
+
+    function formatCargoTitle(rank, areaCode){
+      const areaName = areaById(areaCode).n;
+      if(!rank || rank.n === "Pasas manteca" || rank.i === 0 || rank.isUnpaid){
+        return `🧈 Pasas manteca en ${areaName}`;
+      }
+      return `💼 ${rank.n} de ${areaName}`;
+    }
+
+                function makeOffers(tier, n, exclude){
       S.firedCompanies = S.firedCompanies || [];
       let pool = COMPANIES.filter(c => c.t <= tier && (!exclude || c.n !== exclude.n) && !S.firedCompanies.includes(c.n));
+      const currentOvr = computeOvr();
       const out = [];
       while(out.length < n && pool.length){
         const co = pool.splice(Math.floor(Math.random()*pool.length), 1)[0];
-        out.push({...co, area: rnd(co.areas)});
+        const offeredArea = rnd(co.areas);
+        
+        let hiringOvr = Math.max(previewOvr(offeredArea, co.t), currentOvr);
+        if(currentOvr <= 40){
+          hiringOvr = Math.min(40, hiringOvr); // Pasas manteca
+        } else {
+          hiringOvr = Math.max(41, hiringOvr); // Analista o superior
+        }
+
+        const offeredRank = rankOf(hiringOvr);
+        out.push({
+          ...co,
+          area: offeredArea,
+          offeredRank: offeredRank
+        });
       }
       return out;
     }
@@ -2184,39 +2363,44 @@
 
         
     
-    function pickCompany(i){
+            function pickCompany(i){
       S.flash = null;
       if(i !== -1){
         const c = S.offers[i];
         S.company = {...c};
         S.area = c.area;
+        S.rank = c.offeredRank || rankOf(previewOvr(c.area, c.t));
         S.cyclesInCurrentCompany = 1;
         
-        // Tier boost según la escala real de la empresa
         const tierBoost = Math.min((c.t - 1) * 3.5, 14);
         S.tierBonus = Math.max(S.tierBonus || 0, tierBoost);
-        S.salary = salaryFor(S.company, S.area, rankOf(computeOvr()));
+        // Salario garantizado acorde al puesto contratado
+        S.salary = salaryFor(S.company, S.area, S.rank);
         S.badYears = 0;
         if(c.t >= 3) unlockTrophy('unicornio');
       } else {
         // Quedarse en la misma empresa
         S.cyclesInCurrentCompany = (S.cyclesInCurrentCompany || 1) + 1;
         const currentTier = S.company ? S.company.t : 1;
+        const standardSalary = salaryFor(S.company, S.area, S.rank);
 
-        // Si te quedás demasiado tiempo estancado en una Pyme/Garaje (Tier 1/2), el techo te frena
         if(currentTier <= 1 && S.cyclesInCurrentCompany > 3){
-          S.salary = Math.min(S.salary, 32000); // Techo de Pyme
+          S.salary = Math.min(Math.max(standardSalary, S.salary), 32000);
           S.flash = { good: false, title: "Estancamiento: Esta Pyme no tiene más presupuesto para sueldos altos.", ovrDelta: 0, cashDelta: 0 };
         } else if(currentTier <= 2 && S.cyclesInCurrentCompany > 4){
-          S.salary = Math.min(S.salary, 75000); // Techo de Scaleup
+          S.salary = Math.min(Math.max(standardSalary, S.salary), 75000);
           S.flash = { good: false, title: "Techo de cristal: Para seguir creciendo necesitás saltar a un Unicornio Tier 3+.", ovrDelta: 0, cashDelta: 0 };
         } else {
-          S.salary = Math.round(S.salary * 1.05);
+          // Si el salario anterior era 0 (Pasas manteca) y ahora ascendiste, asigna el salario real del nuevo rango
+          if(S.salary === 0 && S.rank.i > 0){
+            S.salary = standardSalary;
+          } else {
+            S.salary = Math.max(standardSalary, Math.round(S.salary * 1.05));
+          }
           if(S.comp && S.area) S.comp[S.area] = clamp((S.comp[S.area]||20) + 1);
         }
       }
 
-      S.rank = rankOf(computeOvr());
       advanceYear();
     }
 
@@ -2280,10 +2464,11 @@
       saveUnlockedTrophy(k);
     }
 
-                    function advanceYear(){
+                        function advanceYear(){
       const stepYears = {int:1, nor:2, exp:4}[S.pace] || 1;
       const prevAge = S.age;
       S.age += stepYears;
+      S.usedWealthThisRound = false; // Reset límite de 1 por ronda
 
       // ================= LA CRISIS DE LOS 40 (50/50 RESET) =================
       if(prevAge < 40 && S.age >= 40 && !S.crisis40Triggered){
@@ -2292,6 +2477,7 @@
 
         if(!survivesCrisis){
           if(S.company) S.firedCompanies.push(S.company.n);
+          const firedFrom = S.company ? S.company.n : 'la empresa';
           S.company = null;
           S.area = null;
           S.ovrPenalties = (S.ovrPenalties || 0) + 12;
@@ -2299,13 +2485,14 @@
           S.badYears = 0;
           S.rep = clamp(S.rep - 15);
           S.cash = Math.min(S.cash, 40000);
+          playSfx('bad');
 
           S.milestones.push({
             tone: "bad",
             ic: "📉",
             kick: "Crisis de los 40",
             title: "El Gran Quiebre",
-            sub: "Te comió la reestructuración corporativa de mediana edad. Perdiste tu puesto de mando y tu OVR cayó. Tenés que volver a remarla desde abajo en Pymes.",
+            sub: `Te comió la reestructuración corporativa de mediana edad en ${firedFrom}. Perdiste tu puesto de mando y tu OVR cayó. Tenés que volver a remarla desde abajo en Pymes.`,
             cta: "Reinventarse desde Cero"
           });
           S.offers = makeOffers(1, 3);
@@ -2329,7 +2516,7 @@
       const coTier = S.company ? S.company.t : 1;
       const gen = (S.stats.vision + S.stats.ejecucion + S.stats.carisma + S.stats.rosca) / 4;
       
-      const exigencia = coTier * 7.5 + S.rank.i * 1.8;
+      const exigencia = coTier * 7.5 + (S.rank ? S.rank.i : 0) * 1.8;
       const perf = clamp(36 + c * 0.38 + gen * 0.28 + rndInt(-8, 8) - exigencia);
 
       if(perf >= 42){
@@ -2344,28 +2531,21 @@
         S.rep = clamp(S.rep - 1.5);
       }
 
-      // Costo de vida ejecutivo real
-      const rankMultiplier = 1 + S.rank.i * 0.15;
-      S.salary = Math.round(S.salary * 0.75 + salaryFor(S.company, S.area, S.rank) * 0.25);
-      const costOfLiving = (7000 + S.rank.i * 3500 + (coTier - 1) * 4500) * stepYears;
-      const netSavings = Math.round(S.salary * 0.24 * stepYears - costOfLiving * 0.30);
-      S.cash += netSavings;
+      const prevRank = S.rank ? S.rank.i : 0;
+      const targetRank = rankOf(computeOvr());
+      let promotionOccurred = false;
 
-      const prevRank = S.rank.i;
-      S.rank = rankOf(computeOvr());
-      trackPeaks();
-
-            let promotionOccurred = false;
-      if(S.rank.i > prevRank){
+      // Ascenso interno en la empresa si tu desempeño y OVR lo ameritan
+      if(S.company && targetRank.i > prevRank && perf >= 40){
         promotionOccurred = true;
+        S.rank = targetRank; // Ascendido formalmente dentro de la empresa
         S.badYears = 0;
-        if(S.rank.i >= 4) unlockTrophy('ascenso'); // Requiere Director (OVR 50+)
-        if(S.rank.i >= 6 && computeOvr() >= 75) unlockTrophy('clevel');
-        if(S.rank.i >= 7 && computeOvr() >= 82) unlockTrophy('ceo');
-        if(S.rank.i >= 8 && computeOvr() >= 92) unlockTrophy('chairman');
+        if(S.rank.i >= 3) unlockTrophy('ascenso'); // Gerente (OVR 60+)
+        if(S.rank.i >= 6 && computeOvr() >= 85) unlockTrophy('clevel'); // C-Level (OVR 85+)
+        if(S.rank.i >= 7 && computeOvr() >= 90) unlockTrophy('ceo'); // CEO (OVR 90+)
+        if(S.rank.i >= 8 && computeOvr() >= 95) unlockTrophy('chairman'); // Chairman (OVR 95+)
         playSfx('levelUp');
         
-        // Notificación sutil en flash sin popup bloqueante
         S.flash = {
           good: true,
           title: `🎉 ¡Ascendido a ${S.rank.n} de ${areaById(S.area).n}!`,
@@ -2373,6 +2553,27 @@
           cashDelta: 0
         };
       }
+
+      // Actualizar salario siempre acorde al cargo actual
+      if(S.company){
+        const standardSalary = salaryFor(S.company, S.area, S.rank);
+        if(S.rank.i === 0 || S.rank.isUnpaid){
+          S.salary = 0;
+        } else {
+          if(S.salary === 0 || promotionOccurred){
+            S.salary = standardSalary;
+          } else {
+            S.salary = Math.max(standardSalary, Math.round(S.salary * 0.90 + standardSalary * 0.10));
+          }
+        }
+      } else {
+        S.salary = 0;
+      }
+
+      const costOfLiving = costOfLivingFor(S.rank, coTier) * stepYears;
+      const netSavings = Math.round(S.salary * 0.24 * stepYears - costOfLiving * 0.30);
+      S.cash += netSavings;
+      trackPeaks();
 
       // Registro en Timeline
       S.rows.unshift({
@@ -2388,7 +2589,7 @@
       // Condiciones de Derrota
       if(S.cash < -800000) return endGame("Bancarrota Financiera");
 
-      // Despido desafiante
+      // Despido desafiante con ventana emergente en llamas
       if(!promotionOccurred && S.badYears >= 3){
         if(S.company) S.firedCompanies.push(S.company.n);
         const firedFrom = S.company ? S.company.n : 'la empresa';
@@ -2398,14 +2599,15 @@
         S.ovrPenalties = (S.ovrPenalties || 0) + 6;
         S.tierBonus = Math.max(0, (S.tierBonus || 0) - 4);
         S.badYears = 0;
+        playSfx('bad');
 
         S.milestones.push({
-          tone: "bad",
-          ic: "⚠️",
-          kick: "Despido Ejecutivo",
-          title: "Te Eyectaron del Directorio",
-          sub: `El directorio de ${firedFrom} rescindió tu contrato por bajo rendimiento. El golpe a tu currículum te cuesta -6 OVR y quedás vetado.`,
-          cta: "Buscar Nuevo Laburo"
+          tone: "fire-flames",
+          ic: "🔥",
+          kick: "DESPIDO FULMINANTE",
+          title: "¡TE RAJARON!",
+          sub: `El directorio de ${firedFrom} te rescindió el contrato sin anestesia. Perdiste el cargo, tu currículum sufre -6 OVR y quedás en la calle.`,
+          cta: "SALIR A BUSCAR LABURO"
         });
         S.offers = makeOffers(Math.max(1, accessibleTier() - 1), 3);
         S.phase = "offer";
@@ -2580,18 +2782,20 @@
       }
     }
 
-    function buildLandingHTML(){
+            function buildLandingHTML(){
       return `
         <div class="landing-card">
-          <h2>${GAME.hero}</h2>
+          <h2>Hacete de abajo</h2>
           <p>${GAME.pitch}</p>
-          <div style="margin: 6px 0;">
-            <label style="font-size:0.6rem; text-transform:uppercase; color:var(--text-dim); font-weight:800; display:block; margin-bottom:6px;">Ritmo de Carrera</label>
+
+          <div style="margin: 8px 0;">
+            <label style="font-size:0.58rem; text-transform:uppercase; color:var(--text-dim); font-weight:800; display:block; margin-bottom:6px;">Ritmo de Carrera</label>
             <div class="paces-row">
               ${PACES.map(p => `<button class="pace-pill ${PACE===p.id?'on':''}" onclick="PACE='${p.id}';renderApp()">${p.n}</button>`).join('')}
             </div>
           </div>
-          <button class="btn" style="margin-top:8px;" onclick="initSetup()">Iniciar Carrera</button>
+
+          <button class="btn" style="margin-top:10px; width:100%; max-width:320px;" onclick="initSetup()">Iniciar Carrera</button>
         </div>
       `;
     }
@@ -2638,23 +2842,38 @@
       `;
     }
 
-    function buildIdentityHTML(){
+                function buildIdentityHTML(){
       const ov = computeOvr();
       const o = ORIGINS.find(x => x.id === S.origin) || ORIGINS[0];
+      const annualCost = costOfLivingFor(S.rank, S.company ? S.company.t : 1);
+
+      let rankTagText = "💼 PASANTE";
+      if(S.rank){
+        if(S.rank.n === "Pasas manteca" || S.rank.i === 0 || S.rank.isUnpaid){
+          rankTagText = "🧈 PASA MANTECA";
+        } else if(S.rank.n === "Analista" || S.rank.i === 1){
+          rankTagText = "💼 ANALISTA";
+        } else {
+          rankTagText = `💼 ${S.rank.n.toUpperCase()}`;
+        }
+      }
+
       return `
-                <article class="player-card">
+        <article class="player-card">
           <div class="card-hero">
-            <div class="ovr-gold-badge" id="ovrBadge">
+            <div class="ovr-gold-badge ovr-badge ${ovrColorClass(S.displayOvr !== undefined ? S.displayOvr : ov)}" id="ovrBadge">
               <small>OVR</small>
               <b id="ovrNum">${S.displayOvr !== undefined ? S.displayOvr : ov}</b>
-              <span class="pos-pill">${S.rank ? S.rank.n : 'Pasante'}</span>
             </div>
             <div class="avatarbox">
               ${avatarSVG(S)}
             </div>
             <div class="player-meta">
               <div class="tags-row">
-                ${S.area ? `<span class="badge-tag role">${areaById(S.area).n}</span>` : ''}
+                ${S.company ? `
+                  <span class="badge-tag rank-tag" style="background:#1e293b; color:var(--gold); border:1px solid rgba(255,215,0,0.35); font-weight:900;">${rankTagText}</span>
+                  ${S.area ? `<span class="badge-tag role">${areaById(S.area).n.toUpperCase()}</span>` : ''}
+                ` : ''}
               </div>
               <div class="company-headline ${!S.company?'none':''}">
                 ${companyLogo(S.company)}
@@ -2663,6 +2882,7 @@
               <div class="exp-sub">${S.apellido} • ${S.age} años • ${o.n}</div>
             </div>
           </div>
+          
           <div class="kpi-board">
             <div class="kpi-cell">
               <div class="l">Patrimonio</div>
@@ -2670,57 +2890,65 @@
             </div>
             <div class="kpi-cell">
               <div class="l">Salario Anual</div>
-              <div class="v blue">${S.company ? money(S.salary) : '$0'}</div>
+              <div class="v blue">${S.company ? (S.salary === 0 ? '$0 (Exp)' : money(S.salary)) : '$0'}</div>
             </div>
             <div class="kpi-cell">
-              <div class="l">Reputación</div>
-              <div class="v amber">${S.rep} / 100</div>
-            </div>
-          </div>
-
-          <div class="trophy-rack">
-            <span class="title">Vitrina</span>
-            <div class="slots">
-              <div class="trophy-item ${S.trophies.ascenso?'unlocked':'locked'}" title="Primer Ascenso">🎖️</div>
-              <div class="trophy-item ${S.trophies.unicornio?'unlocked':'locked'}" title="Unicornio Tier 3+">🦄</div>
-              <div class="trophy-item ${S.trophies.clevel?'unlocked':'locked'}" title="C-Level / Directorio">👔</div>
-              <div class="trophy-item ${S.trophies.ceo?'unlocked':'locked'}" title="Llegar a CEO">👑</div>
-              <div class="trophy-item ${S.trophies.millonario?'unlocked':'locked'}" title="Patrimonio $1M+">💰</div>
-              <div class="trophy-item ${S.trophies.magnate?'unlocked':'locked'}" title="Vida de Magnate">🏎️</div>
-              <div class="trophy-item ${S.trophies.transhumano?'unlocked':'locked'}" title="Transhumanismo">🧬</div>
+              <div class="l">Costo de Vida</div>
+              <div class="v amber" style="font-size:0.88rem;">${money(annualCost)}/año</div>
             </div>
           </div>
         </article>
       `;
     }
 
-    function buildWealthHTML(){
+                let wealthDrawerOpen = false;
+    function toggleWealthDrawer(){
+      wealthDrawerOpen = !wealthDrawerOpen;
+      const el = document.getElementById("wealthDrawer");
+      if(el){
+        if(wealthDrawerOpen) el.classList.add("open");
+        else el.classList.remove("open");
+        const cnt = el.querySelector(".wealth-drawer-content");
+        if(cnt) cnt.style.display = wealthDrawerOpen ? "grid" : "none";
+      }
+    }
+
+                    function buildWealthHTML(){
       const affordable = WEALTH_ACTIONS.filter(a => checkWealthAvailability(a).ok).length;
+      const isLocked = S.usedWealthThisRound;
+      const hasOptions = !isLocked && affordable > 0;
+
+      let headerText = "";
+      if(isLocked) headerText = "🔒 Usado este ciclo [1/1] (Se reactiva el próximo año)";
+      else if(hasOptions) headerText = `Usar Patrimonio ($) (${affordable} disponibles)`;
+      else headerText = "Usar Patrimonio ($) (Sin fondos suficientes)";
+
       return `
         <div class="wealth-drawer ${wealthDrawerOpen ? 'open' : ''}" id="wealthDrawer">
-          <div class="wealth-drawer-trigger" onclick="toggleWealthDrawer()">
-            <span class="title">⚡ Usar Patrimonio ($) <span style="font-size:0.65rem; color:var(--text-muted); font-weight:600;">(${affordable} disponibles)</span></span>
-            <span class="arrow">▼</span>
+          <div class="wealth-drawer-trigger ${isLocked ? 'locked-round' : ''}" onclick="${isLocked ? '' : 'toggleWealthDrawer()'}">
+            <span class="title">
+              <span class="rayo-icon ${hasOptions ? 'titilar' : ''}">⚡</span> ${headerText}
+            </span>
+            <span class="arrow">${isLocked ? '🔒' : '▼'}</span>
           </div>
-          <div class="wealth-drawer-content">
-            ${WEALTH_ACTIONS.map(a => {
-              const check = checkWealthAvailability(a);
-              let cardClass = check.ok ? '' : 'disabled';
-              if(check.status === 'cooldown') cardClass += ' on-cooldown';
-              if(check.status === 'purchased') cardClass += ' purchased-once';
+          <div class="wealth-drawer-content" style="display:${wealthDrawerOpen && !isLocked ? 'grid' : 'none'};">
+            <div class="wealth-grid-v19" style="grid-column: 1 / -1;">
+              ${WEALTH_ACTIONS.map(a => {
+                const check = checkWealthAvailability(a);
+                let cardClass = check.ok ? '' : 'disabled';
+                if(check.status === 'cooldown') cardClass += ' on-cooldown';
+                if(check.status === 'purchased') cardClass += ' purchased-once';
 
-              return `
-                <div class="wealth-card ${cardClass}" onclick="executeWealthAction('${a.id}')">
-                  <div class="wealth-card-top">
-                    <span class="ic">${a.ic}</span>
-                    ${check.ok ? `<span class="wealth-cost">-${money(a.cost)}</span>` : `<span class="wealth-status-badge ${check.status}">${check.reason}</span>`}
+                return `
+                  <div class="wealth-card-v19 ${cardClass}" onclick="executeWealthAction('${a.id}')">
+                    <div class="ic">${a.ic}</div>
+                    <div class="title">${a.n}</div>
+                    <div class="gain-tag">${a.gainText}</div>
+                    ${check.ok ? `<span class="cost-pill">-${money(a.cost)}</span>` : `<span class="status-badge ${check.status}">${check.reason}</span>`}
                   </div>
-                  <div class="wealth-title">${a.n}</div>
-                  <div class="wealth-desc">${a.desc}</div>
-                  <div class="wealth-perk">${a.perk}</div>
-                </div>
-              `;
-            }).join('')}
+                `;
+              }).join('')}
+            </div>
           </div>
         </div>
       `;
@@ -2741,7 +2969,7 @@
       `;
     }
 
-        function buildDecisionHTML(){
+                function buildDecisionHTML(){
       if(S.phase === "longevity"){
         const nextCost = EXT_COSTS[S.extensiones];
         return `
@@ -2776,8 +3004,8 @@
           </div>
           <div class="contract-grid">
             ${S.offers.map((co, i) => {
-              const offeredRank = rankOf(previewOvr(co.area, co.t));
-              const cargoName = `${offeredRank.n} de ${areaById(co.area).n}`;
+              const offeredRank = co.offeredRank || rankOf(previewOvr(co.area, co.t));
+              const cargoLabel = formatCargoTitle(offeredRank, co.area);
               const sal = salaryFor(co, co.area, offeredRank);
               const diff = sal - (S.company ? S.salary : 0);
               return `
@@ -2785,8 +3013,8 @@
                   <span class="card-kicker">Aceptar Oferta en</span>
                   ${companyLogo(co)}
                   <div class="company-name">${co.n}</div>
-                  <span class="co-sector" style="color:var(--gold); font-weight:800; font-size:0.70rem;">💼 ${cargoName}</span>
-                  <div class="salary-pill ${diff<0?'down':''}">${money(sal)} / año</div>
+                  <span class="co-sector" style="color:var(--gold); font-weight:800; font-size:0.70rem;">${cargoLabel}</span>
+                  <div class="salary-pill ${diff<0?'down':''}">${sal === 0 ? "$0 (Paga en experiencia)" : money(sal) + " / año"}</div>
                 </div>
               `;
             }).join('')}
@@ -2794,7 +3022,7 @@
               <div class="contract-card stay-option" onclick="pickCompany(-1)">
                 <span class="card-kicker">Quedarte en</span>
                 <div class="company-name">${S.company.n} (Puesto Actual)</div>
-                <span class="co-sector" style="color:var(--electric-blue); font-size:0.68rem;">Conservar puesto de ${S.rank.n} de ${areaById(S.area).n}</span>
+                <span class="co-sector" style="color:var(--electric-blue); font-size:0.68rem;">Conservar puesto: ${formatCargoTitle(S.rank, S.area)}</span>
                 <div class="salary-pill">${money(Math.round(S.salary*1.05))} / año</div>
               </div>
             ` : ''}
@@ -2802,6 +3030,10 @@
         </div>
       `;
     }
+
+
+
+
 
 
 
@@ -3271,6 +3503,7 @@
     if(document.readyState === "complete" || document.readyState === "interactive") {
       renderApp();
     }
+  
   </script>
 </body>
 </html>
