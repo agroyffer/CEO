@@ -193,6 +193,38 @@
       width: 100%;
     }
 
+    
+    /* Logos Corporativos Vectoriales estilo Ticker / Heatmap */
+    .company-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      background: #1e293b;
+    }
+    .company-logo svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .company-logo.sm {
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+    }
+    .company-logo.contract-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      margin: 2px 0 4px;
+    }
+
     /* Ficha Ejecutiva Compacta */
     .player-card {
       background: var(--card-inner);
@@ -2094,99 +2126,40 @@
       }
     ];
 
-    /* ================= LOGOS PROCEDURALES POR TIER ================= */
-    function hashEmpresa(s){
-      let h = 0;
-      const str = String(s || '');
-      for(let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) | 0;
-      return Math.abs(h);
-    }
+        /* ================= LOGOS CORPORATIVOS BURSÁTILES ================= */
+    const COMPANY_LOGOS = {"Kiosco Cripto SRL": {"bg": "#f59e0b", "fg": "#ffffff", "ticker": "KIOS", "svg": "<circle cx=\"18\" cy=\"18\" r=\"14\" fill=\"#f59e0b\"/><text x=\"18\" y=\"24\" text-anchor=\"middle\" font-family=\"monospace\" font-weight=\"900\" font-size=\"16\" fill=\"#fff\">\u20bf</text>"}, "AppMiPyme": {"bg": "#0284c7", "fg": "#ffffff", "ticker": "PYME", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#0284c7\"/><path d=\"M11 22a6 6 0 0 1 1-11.8A7 7 0 0 1 25 12a5 5 0 0 1 0 10z\" fill=\"#ffffff\"/><circle cx=\"18\" cy=\"18\" r=\"2.5\" fill=\"#0284c7\"/>"}, "Empanada Valley": {"bg": "#ea580c", "fg": "#ffffff", "ticker": "EMPA", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#ea580c\"/><path d=\"M8 23c0-7 5-13 10-13s10 6 10 13z\" fill=\"#fde047\"/><path d=\"M7 23h22\" stroke=\"#b45309\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>"}, "Coworking El Nido": {"bg": "#10b981", "fg": "#ffffff", "ticker": "NIDO", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#10b981\"/><circle cx=\"18\" cy=\"18\" r=\"10\" fill=\"#064e3b\"/><ellipse cx=\"18\" cy=\"18\" rx=\"6\" ry=\"8\" fill=\"#ffffff\"/><circle cx=\"18\" cy=\"18\" r=\"3\" fill=\"#10b981\"/>"}, "Estudio & Asociados": {"bg": "#334155", "fg": "#ffffff", "ticker": "ESTU", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#334155\"/><path d=\"M18 7v22M10 13l8-3 8 3M8 19l4-6 4 6zM20 19l4-6 4 6z\" stroke=\"#fbbf24\" stroke-width=\"2\" fill=\"none\" stroke-linejoin=\"round\"/>"}, "Agencia Humo & Viral": {"bg": "#ec4899", "fg": "#ffffff", "ticker": "HUMO", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#ec4899\"/><path d=\"M18 6c2 4-2 7 2 11s6 3 6 7a8 8 0 0 1-16 0c0-6 4-9 8-18z\" fill=\"#fef08a\"/>"}, "DistriLog\u00edstica Sur": {"bg": "#475569", "fg": "#ffffff", "ticker": "DSUR", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#475569\"/><rect x=\"7\" y=\"12\" width=\"14\" height=\"12\" rx=\"2\" fill=\"#38bdf8\"/><path d=\"M21 15l6 2v7h-6z\" fill=\"#0284c7\"/><circle cx=\"12\" cy=\"25\" r=\"2.5\" fill=\"#0f172a\"/><circle cx=\"23\" cy=\"25\" r=\"2.5\" fill=\"#0f172a\"/>"}, "Caf\u00e9 de Especialidad": {"bg": "#78350f", "fg": "#ffffff", "ticker": "CAFE", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#78350f\"/><rect x=\"10\" y=\"14\" width=\"14\" height=\"11\" rx=\"3\" fill=\"#fef3c7\"/><path d=\"M24 16h3a3 3 0 0 1 0 6h-3\" stroke=\"#fef3c7\" stroke-width=\"2\" fill=\"none\"/><path d=\"M13 10q2-3 0-4M17 10q2-3 0-4M21 10q2-3 0-4\" stroke=\"#fde68a\" stroke-width=\"1.5\" fill=\"none\" stroke-linecap=\"round\"/>"}, "Software Factory 1999": {"bg": "#0f172a", "fg": "#10e575", "ticker": "SF99", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#0f172a\" stroke=\"#10e575\" stroke-width=\"1.5\"/><text x=\"18\" y=\"23\" text-anchor=\"middle\" font-family=\"monospace\" font-weight=\"900\" font-size=\"12\" fill=\"#10e575\">&gt;_</text>"}, "Melon Cash": {"bg": "#84cc16", "fg": "#14532d", "ticker": "MELN", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#84cc16\"/><path d=\"M8 14c0 10 8 15 10 15s10-5 10-15z\" fill=\"#ef4444\"/><ellipse cx=\"18\" cy=\"14\" rx=\"10\" ry=\"3\" fill=\"#84cc16\"/><circle cx=\"15\" cy=\"19\" r=\"1\" fill=\"#000\"/><circle cx=\"21\" cy=\"19\" r=\"1\" fill=\"#000\"/><circle cx=\"18\" cy=\"23\" r=\"1\" fill=\"#000\"/>"}, "Vaquita Pagos": {"bg": "#8b5cf6", "fg": "#ffffff", "ticker": "VAQU", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#8b5cf6\"/><circle cx=\"18\" cy=\"19\" r=\"8\" fill=\"#fdf4ff\"/><circle cx=\"15\" cy=\"18\" r=\"1.5\" fill=\"#000\"/><circle cx=\"21\" cy=\"18\" r=\"1.5\" fill=\"#000\"/><ellipse cx=\"18\" cy=\"22\" rx=\"4\" ry=\"2\" fill=\"#f472b6\"/><path d=\"M12 12l-2-4M24 12l2-4\" stroke=\"#fbbf24\" stroke-width=\"2\" stroke-linecap=\"round\"/>"}, "TiendaNube Express": {"bg": "#2563eb", "fg": "#ffffff", "ticker": "TNUB", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#2563eb\"/><path d=\"M10 23a6 6 0 0 1 1-11.8A7 7 0 0 1 25 13a5 5 0 0 1 0 10z\" fill=\"#ffffff\"/><path d=\"M16 16v5M16 21l3-3M16 21l-3-3\" stroke=\"#2563eb\" stroke-width=\"2\" stroke-linecap=\"round\"/>"}, "Despegarte": {"bg": "#dc2626", "fg": "#ffffff", "ticker": "DESP", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#dc2626\"/><path d=\"M9 25l18-9-7-2-2-6-3 4-1-1v4l-5 2z\" fill=\"#ffffff\"/>"}, "InmoClick": {"bg": "#059669", "fg": "#ffffff", "ticker": "INMO", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#059669\"/><path d=\"M9 17l9-8 9 8v10H9z\" fill=\"#ffffff\"/><rect x=\"15\" y=\"20\" width=\"6\" height=\"7\" fill=\"#059669\"/>"}, "L\u00e1cteos La Sure\u00f1a": {"bg": "#0284c7", "fg": "#ffffff", "ticker": "LSUR", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#0284c7\"/><path d=\"M18 7c3 5 7 9 7 13a7 7 0 0 1-14 0c0-4 4-8 7-13z\" fill=\"#ffffff\"/>"}, "Tarjeta Ilimitada": {"bg": "#1e293b", "fg": "#fbbf24", "ticker": "TLIM", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#1e293b\" stroke=\"#fbbf24\" stroke-width=\"1.5\"/><rect x=\"7\" y=\"10\" width=\"22\" height=\"16\" rx=\"3\" fill=\"#334155\"/><rect x=\"10\" y=\"14\" width=\"5\" height=\"4\" rx=\"1\" fill=\"#fbbf24\"/><path d=\"M7 16h22\" stroke=\"#0f172a\" stroke-width=\"2\"/>"}, "ElectroGalaxia": {"bg": "#4338ca", "fg": "#f59e0b", "ticker": "EGAL", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#4338ca\"/><circle cx=\"18\" cy=\"18\" r=\"6\" fill=\"#f59e0b\"/><ellipse cx=\"18\" cy=\"18\" rx=\"13\" ry=\"4\" fill=\"none\" stroke=\"#38bdf8\" stroke-width=\"2\" transform=\"rotate(-25 18 18)\"/>"}, "CloudLatam": {"bg": "#0369a1", "fg": "#ffffff", "ticker": "CLAT", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#0369a1\"/><rect x=\"8\" y=\"10\" width=\"20\" height=\"6\" rx=\"2\" fill=\"#e0f2fe\"/><rect x=\"8\" y=\"18\" width=\"20\" height=\"6\" rx=\"2\" fill=\"#e0f2fe\"/><circle cx=\"12\" cy=\"13\" r=\"1\" fill=\"#0284c7\"/><circle cx=\"12\" cy=\"21\" r=\"1\" fill=\"#0284c7\"/>"}, "Mercado Libre\u00f1o": {"bg": "#ffe600", "fg": "#2d3277", "ticker": "MELI", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#ffe600\"/><path d=\"M9 19c3-5 7-5 9-1 2-4 6-4 9 1l-3 3-6-3-6 3z\" fill=\"#2d3277\"/>"}, "Globanthic": {"bg": "#10e575", "fg": "#042f1a", "ticker": "GLOB", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#10e575\"/><text x=\"18\" y=\"26\" text-anchor=\"middle\" font-family=\"Arial, sans-serif\" font-weight=\"900\" font-size=\"22\" fill=\"#042f1a\">G</text>"}, "AuthCero": {"bg": "#18181b", "fg": "#eb5424", "ticker": "AUTH", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#18181b\" stroke=\"#eb5424\" stroke-width=\"1.5\"/><path d=\"M18 7l9 4v7c0 6-9 11-9 11s-9-5-9-11v-7z\" fill=\"#eb5424\"/><circle cx=\"18\" cy=\"16\" r=\"2.5\" fill=\"#fff\"/>"}, "Ual\u00e1zo": {"bg": "#ffffff", "fg": "#e11d48", "ticker": "UALA", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#ffffff\" stroke=\"#e11d48\" stroke-width=\"1.5\"/><path d=\"M11 11v7a7 7 0 0 0 14 0v-7\" stroke=\"#e11d48\" stroke-width=\"4.5\" fill=\"none\" stroke-linecap=\"round\"/>"}, "AgroSoja Corp": {"bg": "#15803d", "fg": "#fbbf24", "ticker": "SOJA", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#15803d\"/><circle cx=\"18\" cy=\"14\" r=\"5\" fill=\"#fbbf24\"/><path d=\"M18 19v10M12 23c3 0 6 3 6 6M24 23c-3 0-6 3-6 6\" stroke=\"#fbbf24\" stroke-width=\"2\" stroke-linecap=\"round\"/>"}, "Cerveza Patagonia Global": {"bg": "#1e3a5f", "fg": "#ffffff", "ticker": "PATA", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#1e3a5f\"/><path d=\"M6 26l8-14 6 8 4-4 6 10z\" fill=\"#ffffff\"/><path d=\"M14 12l2 4 4-2z\" fill=\"#38bdf8\"/>"}, "Biog\u00e9nesis Andina": {"bg": "#047857", "fg": "#38bdf8", "ticker": "BGEN", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#047857\"/><path d=\"M12 8c6 5 6 15 12 20M24 8c-6 5-6 15-12 20\" stroke=\"#38bdf8\" stroke-width=\"2.5\" stroke-linecap=\"round\"/><circle cx=\"18\" cy=\"18\" r=\"3\" fill=\"#ffffff\"/>"}, "Gargle Argentina": {"bg": "#ffffff", "fg": "#4285f4", "ticker": "GOOG", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#ffffff\" stroke=\"#e2e8f0\" stroke-width=\"1\"/><path d=\"M18 10a8 8 0 0 1 5.7 2.4l-2.4 2.4A4.6 4.6 0 0 0 18 13.4a4.6 4.6 0 0 0 0 9.2 4.6 4.6 0 0 0 4.6-4.6H18v-3.4h8a8 8 0 1 1-8-5z\" fill=\"#4285f4\"/>"}, "MacroMonopolio Bank": {"bg": "#0c1b33", "fg": "#ffd700", "ticker": "MMBK", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#0c1b33\" stroke=\"#ffd700\" stroke-width=\"1.5\"/><path d=\"M8 14l10-6 10 6v3H8zM11 17v7M15 17v7M21 17v7M25 17v7M7 24h22v4H7z\" fill=\"#ffd700\"/>"}, "PetroNacional": {"bg": "#1c1917", "fg": "#f97316", "ticker": "PETR", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#1c1917\" stroke=\"#f97316\" stroke-width=\"1.5\"/><path d=\"M18 7c4 6 7 10 7 14a7 7 0 0 1-14 0c0-4 3-8 7-14z\" fill=\"#f97316\"/><circle cx=\"18\" cy=\"22\" r=\"2.5\" fill=\"#fef08a\"/>"}, "Telecomunicaciones Patria": {"bg": "#0284c7", "fg": "#ffffff", "ticker": "TPAT", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#0284c7\"/><path d=\"M18 16v12M14 28h8\" stroke=\"#ffffff\" stroke-width=\"2.5\" stroke-linecap=\"round\"/><circle cx=\"18\" cy=\"14\" r=\"3\" fill=\"#fde047\"/><path d=\"M12 11a8 8 0 0 1 12 0M9 8a13 13 0 0 1 18 0\" stroke=\"#ffffff\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\"/>"}, "Prometeus AI": {"bg": "#09090b", "fg": "#a855f7", "ticker": "PRAI", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#09090b\" stroke=\"#a855f7\" stroke-width=\"1.5\"/><circle cx=\"18\" cy=\"18\" r=\"8\" fill=\"#581c87\"/><path d=\"M18 10v16M10 18h16M13 13l10 10M13 23l10-10\" stroke=\"#c084fc\" stroke-width=\"1.5\"/><circle cx=\"18\" cy=\"18\" r=\"3\" fill=\"#ffffff\"/>"}, "Cortex Neural Corp": {"bg": "#020617", "fg": "#00f0ff", "ticker": "CRTX", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#020617\" stroke=\"#00f0ff\" stroke-width=\"1.5\"/><rect x=\"11\" y=\"11\" width=\"14\" height=\"14\" rx=\"3\" fill=\"#0f172a\" stroke=\"#00f0ff\" stroke-width=\"1.5\"/><circle cx=\"18\" cy=\"18\" r=\"3\" fill=\"#ff0055\"/><path d=\"M18 6v5M18 25v5M6 18h5M25 18h5\" stroke=\"#00f0ff\" stroke-width=\"1.5\"/>"}, "Orbital Helium Mining": {"bg": "#030712", "fg": "#38bdf8", "ticker": "ORBT", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#030712\" stroke=\"#38bdf8\" stroke-width=\"1.5\"/><circle cx=\"18\" cy=\"18\" r=\"7\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"1.5\"/><ellipse cx=\"18\" cy=\"18\" rx=\"14\" ry=\"5\" fill=\"none\" stroke=\"#f59e0b\" stroke-width=\"1.5\" transform=\"rotate(-30 18 18)\"/><circle cx=\"28\" cy=\"12\" r=\"2\" fill=\"#ffd700\"/>"}, "Fondo Soberano Atl\u00e1ntico": {"bg": "#081b33", "fg": "#ffd700", "ticker": "FSAT", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#081b33\" stroke=\"#ffd700\" stroke-width=\"1.5\"/><path d=\"M18 7v20M12 11l6-4 6 4M12 18h12\" stroke=\"#ffd700\" stroke-width=\"2\" stroke-linecap=\"round\" fill=\"none\"/><circle cx=\"18\" cy=\"12\" r=\"2\" fill=\"#38bdf8\"/>"}};
 
-    const PALETA_TIER = {
-      1: ["#b45309", "#4d7c0f", "#a16207", "#9f1239", "#3f6212"],
-      2: ["#475569", "#1e40af", "#0f766e", "#7c2d12", "#334155"],
-      3: [["#a855f7","#ec4899"], ["#38bdf8","#6366f1"], ["#10e575","#0284c7"], ["#f59e0b","#ef4444"]],
-      4: ["#f8fafc"],
-      5: ["#ffffff"]
-    };
-
-    function logoTier1(co, h){
-      const c1 = PALETA_TIER[1][h % 5];
-      const c2 = PALETA_TIER[1][(h >> 3) % 5];
-      const rot = ((h % 5) - 2) * 0.9;
-      return `
-        <g transform="rotate(${rot} 18 18)">
-          <rect x="1" y="1" width="34" height="34" rx="3" fill="${c1}" stroke="${c2}" stroke-width="2.5"/>
-          <text x="18" y="24" text-anchor="middle" font-family="Impact, Arial Black, sans-serif" font-size="14" letter-spacing="-1" fill="#fff">${esc(co.ini || co.n.substring(0,2))}</text>
-        </g>
-      `;
-    }
-
-    function logoTier2(co, h){
-      const c = PALETA_TIER[2][h % 5];
-      return `
-        <rect width="36" height="36" rx="6" fill="${c}"/>
-        <text x="18" y="23" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="800" fill="#fff">${esc(co.ini || co.n.substring(0,2))}</text>
-      `;
-    }
-
-    function logoTier3(co, h, uid){
-      const [a, b] = PALETA_TIER[3][h % 4];
-      const glifos = [
-        `<circle cx="18" cy="18" r="7" fill="none" stroke="#fff" stroke-width="3.5"/>`,
-        `<path d="M11 23l7-10 7 10z" fill="#fff"/>`,
-        `<rect x="12" y="12" width="12" height="12" rx="4" fill="#fff"/>`,
-        `<path d="M12 18h12M18 12v12" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>`
-      ];
-      return `
-        <defs>
-          <linearGradient id="lg_${uid}" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="${a}"/><stop offset="100%" stop-color="${b}"/>
-          </linearGradient>
-        </defs>
-        <rect width="36" height="36" rx="12" fill="url(#lg_${uid})"/>
-        ${glifos[h % 4]}
-      `;
-    }
-
-    function logoTier4(co, h){
-      return `
-        <rect width="36" height="36" rx="8" fill="#0a0a0a" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-        <text x="18" y="22" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="300" letter-spacing="2" fill="#f8fafc">${esc(co.ini || co.n.substring(0,2))}</text>
-      `;
-    }
-
-    function logoTier5(co, h){
-      const marcas = [
-        `<circle cx="18" cy="18" r="2.5" fill="#fff"/>`,
-        `<line x1="10" y1="18" x2="26" y2="18" stroke="#fff" stroke-width="1.2"/>`,
-        `<circle cx="18" cy="18" r="7" fill="none" stroke="#fff" stroke-width="0.8"/>`
-      ];
-      return `<rect width="36" height="36" rx="8" fill="#000" stroke="#38bdf8" stroke-width="0.8"/>${marcas[h % 3]}`;
-    }
-
-    const GENERADORES_LOGO = { 1: logoTier1, 2: logoTier2, 3: logoTier3, 4: logoTier4, 5: logoTier5 };
-
-    function companyLogo(co, sm = false){
-      if(!co) return `<div class="company-logo ${sm?'sm':''}" style="background:#1e293b; color:var(--text-dim)">?</div>`;
-      if(co.t === 0 || co.isGig){
-        const c = co.color || '#ca8a04';
+    function companyLogo(co, sm = false, isContract = false){
+      const badgeClass = `company-logo ${sm?'sm':''} ${isContract?'contract-badge':''}`;
+      if(!co) {
+        return `<div class="${badgeClass}" style="background:#1e293b; color:var(--text-dim); font-size:${sm?'0.75rem':'1rem'}; font-weight:800;">?</div>`;
+      }
+      
+      if(COMPANY_LOGOS[co.n]){
+        const logData = COMPANY_LOGOS[co.n];
         return `
-          <div class="company-logo ${sm?'sm':''} logo-app" style="background:${c}; position:relative; border-radius:8px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.5);">
-            <span style="font-size:${sm?'0.75rem':'1.1rem'};">${co.ini || '📱'}</span>
-            <div style="position:absolute; top:-2px; right:-2px; width:7px; height:7px; background:#ef4444; border-radius:50%; border:1px solid #fff;"></div>
+          <div class="${badgeClass}" title="${esc(co.n)} (${esc(logData.ticker)})">
+            <svg viewBox="0 0 36 36">${logData.svg}</svg>
           </div>
         `;
       }
+
+      // Fallback procedimental con iniciales
       const h = hashEmpresa(co.n);
-      const uid = (co.ini || 'CO') + '_' + (co.t || 1) + (sm ? '_s' : '_b') + '_' + h;
-      const gen = GENERADORES_LOGO[co.t] || logoTier2;
+      const bgColors = ["#0284c7", "#f59e0b", "#10b981", "#8b5cf6", "#ec4899", "#ef4444", "#334155", "#0f766e"];
+      const bg = bgColors[h % bgColors.length];
+      const initials = esc(co.ini || co.n.substring(0, 2).toUpperCase());
+      
       return `
-        <div class="company-logo ${sm?'sm':''} logo-t${co.t || 1}">
-          <svg viewBox="0 0 36 36">${gen(co, h, uid)}</svg>
+        <div class="${badgeClass}" style="background:${bg};" title="${esc(co.n)}">
+          <svg viewBox="0 0 36 36">
+            <rect width="36" height="36" rx="10" fill="${bg}"/>
+            <text x="18" y="24" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="14" fill="#ffffff">${initials}</text>
+          </svg>
         </div>
       `;
     }
+
 
     /* ================= PERSISTENCIA DE PARTIDA (AUTO-SAVE) ================= */
     const SAVE_KEY = 'market_capo_run_v1';
@@ -3526,7 +3499,7 @@ function avatarSVG(customState = null){
       `;
     }
 
-    function buildDecisionHTML(){
+        function buildDecisionHTML(){
       if(S.phase === "longevity"){
         const nextCost = EXT_COSTS[S.extensiones];
         return `
@@ -3567,7 +3540,7 @@ function avatarSVG(customState = null){
               return `
                 <div class="contract-card" role="button" tabindex="0" onclick="pickCompany(${i})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pickCompany(${i});}">
                   <span class="card-kicker">Aceptar Oferta en</span>
-                  ${companyLogo(co)}
+                  ${companyLogo(co, false, true)}
                   <div class="company-name">${esc(co.n)}</div>
                   <span class="co-sector" style="color:var(--gold); font-weight:800; font-size:0.72rem;">${esc(cargoLabel)}</span>
                   <div class="salary-pill ${diff<0?'down':''}">${sal === 0 ? "$0 (Paga en experiencia)" : money(sal) + " / año"}</div>
@@ -3577,6 +3550,7 @@ function avatarSVG(customState = null){
             ${S.company ? `
               <div class="contract-card stay-option" role="button" tabindex="0" onclick="pickCompany(-1)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pickCompany(-1);}">
                 <span class="card-kicker">Quedarte en</span>
+                ${companyLogo(S.company, false, true)}
                 <div class="company-name">${esc(S.company.n)} (Puesto Actual)</div>
                 <span class="co-sector" style="color:var(--electric-blue); font-size:0.70rem;">Conservar puesto: ${esc(formatCargoTitle(S.rank, S.area))}</span>
                 <div class="salary-pill">${money(Math.round(S.salary*1.05))} / año</div>
