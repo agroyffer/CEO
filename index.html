@@ -14,14 +14,14 @@
   <meta property="og:url" content="https://agroyffer.github.io/CEO/">
   <meta property="og:title" content="Market CAPo - Hacete de abajo">
   <meta property="og:description" content="Simulador satirico de carrera corporativa. Conseguite un laburo honesto, aguanta los puestos que te toquen y llega al directorio. O al corchazo.">
-  <meta property="og:image" content="https://agroyffer.github.io/CEO/og.png">
+  <meta property="og:image" content="https://agroyffer.github.io/CEO/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Market CAPo · Simulador satírico de carrera corporativa">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Market CAPo - Hacete de abajo">
   <meta name="twitter:description" content="Simulador satirico de carrera corporativa. Llega al directorio. O al corchazo.">
-  <meta name="twitter:image" content="https://agroyffer.github.io/CEO/og.png">
+  <meta name="twitter:image" content="https://agroyffer.github.io/CEO/og-image.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Space+Grotesk:wght@600;700;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
@@ -1678,7 +1678,7 @@
   <main class="board" id="board" style="grid-template-columns: 1fr;">
     <div class="landing-card" id="staticLanding">
       <h2>Hacete de abajo</h2>
-      <p>Elegí tus orígenes y estilo. Conseguite un laburo honesto, aguantá los puestos que te toquen, año a año, hasta llegar al directorio. O hasta el corchazo.</p>
+      <p>Elegí tus orígenes y estilo. Conseguite un laburo honesto, aguantá los puestos que te toquen, año a año, hasta llegar al directorio o el corchazo.</p>
 
       <div style="margin: 8px 0;">
         <label style="font-size:0.68rem; text-transform:uppercase; color:var(--text-dim); font-weight:800; display:block; margin-bottom:6px;">Ritmo de Carrera</label>
@@ -1722,7 +1722,7 @@
     /* ================= CONSTANTES DEL JUEGO ================= */
     const GAME = {
       hero: "Hacete de abajo",
-      pitch: "Elegí tus orígenes y estilo. Conseguite un laburo honesto, aguantá los puestos que te toquen, año a año, hasta llegar al directorio. O hasta el corchazo."
+      pitch: "Elegí tus orígenes y estilo. Conseguite un laburo honesto, aguantá los puestos que te toquen, año a año, hasta llegar al directorio o el corchazo."
     };
 
     const PACES = [
@@ -3861,19 +3861,7 @@ function avatarSVG(customState = null){
             <div>
               <label style="display:block; font-size:0.68rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-dim); margin-bottom:6px; font-weight:800;">Origen Socio-Académico</label>
               <div class="origin-list" role="radiogroup" aria-label="Origen socio-académico">
-                ${ORIGINS.map(x => {
-                  const libre = origenDesbloqueado(x);
-                  if(!libre){
-                    return `
-                      <div class="origin-card locked" role="radio" aria-checked="false" aria-disabled="true" tabindex="-1" title="${esc(x.lockText || 'Bloqueado')}">
-                        <div class="ic" aria-hidden="true">🔒</div>
-                        <div class="tx">
-                          <b>${esc(x.n)}</b>
-                          <small>${esc(x.lockText || 'Todavía no lo desbloqueaste.')}</small>
-                        </div>
-                      </div>
-                    `;
-                  }
+                ${origenesDisponibles().map(x => {
                   return `
                     <div class="origin-card ${S.origin===x.id?'on':''}" role="radio" aria-checked="${S.origin===x.id}" tabindex="0" onclick="S.origin='${x.id}';renderApp()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();S.origin='${x.id}';renderApp();}">
                       <div class="ic" aria-hidden="true">${x.ic}</div>
