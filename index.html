@@ -1700,29 +1700,29 @@
       },
       {
         id: "calle",
-        n: "Lobo de WS",
-        d: "Te las sabés todas",
-        ic: "🥊",
+        n: "Lobo de CABA",
+        d: "La escuela de la calle.",
+        ic: "🐺",
         cash: 2000,
         rep: 45,
-        stats: { vision: 8, ejecucion: 22, carisma: 16, rosca: 4 },
+        stats: { vision: 8, ejecucion: 16, carisma: 22, rosca: 4 },
         comp: { ven: 36, pro: 14, fin: 10, ope: 30, mkt: 18, leg: 8 }
       },
       {
         id: "trust",
         n: "Nepobaby",
         d: "Heredaste un montón de plata y deptos para alquiler.",
-        ic: "🏛️",
+        ic: "💳",
         cash: 900000,
         rep: 60,
         stats: { vision: 12, ejecucion: 4, carisma: 14, rosca: 20 },
-        comp: { ven: 14, pro: 8, fin: 30, ope: 8, mkt: 24, leg: 20 }
+        comp: { ven: 16, pro: 8, fin: 14, ope: 8, mkt: 30, leg: 10 }
       },
       {
         id: "tecnico",
         n: "Vibecoder IA",
         d: "Claude, Gemini y ChatGPT. Tenés 0 código.",
-        ic: "⚙️",
+        ic: "💾",
         cash: 15000,
         rep: 40,
         stats: { vision: 10, ejecucion: 24, carisma: 4, rosca: 8 },
@@ -1755,7 +1755,7 @@
         id: "onlyflans",
         n: "OnlyFlanes VIP",
         role: "Creador de Contenido VIP",
-        tag: "🔞 ONLYFANES",
+        tag: "🔞 ONLYFLANES",
         ic: "🔞",
         baseSalary: 20000,
         desc: "Fotos de pies, suscripción mensual en dólares y pánico de que un directivo te reconozca.",
@@ -1850,7 +1850,7 @@
       { id: "equity", n: "Socio Accionista", d: "Comprá un paquete de acciones de la empresa.", ic: "📈" },
       { id: "purga", n: "Inmune a la Purga", d: "Llegá a la jubilación sin ser despedido jamás.", ic: "🚪" },
       { id: "gig_king", n: "Rey del Monotributo", d: "Sobreviví al menos 2 años en la Gig Economy.", ic: "🛵" },
-      { id: "onlyfans_star", n: "Top 1% en OnlyFanes", d: "Monetizá contenido independiente en plataformas.", ic: "🔞" }
+      { id: "onlyflans_star", n: "Top 1% en OnlyFlanes", d: "Monetizá contenido independiente en plataformas.", ic: "🔞" }
     ];
 
     const WEALTH_ACTIONS = [
@@ -2551,10 +2551,10 @@ function avatarSVG(customState = null){
         color: "#111827"
       },
       {
-        id: "onlyfans",
+        id: "onlyflans",
         n: "OnlyFlanes VIP",
         role: "Creador de Contenido VIP",
-        tag: "🔞 ONLYFANES",
+        tag: "🔞 ONLYFLANES",
         ic: "🔞",
         baseCash: 20000,
         desc: "Se viralizó una foto de pies, cayeron suscripciones en dólares y pánico de que un directivo te reconozca.",
@@ -2609,7 +2609,7 @@ function avatarSVG(customState = null){
       S.usedGigThisRound = true;
       playSfx('cash');
 
-      if(hustle.id === 'onlyfans') unlockTrophy('onlyfans_star');
+      if(hustle.id === 'onlyflans') unlockTrophy('onlyflans_star');
       if(S.gigStreak >= 2) unlockTrophy('gig_king');
 
       S.flash = {
@@ -2912,7 +2912,7 @@ function avatarSVG(customState = null){
         const baseSal = (S.company.gigData && S.company.gigData.baseSalary) ? S.company.gigData.baseSalary : 15000;
         S.salary = Math.round(baseSal * decayRate);
         if(S.gigConsecutiveYears >= 2) unlockTrophy('gig_king');
-        if(S.company.gigData && S.company.gigData.id === 'onlyfans') unlockTrophy('onlyfans_star');
+        if(S.company.gigData && S.company.gigData.id === 'onlyflans') unlockTrophy('onlyflans_star');
         S.badYears = 0;
       } else if(S.company){
         S.gigConsecutiveYears = 0;
@@ -3446,7 +3446,7 @@ function avatarSVG(customState = null){
               </div>
               <div class="gig-info">
                 <h3>Hacer Changa Instantánea</h3>
-                <p>Inyección de caja al azar (OnlyFans, Uber, Rappi, Workana). <strong>No termina tu turno</strong>.</p>
+                <p>Inyección de caja al azar (OnlyFlans, Uber, Rappi, Workana). <strong>No termina tu turno</strong>.</p>
               </div>
             </div>
             <button type="button" class="gig-hustle-btn ${isAvailable ? 'active-glow' : 'used'}" onclick="${isAvailable ? 'executeSideHustle()' : ''}">
