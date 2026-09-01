@@ -154,7 +154,7 @@
       outline: 2px solid var(--electric-blue);
     }
 
-    /* Layout Centrado Elegante Sin Timeline en Pantalla Activa */
+    /* Layout Centrado */
     .board {
       width: 100%;
       max-width: 580px;
@@ -287,7 +287,7 @@
       }
     }
 
-    /* Avatar Box */
+    /* Avatar Box Interactivo / Botón de Legajo */
     .avatarbox {
       width: 58px;
       height: 72px;
@@ -300,6 +300,37 @@
       position: relative;
     }
     .avatarbox svg { width: 100%; height: 100%; display: block; }
+
+    .avatarbox.clickable-avatar {
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .avatarbox.clickable-avatar:hover, .avatarbox.clickable-avatar:focus-visible {
+      transform: scale(1.06);
+      border-color: var(--electric-blue);
+      box-shadow: 0 0 16px var(--blue-glow), inset 0 0 10px rgba(56, 189, 248, 0.3);
+      outline: none;
+    }
+    .avatarbox.clickable-avatar:active {
+      transform: scale(0.96);
+    }
+    .avatar-tap-hint {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(4, 6, 14, 0.88);
+      color: var(--electric-blue);
+      font-size: 0.52rem;
+      font-weight: 900;
+      text-align: center;
+      padding: 2px 0;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-top: 1px solid rgba(56, 189, 248, 0.3);
+      pointer-events: none;
+      user-select: none;
+    }
 
     .player-meta {
       flex: 1;
@@ -809,97 +840,7 @@
     .event-result-box.bad .tag-res { background: rgba(244, 63, 94, 0.2); color: var(--hot-pink); }
     .event-result-box h3 { font-size: 1.08rem; font-weight: 900; color: #fff; line-height: 1.25; }
 
-    /* Timeline Panel */
-    .timeline-panel-wrap {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-    }
-    .timeline-container {
-      background: var(--card-inner);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 10px;
-      min-height: 480px;
-      max-height: 640px;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.35);
-    }
-    .timeline-head {
-      display: grid;
-      grid-template-columns: 42px 1fr 44px 44px 58px;
-      padding: 8px 8px;
-      font-size: 0.68rem;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-dim);
-      border-bottom: 1px solid var(--border);
-      background: #111728;
-      border-radius: 8px 8px 0 0;
-    }
-    .timeline-head span:nth-child(n+3) { text-align: right; }
-    .timeline-scroll {
-      overflow-y: auto;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      padding-right: 2px;
-    }
-    .timeline-scroll::-webkit-scrollbar { width: 4px; }
-    .timeline-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
-
-    .t-row {
-      display: grid;
-      grid-template-columns: 42px 1fr 44px 44px 58px;
-      padding: 8px 8px;
-      font-size: 0.76rem;
-      align-items: center;
-      border-radius: 7px;
-      transition: background 0.12s;
-    }
-    .t-row span:nth-child(n+3) { text-align: right; }
-    .t-row .age-num { font-family: var(--font-num); font-size: 0.72rem; font-weight: 700; color: var(--text-muted); }
-    .t-row .ovr-num { font-family: var(--font-num); font-weight: 800; color: var(--gold); }
-    .t-row .co-badge { display: flex; align-items: center; gap: 6px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    
-    .t-row.past { background: rgba(255,255,255,0.02); }
-    .t-row.current {
-      background: linear-gradient(90deg, rgba(16, 229, 117, 0.15), transparent);
-      border-left: 3px solid var(--money);
-      font-weight: 800;
-    }
-    .t-row.future {
-      opacity: 0.20;
-      color: var(--text-dim);
-    }
-
-    /* Logo Emblems SVG */
-    .company-logo {
-      width: 30px;
-      height: 30px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      overflow: hidden;
-      position: relative;
-    }
-    .company-logo.sm {
-      width: 20px;
-      height: 20px;
-      border-radius: 5px;
-    }
-    .company-logo svg {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    /* Modales */
+    /* Modales Globales */
     .overlay {
       position: fixed;
       inset: 0;
@@ -976,7 +917,7 @@
     .mile h3 { font-size: 1.45rem; font-weight: 900; margin-bottom: 6px; }
     .mile .sub { font-size: 0.80rem; color: var(--text-muted); line-height: 1.45; margin-bottom: 16px; }
 
-    /* Botones Táctiles */
+    /* Botones */
     .btn {
       background: var(--money);
       color: #042f1a;
@@ -1096,22 +1037,7 @@
     .end-stat .l { font-size: 0.68rem; text-transform: uppercase; color: var(--text-dim); font-weight: 800; }
     .end-stat .v { font-family: var(--font-num); font-size: 1.08rem; font-weight: 800; color: var(--text); margin-top: 2px; }
   
-        /* Timeline Mini Avatar */
-    .t-avatar {
-      width: 24px;
-      height: 28px;
-      border-radius: 5px;
-      background: #080c14;
-      border: 1px solid var(--border);
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-    .t-avatar svg { width: 100%; height: 100%; display: block; }
-
-    
-
-  
-    /* Botón Compacto de Changa / Side Hustle (No termina el turno) */
+    /* Botón y Widget de Changas */
     .gig-hustle-btn {
       background: #090e1a;
       border: 1.5px solid var(--cyber-amber);
@@ -1152,8 +1078,6 @@
       100% { box-shadow: 0 0 18px rgba(251, 191, 36, 0.75); border-color: #ffd700; }
     }
 
-  
-    /* Panel / Widget Dedicado de Changas de Plataforma */
     .gig-card-box {
       background: var(--card-inner);
       border: 1.5px solid var(--border);
@@ -1249,6 +1173,397 @@
       box-shadow: 0 0 24px rgba(251, 191, 36, 0.75);
     }
 
+    /* ================= NUEVO: MODAL LEGAJO EJECUTIVO ================= */
+    .legajo-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 5, 9, 0.88);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 75;
+      padding: 12px;
+      animation: ovIn 0.22s ease both;
+    }
+    .legajo-sheet {
+      background: linear-gradient(175deg, #131b2e 0%, #090d18 100%);
+      border: 1.5px solid var(--electric-blue);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.85), 0 0 30px rgba(56, 189, 248, 0.2);
+      border-radius: 20px;
+      max-width: 540px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      animation: mileIn 0.3s cubic-bezier(.175,1.885,.32,1) both;
+    }
+    .legajo-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+    .legajo-avatar-wrap {
+      width: 52px;
+      height: 64px;
+      border-radius: 8px;
+      background: #080c14;
+      border: 1.5px solid var(--border);
+      overflow: hidden;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .legajo-avatar-wrap svg { width: 100%; height: 100%; display: block; }
+    .legajo-id-block {
+      flex: 1;
+      min-width: 0;
+    }
+    .legajo-id-block .sub-kicker {
+      font-size: 0.62rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--electric-blue);
+      display: block;
+      margin-bottom: 2px;
+    }
+    .legajo-id-block h2 {
+      font-family: var(--font-brand);
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .legajo-id-block p {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .close-legajo-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .close-legajo-btn:hover, .close-legajo-btn:focus-visible {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      outline: 2px solid var(--electric-blue);
+    }
+    .legajo-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .leg-tab {
+      background: #080c14;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 8px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 0.76rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: var(--font-body);
+    }
+    .leg-tab:hover, .leg-tab:focus-visible {
+      color: #fff;
+      border-color: var(--electric-blue);
+      outline: none;
+    }
+    .leg-tab.active {
+      background: #1e293b;
+      color: #fff;
+      border-color: var(--electric-blue);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+    }
+
+    .leg-section-title {
+      font-size: 0.68rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--cyber-amber);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .stats-four-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .stat-card-clean {
+      background: #080c14;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .stat-card-clean .s-ic { font-size: 1.15rem; line-height: 1; }
+    .stat-card-clean .s-info { flex: 1; min-width: 0; }
+    .stat-card-clean .s-label { font-size: 0.66rem; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 3px; }
+    .stat-card-clean .s-bar { height: 4px; background: #1e293b; border-radius: 2px; overflow: hidden; }
+    .stat-card-clean .s-fill { height: 100%; background: linear-gradient(90deg, #38bdf8, #10e575); }
+    .stat-card-clean .s-num { font-family: var(--font-num); color: var(--gold); font-size: 0.96rem; font-weight: 800; }
+
+    .comp-six-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+    @media (max-width: 480px) {
+      .comp-six-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .comp-chip {
+      background: #080c14;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 8px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .comp-chip.active-role {
+      border-color: var(--money);
+      background: rgba(16, 229, 117, 0.08);
+      box-shadow: 0 0 10px rgba(16, 229, 117, 0.15);
+    }
+    .comp-chip .c-name { font-size: 0.65rem; color: var(--text-dim); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .comp-chip .c-val { font-family: var(--font-num); font-size: 0.84rem; color: #fff; font-weight: 800; }
+
+    /* Timeline View */
+    .t-table-header {
+      display: grid;
+      grid-template-columns: 40px 1fr 44px 62px;
+      padding: 6px 8px;
+      font-size: 0.64rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+      border-bottom: 1px solid var(--border);
+      background: #080c14;
+      border-radius: 6px 6px 0 0;
+    }
+    .t-table-rows {
+      max-height: 280px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding-top: 4px;
+    }
+    .t-table-rows::-webkit-scrollbar { width: 4px; }
+    .t-table-rows::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    .t-table-row {
+      display: grid;
+      grid-template-columns: 40px 1fr 44px 62px;
+      padding: 6px 8px;
+      font-size: 0.72rem;
+      align-items: center;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.02);
+    }
+    .t-table-row.current {
+      background: linear-gradient(90deg, rgba(16, 229, 117, 0.14), transparent);
+      border-left: 3px solid var(--money);
+      font-weight: 800;
+    }
+    .t-table-row .t-age { font-family: var(--font-num); color: var(--text-muted); font-size: 0.70rem; }
+    .t-table-row .t-role { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 4px; color: #fff; }
+    .t-table-row .t-ovr { font-family: var(--font-num); font-weight: 800; color: var(--gold); text-align: right; }
+    .t-table-row .t-cash { font-family: var(--font-num); font-weight: 800; color: var(--money); text-align: right; }
+
+    /* ================= NUEVO: TARJETA DE EPITAFIO CORPORATIVO ================= */
+    .tombstone-card {
+      background: linear-gradient(165deg, #131724 0%, #070910 100%);
+      border: 2px solid var(--gold);
+      border-radius: 20px;
+      padding: 22px 18px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.85), 0 0 35px var(--gold-glow);
+      text-align: center;
+      color: var(--text);
+      margin: 14px auto;
+      max-width: 520px;
+      width: 100%;
+    }
+    .tombstone-glow {
+      position: absolute;
+      top: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 240px;
+      height: 100px;
+      background: radial-gradient(circle, rgba(255,215,0,0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .tombstone-header .cross-icon {
+      font-size: 2rem;
+      margin-bottom: 2px;
+      line-height: 1;
+    }
+    .tombstone-header .rip-kicker {
+      font-size: 0.66rem;
+      letter-spacing: 0.22em;
+      color: var(--gold);
+      font-weight: 900;
+      text-transform: uppercase;
+      display: block;
+    }
+    .tomb-name {
+      font-family: var(--font-brand);
+      font-size: 1.85rem;
+      font-weight: 900;
+      color: #fff;
+      margin: 4px 0 2px;
+      letter-spacing: -0.01em;
+    }
+    .tomb-dates {
+      font-family: var(--font-num);
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .tombstone-body {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 16px 0;
+      text-align: left;
+    }
+    .epitaph-block {
+      background: rgba(255,255,255,0.03);
+      border-left: 3.5px solid var(--gold);
+      padding: 9px 12px;
+      border-radius: 0 10px 10px 0;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .epitaph-block .ep-tag {
+      font-size: 0.65rem;
+      font-weight: 900;
+      color: var(--gold);
+      letter-spacing: 0.12em;
+      display: block;
+      margin-bottom: 3px;
+      text-transform: uppercase;
+    }
+    .epitaph-block .ep-text {
+      font-size: 0.82rem;
+      color: #e2e8f0;
+      line-height: 1.45;
+    }
+    .tombstone-footer {
+      border-top: 1px solid rgba(255,215,0,0.25);
+      padding-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .badge-row { display: flex; gap: 5px; }
+    .t-pill {
+      font-family: var(--font-num);
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: #182238;
+      color: #fff;
+      border: 1px solid var(--border);
+    }
+    .t-pill.gold {
+      background: rgba(255,215,0,0.15);
+      color: var(--gold);
+      border-color: rgba(255,215,0,0.35);
+    }
+    .app-watermark { font-size: 0.65rem; color: var(--text-dim); font-weight: 700; }
+
+    .share-actions-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 8px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    .btn-copy-text {
+      background: #182238;
+      border: 1.5px solid var(--electric-blue);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 9px;
+      font-weight: 800;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: var(--font-body);
+    }
+    .btn-copy-text:hover, .btn-copy-text:focus-visible {
+      background: #233354;
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+      outline: none;
+    }
+    .btn-share-card {
+      background: linear-gradient(135deg, #ffd700, #f59e0b);
+      border: none;
+      color: #1a0f00;
+      padding: 10px 16px;
+      border-radius: 9px;
+      font-weight: 900;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 14px rgba(255, 215, 0, 0.35);
+      font-family: var(--font-body);
+    }
+    .btn-share-card:hover, .btn-share-card:focus-visible {
+      filter: brightness(1.1);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+      outline: none;
+    }
+    .copy-success-toast {
+      background: #10e575;
+      color: #042f1a;
+      font-size: 0.74rem;
+      font-weight: 900;
+      padding: 4px 10px;
+      border-radius: 8px;
+      display: inline-block;
+      margin-top: 6px;
+      animation: flashIn 0.25s ease both;
+    }
+
   </style>
 </head>
 <body>
@@ -1258,7 +1573,7 @@
     </div>
   </noscript>
 
-    <!-- Masthead -->
+  <!-- Masthead -->
   <header class="masthead">
     <div class="masthead-brand">
       <div class="logo-coin" aria-hidden="true">$</div>
@@ -1269,8 +1584,6 @@
       <button type="button" class="sound-toggle-btn" id="soundToggleBtn" onclick="toggleSound()" aria-label="Alternar sonido">🔇 Mute</button>
     </div>
   </header>
-
-  
 
   <!-- Main Board Container -->
   <main class="board" id="board" style="grid-template-columns: 1fr;">
@@ -1293,6 +1606,9 @@
       </div>
     </div>
   </main>
+
+  <!-- Modal de Legajo Ejecutivo (Stats, Competencias y Timeline) -->
+  <div id="legajoModalContainer"></div>
 
   <!-- Modal de Decisiones Críticas / Eventos -->
   <div id="eventModalContainer"></div>
@@ -1342,7 +1658,7 @@
     const ORIGINS = [
       {
         id: "mba",
-        n: "MBA en Masachusets Wachoski",
+        n: "MBA",
         d: "Teoría impecable y una deuda impagable",
         ic: "🎓",
         cash: -40000,
@@ -1352,7 +1668,7 @@
       },
       {
         id: "calle",
-        n: "Escuela de la calle",
+        n: "Lobo de WS",
         d: "Te las sabés todas",
         ic: "🥊",
         cash: 2000,
@@ -1372,7 +1688,7 @@
       },
       {
         id: "tecnico",
-        n: "Especialista en IA",
+        n: "Vibecoder IA",
         d: "Claude, Gemini y ChatGPT. Tenés 0 código.",
         ic: "⚙️",
         cash: 15000,
@@ -1382,8 +1698,6 @@
       }
     ];
 
-    
-    /* ================= POOL DE CHANGAS Y GIG ECONOMY (TIER 0) ================= */
     const GIG_JOBS = [
       {
         id: "rappi",
@@ -1448,7 +1762,6 @@
     ];
 
     const COMPANIES = [
-      // Tier 1: Pymes y Startups locales
       { n: "Kiosco Cripto SRL", s: "Fintech", t: 1, ini: "KC", areas: ["fin", "mkt", "ope"] },
       { n: "AppMiPyme", s: "SaaS", t: 1, ini: "AP", areas: ["pro", "ope", "ven"] },
       { n: "Empanada Valley", s: "FoodTech", t: 1, ini: "EV", areas: ["ope", "mkt", "ven"] },
@@ -1460,7 +1773,6 @@
       { n: "Software Factory 1999", s: "Tech", t: 1, ini: "SF", areas: ["pro", "ope", "leg"] },
       { n: "Melon Cash", s: "Fintech", t: 1, ini: "MC", areas: ["fin", "mkt", "ven"] },
       
-      // Tier 2: Scaleups y Empresas Medianas Consolidadas
       { n: "Vaquita Pagos", s: "Fintech", t: 2, ini: "VP", areas: ["fin", "pro", "leg", "mkt"] },
       { n: "TiendaNube Express", s: "E-Commerce", t: 2, ini: "TN", areas: ["mkt", "ven", "pro", "ope"] },
       { n: "Despegarte", s: "TravelTech", t: 2, ini: "DG", areas: ["ven", "mkt", "fin", "pro"] },
@@ -1470,7 +1782,6 @@
       { n: "ElectroGalaxia", s: "Retail Tech", t: 2, ini: "EG", areas: ["ven", "ope", "mkt", "fin"] },
       { n: "CloudLatam", s: "Infraestructura", t: 2, ini: "CL", areas: ["pro", "ope", "leg", "ven"] },
 
-      // Tier 3: Unicornios Regionales
       { n: "Mercado Libreño", s: "E-Commerce", t: 3, ini: "ML", areas: ["pro", "ope", "fin", "mkt", "leg", "ven"] },
       { n: "Globanthic", s: "Tech Consulting", t: 3, ini: "GL", areas: ["pro", "ven", "ope", "mkt", "fin"] },
       { n: "AuthCero", s: "Ciberseguridad", t: 3, ini: "AC", areas: ["pro", "leg", "ope", "fin"] },
@@ -1479,14 +1790,12 @@
       { n: "Cerveza Patagonia Global", s: "Consumo", t: 3, ini: "CP", areas: ["mkt", "ven", "ope", "fin"] },
       { n: "Biogénesis Andina", s: "Biotech", t: 3, ini: "BA", areas: ["pro", "leg", "ope", "fin"] },
 
-      // Tier 4: Monopolios y Big Tech
       { n: "Gargle Argentina", s: "Big Tech", t: 4, ini: "GG", areas: ["pro", "mkt", "fin", "leg", "ope", "ven"] },
       { n: "MacroMonopolio Bank", s: "Banca Mayorista", t: 4, ini: "MB", areas: ["fin", "leg", "ven", "ope"] },
       { n: "PetroNacional", s: "Energía", t: 4, ini: "PN", areas: ["ope", "fin", "leg", "ven"] },
       { n: "Telecomunicaciones Patria", s: "Telco", t: 4, ini: "TP", areas: ["ope", "mkt", "leg", "fin"] },
       { n: "Prometeus AI", s: "IA Soberana", t: 4, ini: "PA", areas: ["pro", "fin", "leg", "mkt"] },
 
-      // Tier 5: Singularidad y Fondos Soberanos Transhumanos
       { n: "Cortex Neural Corp", s: "NeuroTech", t: 5, ini: "CN", areas: ["pro", "fin", "leg", "ope", "mkt", "ven"] },
       { n: "Orbital Helium Mining", s: "Aeroespacial", t: 5, ini: "OH", areas: ["ope", "fin", "leg", "pro"] },
       { n: "Fondo Soberano Atlántico", s: "Megafondo", t: 5, ini: "FA", areas: ["fin", "leg", "ven", "pro"] }
@@ -1785,6 +2094,99 @@
       }
     ];
 
+    /* ================= LOGOS PROCEDURALES POR TIER ================= */
+    function hashEmpresa(s){
+      let h = 0;
+      const str = String(s || '');
+      for(let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) | 0;
+      return Math.abs(h);
+    }
+
+    const PALETA_TIER = {
+      1: ["#b45309", "#4d7c0f", "#a16207", "#9f1239", "#3f6212"],
+      2: ["#475569", "#1e40af", "#0f766e", "#7c2d12", "#334155"],
+      3: [["#a855f7","#ec4899"], ["#38bdf8","#6366f1"], ["#10e575","#0284c7"], ["#f59e0b","#ef4444"]],
+      4: ["#f8fafc"],
+      5: ["#ffffff"]
+    };
+
+    function logoTier1(co, h){
+      const c1 = PALETA_TIER[1][h % 5];
+      const c2 = PALETA_TIER[1][(h >> 3) % 5];
+      const rot = ((h % 5) - 2) * 0.9;
+      return `
+        <g transform="rotate(${rot} 18 18)">
+          <rect x="1" y="1" width="34" height="34" rx="3" fill="${c1}" stroke="${c2}" stroke-width="2.5"/>
+          <text x="18" y="24" text-anchor="middle" font-family="Impact, Arial Black, sans-serif" font-size="14" letter-spacing="-1" fill="#fff">${esc(co.ini || co.n.substring(0,2))}</text>
+        </g>
+      `;
+    }
+
+    function logoTier2(co, h){
+      const c = PALETA_TIER[2][h % 5];
+      return `
+        <rect width="36" height="36" rx="6" fill="${c}"/>
+        <text x="18" y="23" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="800" fill="#fff">${esc(co.ini || co.n.substring(0,2))}</text>
+      `;
+    }
+
+    function logoTier3(co, h, uid){
+      const [a, b] = PALETA_TIER[3][h % 4];
+      const glifos = [
+        `<circle cx="18" cy="18" r="7" fill="none" stroke="#fff" stroke-width="3.5"/>`,
+        `<path d="M11 23l7-10 7 10z" fill="#fff"/>`,
+        `<rect x="12" y="12" width="12" height="12" rx="4" fill="#fff"/>`,
+        `<path d="M12 18h12M18 12v12" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>`
+      ];
+      return `
+        <defs>
+          <linearGradient id="lg_${uid}" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="${a}"/><stop offset="100%" stop-color="${b}"/>
+          </linearGradient>
+        </defs>
+        <rect width="36" height="36" rx="12" fill="url(#lg_${uid})"/>
+        ${glifos[h % 4]}
+      `;
+    }
+
+    function logoTier4(co, h){
+      return `
+        <rect width="36" height="36" rx="8" fill="#0a0a0a" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+        <text x="18" y="22" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="300" letter-spacing="2" fill="#f8fafc">${esc(co.ini || co.n.substring(0,2))}</text>
+      `;
+    }
+
+    function logoTier5(co, h){
+      const marcas = [
+        `<circle cx="18" cy="18" r="2.5" fill="#fff"/>`,
+        `<line x1="10" y1="18" x2="26" y2="18" stroke="#fff" stroke-width="1.2"/>`,
+        `<circle cx="18" cy="18" r="7" fill="none" stroke="#fff" stroke-width="0.8"/>`
+      ];
+      return `<rect width="36" height="36" rx="8" fill="#000" stroke="#38bdf8" stroke-width="0.8"/>${marcas[h % 3]}`;
+    }
+
+    const GENERADORES_LOGO = { 1: logoTier1, 2: logoTier2, 3: logoTier3, 4: logoTier4, 5: logoTier5 };
+
+    function companyLogo(co, sm = false){
+      if(!co) return `<div class="company-logo ${sm?'sm':''}" style="background:#1e293b; color:var(--text-dim)">?</div>`;
+      if(co.t === 0 || co.isGig){
+        const c = co.color || '#ca8a04';
+        return `
+          <div class="company-logo ${sm?'sm':''} logo-app" style="background:${c}; position:relative; border-radius:8px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.5);">
+            <span style="font-size:${sm?'0.75rem':'1.1rem'};">${co.ini || '📱'}</span>
+            <div style="position:absolute; top:-2px; right:-2px; width:7px; height:7px; background:#ef4444; border-radius:50%; border:1px solid #fff;"></div>
+          </div>
+        `;
+      }
+      const h = hashEmpresa(co.n);
+      const uid = (co.ini || 'CO') + '_' + (co.t || 1) + (sm ? '_s' : '_b') + '_' + h;
+      const gen = GENERADORES_LOGO[co.t] || logoTier2;
+      return `
+        <div class="company-logo ${sm?'sm':''} logo-t${co.t || 1}">
+          <svg viewBox="0 0 36 36">${gen(co, h, uid)}</svg>
+        </div>
+      `;
+    }
 
     /* ================= PERSISTENCIA DE PARTIDA (AUTO-SAVE) ================= */
     const SAVE_KEY = 'market_capo_run_v1';
@@ -1795,7 +2197,6 @@
         return;
       }
       try {
-        // Serialización optimizada de referencias de empresas
         const cleanState = {
           ...S,
           companyName: S.company ? S.company.n : null,
@@ -1819,7 +2220,6 @@
         if(!raw) return null;
         const s = JSON.parse(raw);
         if(s && s.age >= 22 && s.phase !== 'end'){
-          // Rehidratar referencias de empresas
           if(s.companyName){
             s.company = COMPANIES.find(c => c.n === s.companyName) || null;
           }
@@ -1847,7 +2247,7 @@
 
     /* ================= SUITE DE AUDIO ARCADE PROFESIONAL ================= */
     let audioCtx = null;
-    let soundEnabled = false; // Mute por defecto
+    let soundEnabled = false;
 
     function playSfx(type){
       if(!soundEnabled) return;
@@ -1913,21 +2313,20 @@
       if(btn) btn.textContent = soundEnabled ? '🔊 Sonido' : '🔇 Mute';
     }
 
-    /* ================= AVATARES SATÍRICOS ARGENTINOS HD ================= */
+    /* ================= AVATARES HD 256x256 PIXEL ART ================= */
     const ARG_FIXED_AVATARS = {
-      H_mba: `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g_chaleco_fix" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0284c7"/><stop offset="100%" stop-color="#0369a1"/></linearGradient><linearGradient id="g_face_mba_fix" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fde2d2"/><stop offset="100%" stop-color="#f2bba5"/></linearGradient></defs><path d="M50 72c-15 0-27 8-29 24l-3 24h64l-3-24c-2-16-14-24-29-24z" fill="#1e293b"/><path d="M36 78c-4 8-6 20-6 30h40c0-10-2-22-6-30-5 2-10 3-14 3s-9-1-14-3z" fill="url(#g_chaleco_fix)" stroke="#075985" stroke-width="1.2"/><line x1="50" y1="81" x2="50" y2="108" stroke="#075985" stroke-width="2"/><polygon points="50,72 40,78 50,90 60,78" fill="#e0f2fe"/><rect x="44" y="62" width="12" height="12" fill="#e2a890"/><ellipse cx="50" cy="46" rx="20" ry="22" fill="url(#g_face_mba_fix)"/><path d="M28 36c0-12 9-18 22-18s22 6 22 18c0 4-1 6-1 6-3-6-10-8-21-8s-18 2-21 8c0 0-1-2-1-6z" fill="#2e1c14"/><path d="M30 26c6-4 14-5 20-5s14 1 20 5c-4-3-10-4-20-4s-16 1-20 4z" fill="#4a3022"/><rect x="33" y="42" width="14" height="10" rx="3" fill="none" stroke="#0f172a" stroke-width="2.2"/><rect x="53" y="42" width="14" height="10" rx="3" fill="none" stroke="#0f172a" stroke-width="2.2"/><line x1="47" y1="46" x2="53" y2="46" stroke="#0f172a" stroke-width="2.2"/><circle cx="40" cy="47" r="2.2" fill="#0284c7"/><circle cx="60" cy="47" r="2.2" fill="#0284c7"/><path d="M43 59c3 3 11 3 14 0" stroke="#b45309" stroke-width="2" fill="none" stroke-linecap="round"/><rect x="74" y="80" width="10" height="25" rx="3" fill="#047857" stroke="#022c22" stroke-width="1"/><rect x="76" y="76" width="6" height="4" fill="#94a3b8"/></svg>`,
-      M_mba: `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g_blazer_m_fix" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#475569"/><stop offset="100%" stop-color="#1e293b"/></linearGradient></defs><path d="M50 72c-15 0-27 8-29 24l-3 24h64l-3-24c-2-16-14-24-29-24z" fill="url(#g_blazer_m_fix)"/><polygon points="50,72 40,78 50,92 60,78" fill="#fdf4ff"/><rect x="44" y="62" width="12" height="12" fill="#e2a890"/><ellipse cx="50" cy="46" rx="19" ry="21" fill="#fde2d2"/><path d="M24 38c0-14 12-24 26-24s26 10 26 24c0 12-2 28-5 40h-6c3-10 4-24 3-34 0-10-7-16-18-16s-18 6-18 16c-1 10 0 24 3 34h-6c-3-12-5-28-5-40z" fill="#3b1d11"/><polygon points="32,42 46,41 44,49 34,48" fill="none" stroke="#a855f7" stroke-width="2"/><polygon points="54,41 68,42 66,48 56,49" fill="none" stroke="#a855f7" stroke-width="2"/><line x1="46" y1="44" x2="54" y2="44" stroke="#a855f7" stroke-width="2"/><circle cx="39" cy="45.5" r="2.2" fill="#0284c7"/><circle cx="61" cy="45.5" r="2.2" fill="#0284c7"/><path d="M44 59c3 2.5 9 2.5 12 0" stroke="#e11d48" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
-      H_calle: `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g_cuero_fix" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#27272a"/><stop offset="100%" stop-color="#09090b"/></linearGradient><linearGradient id="g_face_calle_fix" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fcd3bd"/><stop offset="100%" stop-color="#e89d7d"/></linearGradient></defs><path d="M50 72c-15 0-27 8-29 24l-3 24h64l-3-24c-2-16-14-24-29-24z" fill="url(#g_cuero_fix)"/><polygon points="50,72 38,80 50,96 62,80" fill="#f8fafc"/><path d="M43 78c3 8 11 8 14 0" stroke="#fbbf24" stroke-width="2.5" fill="none" stroke-linecap="round"/><rect x="42" y="62" width="16" height="12" fill="#d98c6c"/><ellipse cx="50" cy="46" rx="21" ry="23" fill="url(#g_face_calle_fix)"/><path d="M33 48c0 10 7 19 17 19s17-9 17-19c-3 1-8 2-17 2s-14-1-17-2z" fill="#78350f" opacity="0.35"/><path d="M26 36L30 18L42 24L52 14L64 22L74 16L74 36z" fill="#18181b"/><ellipse cx="40" cy="46" rx="2.5" ry="3" fill="#18181b"/><path d="M57 47c2-2 6-2 8 0" stroke="#18181b" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M43 59c4 1 10 4 14 1" stroke="#9a3412" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>`,
-      M_calle: `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g_campera_f_fix" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#dc2626"/><stop offset="100%" stop-color="#991b1b"/></linearGradient></defs><path d="M50 72c-15 0-27 8-29 24l-3 24h64l-3-24c-2-16-14-24-29-24z" fill="url(#g_campera_f_fix)"/><polygon points="50,72 40,78 50,92 60,78" fill="#18181b"/><circle cx="28" cy="50" r="4.5" fill="none" stroke="#fbbf24" stroke-width="1.8"/><circle cx="72" cy="50" r="4.5" fill="none" stroke="#fbbf24" stroke-width="1.8"/><rect x="44" y="62" width="12" height="12" fill="#e89d7d"/><ellipse cx="50" cy="46" rx="19" ry="21" fill="#fcd3bd"/><circle cx="50" cy="20" r="9" fill="#18181b"/><path d="M28 36c4-8 12-14 22-14s18 6 22 14c-4-4-10-6-22-6s-18 2-22 6z" fill="#18181b"/><path d="M30 40c4 4 10 5 20 5s16-1 20-5c-3 8-9 10-20 10s-17-2-20-10z" fill="#18181b"/><circle cx="39" cy="46" r="2.5" fill="#78350f"/><circle cx="61" cy="46" r="2.5" fill="#78350f"/><path d="M43 59c3 3 11 3 14 0" stroke="#b91c1c" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>`,
-      H_trust: `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g_sueter_fix" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#15803d"/><stop offset="100%" stop-color="#166534"/></linearGradient><linearGradient id="g_face_trust_fix" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fed7aa"/><stop offset="100%" stop-color="#fba876"/></linearGradient></defs><path d="M50 72c-15 0-27 8-29 24l-3 24h64l-3-24c-2-16-14-24-29-24z" fill="#fbcfe8"/><path d="M32 74c6 6 12 12 18 18 6-6 12-12 18-18-4-4-10-6-18-6s-14 2-18 6z" fill="url(#g_sueter_fix)"/><path d="M44 88c2 4 4 10 4 16h4c0-6 2-12 4-16z" fill="#166534"/><rect x="42" y="62" width="16" height="12" fill="#f59e6b"/><ellipse cx="50" cy="46" rx="21" ry="22" fill="url(#g_face_trust_fix)"/><path d="M26 38c0-14 10-24 26-24s26 8 26 22l-6-2c0-8-8-12-20-12s-18 4-20 12z" fill="#eab308"/><path d="M30 20c8-6 16-7 24-5l6 4c-6-3-14-3-22 1z" fill="#fef08a"/><circle cx="39" cy="46" r="2.5" fill="#38bdf8"/><circle cx="61" cy="46" r="2.5" fill="#38bdf8"/><path d="M44 59c3 3 10 3 13 0" stroke="#c2410c" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>`,
-      M_trust: `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g_chaleco_f_fix" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f43f5e"/><stop offset="100%" stop-color="#be123c"/></linearGradient></defs><path d="M50 72c-15 0-27 8-29 24l-3 24h64l-3-24c-2-16-14-24-29-24z" fill="url(#g_chaleco_f_fix)"/><polygon points="50,72 40,78 50,92 60,78" fill="#ffffff"/><path d="M42 74c3 4 13 4 16 0-3 6-13 6-16 0z" fill="#fde047"/><rect x="44" y="62" width="12" height="12" fill="#fba876"/><ellipse cx="50" cy="46" rx="19" ry="21" fill="#fed7aa"/><rect x="34" y="24" width="14" height="7" rx="2" fill="#09090b" stroke="#ffd700" stroke-width="1"/><rect x="52" y="24" width="14" height="7" rx="2" fill="#09090b" stroke="#ffd700" stroke-width="1"/><line x1="48" y1="27" x2="52" y2="27" stroke="#ffd700" stroke-width="1.5"/><path d="M22 38c0-14 12-24 28-24s28 10 28 24c0 14-4 36-8 46h-7c4-10 6-26 5-36 0-10-7-16-18-16s-18 6-18 16c-1 10 1 26 5 36h-7c-4-10-8-32-8-46z" fill="#fbbf24"/><circle cx="39" cy="46" r="2.5" fill="#38bdf8"/><circle cx="61" cy="46" r="2.5" fill="#38bdf8"/><path d="M44 59c3 2 9 2 12 0" stroke="#be123c" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
-      H_tecnico: `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g_hoodie_fix" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#312e81"/><stop offset="100%" stop-color="#1e1b4b"/></linearGradient><linearGradient id="g_face_tec_fix" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fde2d2"/><stop offset="100%" stop-color="#e2a890"/></linearGradient></defs><path d="M50 72c-15 0-27 8-29 24l-3 24h64l-3-24c-2-16-14-24-29-24z" fill="url(#g_hoodie_fix)"/><text x="50" y="98" text-anchor="middle" font-family="monospace" font-size="7" font-weight="900" fill="#38bdf8">&lt;/&gt;</text><path d="M30 68c0-10 10-14 20-14s20 4 20 14" stroke="#e11d48" stroke-width="4" fill="none"/><rect x="25" y="66" width="8" height="14" rx="3" fill="#18181b" stroke="#e11d48" stroke-width="1.5"/><rect x="67" y="66" width="8" height="14" rx="3" fill="#18181b" stroke="#e11d48" stroke-width="1.5"/><rect x="44" y="62" width="12" height="10" fill="#d49a80"/><ellipse cx="50" cy="46" rx="20" ry="22" fill="url(#g_face_tec_fix)"/><path d="M34 50c2 2 6 2 8 0M58 50c2 2 6 2 8 0" stroke="#713f12" stroke-width="1.5" fill="none" opacity="0.6"/><path d="M24 40c0-15 12-25 28-25s28 10 28 25l-4-4c0-10-8-15-24-15s-24 5-24 15z" fill="#334155"/><path d="M30 36l6-12 8 8 8-10 8 12-10-4-6 6-6-6z" fill="#334155"/><circle cx="38" cy="46" r="6.5" fill="rgba(56,189,248,0.15)" stroke="#38bdf8" stroke-width="2"/><circle cx="62" cy="46" r="6.5" fill="rgba(56,189,248,0.15)" stroke="#38bdf8" stroke-width="2"/><line x1="44.5" y1="46" x2="55.5" y2="46" stroke="#38bdf8" stroke-width="2"/><line x1="45" y1="60" x2="55" y2="60" stroke="#9a3412" stroke-width="2" stroke-linecap="round"/></svg>`,
-      M_tecnico: `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g_hoodie_f_fix" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#064e3b"/></linearGradient></defs><path d="M50 72c-15 0-27 8-29 24l-3 24h64l-3-24c-2-16-14-24-29-24z" fill="url(#g_hoodie_f_fix)"/><text x="50" y="98" text-anchor="middle" font-family="monospace" font-size="7" font-weight="900" fill="#34d399">git push -f</text><rect x="44" y="62" width="12" height="12" fill="#e2a890"/><ellipse cx="50" cy="46" rx="19" ry="21" fill="#fde2d2"/><path d="M24 38c0-14 12-24 26-24s26 10 26 24c0 10-3 20-6 26h-7c2-5 4-13 4-20 0-10-7-16-17-16s-17 6-17 16c0 7 2 15 4 20h-7c-3-6-6-16-6-26z" fill="#0284c7"/><path d="M30 36l6-10 8 6 8-8 8 10-10-3-6 5-6-5z" fill="#a855f7"/><rect x="32" y="42" width="15" height="10" rx="3" fill="none" stroke="#38bdf8" stroke-width="2"/><rect x="53" y="42" width="15" height="10" rx="3" fill="none" stroke="#38bdf8" stroke-width="2"/><line x1="47" y1="46" x2="53" y2="46" stroke="#38bdf8" stroke-width="2"/><circle cx="39.5" cy="47" r="2.2" fill="#10e575"/><circle cx="60.5" cy="47" r="2.2" fill="#10e575"/><path d="M44 60c3 2 8 2 12 0" stroke="#059669" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
-      H_transhumano: `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g_cybersuit" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#090d16"/><stop offset="100%" stop-color="#020408"/></linearGradient><linearGradient id="g_chrome_face" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e2e8f0"/><stop offset="50%" stop-color="#94a3b8"/><stop offset="100%" stop-color="#64748b"/></linearGradient></defs><path d="M50 72c-15 0-27 8-29 24l-3 24h64l-3-24c-2-16-14-24-29-24z" fill="url(#g_cybersuit)" stroke="#06b6d4" stroke-width="1.5"/><line x1="50" y1="74" x2="50" y2="115" stroke="#38bdf8" stroke-width="2"/><path d="M36 84l14 12 14-12" stroke="#a855f7" stroke-width="1.5" fill="none"/><rect x="44" y="62" width="12" height="12" fill="#334155" stroke="#38bdf8" stroke-width="1"/><ellipse cx="50" cy="46" rx="20" ry="22" fill="url(#g_chrome_face)"/><path d="M50 24v44M30 46h40" stroke="#0ea5e9" stroke-width="0.8" opacity="0.6"/><path d="M28 36c0-12 9-18 22-18s22 6 22 18l-5-4c0-8-8-12-17-12s-17 4-17 12z" fill="#38bdf8" opacity="0.85"/><circle cx="40" cy="47" r="4" fill="#090d16" stroke="#00f0ff" stroke-width="1.8"/><circle cx="40" cy="47" r="1.8" fill="#00f0ff"/><circle cx="60" cy="47" r="4" fill="#090d16" stroke="#ffd700" stroke-width="1.8"/><circle cx="60" cy="47" r="1.8" fill="#ffd700"/><path d="M28 42h44v10H28z" fill="rgba(56,189,248,0.15)" stroke="#38bdf8" stroke-width="1.2" rx="2"/><line x1="32" y1="47" x2="68" y2="47" stroke="#38bdf8" stroke-width="0.8" stroke-dasharray="2 2"/><line x1="45" y1="60" x2="55" y2="60" stroke="#00f0ff" stroke-width="2" stroke-linecap="round"/></svg>`,
-      M_transhumano: `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g_cybersuit_f" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1e1b4b"/><stop offset="100%" stop-color="#090d16"/></linearGradient><linearGradient id="g_chrome_f" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f1f5f9"/><stop offset="50%" stop-color="#cbd5e1"/><stop offset="100%" stop-color="#94a3b8"/></linearGradient></defs><path d="M50 72c-15 0-27 8-29 24l-3 24h64l-3-24c-2-16-14-24-29-24z" fill="url(#g_cybersuit_f)" stroke="#a855f7" stroke-width="1.5"/><polygon points="50,72 40,80 50,94 60,80" fill="#090d16" stroke="#00f0ff" stroke-width="1"/><rect x="44" y="62" width="12" height="12" fill="#334155" stroke="#a855f7" stroke-width="1"/><ellipse cx="50" cy="46" rx="19" ry="21" fill="url(#g_chrome_f)"/><path d="M24 38c0-14 12-24 26-24s26 10 26 24c0 10-3 22-6 30h-6c3-8 4-18 3-26 0-8-7-14-17-14s-17 6-17 14c-1 8 0 18 3 26h-6c-3-8-6-20-6-30z" fill="#c084fc" opacity="0.85"/><circle cx="39" cy="46" r="3.8" fill="#090d16" stroke="#a855f7" stroke-width="1.8"/><circle cx="39" cy="46" r="1.6" fill="#a855f7"/><circle cx="61" cy="46" r="3.8" fill="#090d16" stroke="#00f0ff" stroke-width="1.8"/><circle cx="61" cy="46" r="1.6" fill="#00f0ff"/><line x1="44" y1="59" x2="56" y2="59" stroke="#c084fc" stroke-width="2" stroke-linecap="round"/></svg>`
+      H_mba: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect width="256" height="256" fill="#070b14"/> <rect x="16" y="16" width="224" height="224" fill="#0c1220"/> <rect x="24" y="24" width="208" height="208" fill="#10182b"/> <rect x="76" y="28" width="104" height="20" fill="#1e130c"/> <rect x="68" y="44" width="120" height="28" fill="#2b1a10"/> <rect x="80" y="32" width="96" height="12" fill="#3f2718"/> <rect x="92" y="36" width="72" height="6" fill="#5a3822"/> <rect x="60" y="68" width="16" height="40" fill="#1e130c"/> <rect x="180" y="68" width="16" height="40" fill="#1e130c"/> <rect x="56" y="96" width="16" height="28" fill="#dca084"/> <rect x="60" y="102" width="8" height="16" fill="#b8775c"/> <rect x="184" y="96" width="16" height="28" fill="#dca084"/> <rect x="188" y="102" width="8" height="16" fill="#b8775c"/> <rect x="72" y="64" width="112" height="96" fill="#f5caa6"/> <rect x="80" y="72" width="96" height="80" fill="#fbdcc4"/> <rect x="88" y="80" width="80" height="64" fill="#feebd9"/> <rect x="76" y="132" width="104" height="36" fill="#3a2518" opacity="0.35"/> <rect x="88" y="144" width="80" height="28" fill="#3a2518" opacity="0.50"/> <rect x="104" y="156" width="48" height="12" fill="#2b1a10" opacity="0.60"/> <rect x="84" y="88" width="36" height="8" fill="#24160e"/> <rect x="136" y="88" width="36" height="8" fill="#24160e"/> <rect x="76" y="96" width="48" height="36" fill="#090d16"/> <rect x="132" y="96" width="48" height="36" fill="#090d16"/> <rect x="120" y="104" width="16" height="8" fill="#090d16"/> <rect x="82" y="102" width="36" height="24" fill="#0f172a"/> <rect x="138" y="102" width="36" height="24" fill="#0f172a"/> <rect x="90" y="106" width="20" height="16" fill="#ffffff"/> <rect x="98" y="108" width="10" height="12" fill="#0284c7"/> <rect x="102" y="110" width="4" height="6" fill="#042f1a"/> <rect x="98" y="108" width="4" height="4" fill="#ffffff"/> <rect x="146" y="106" width="20" height="16" fill="#ffffff"/> <rect x="154" y="108" width="10" height="12" fill="#0284c7"/> <rect x="158" y="110" width="4" height="6" fill="#042f1a"/> <rect x="154" y="108" width="4" height="4" fill="#ffffff"/> <polygon points="84,122 108,102 114,102 90,122" fill="#38bdf8" opacity="0.75"/> <polygon points="140,122 164,102 170,102 146,122" fill="#38bdf8" opacity="0.75"/> <rect x="122" y="116" width="12" height="24" fill="#e8ad8d"/> <rect x="116" y="136" width="24" height="6" fill="#d08e6c"/> <rect x="112" y="152" width="32" height="4" fill="#9f5438"/> <rect x="116" y="154" width="24" height="4" fill="#ffffff"/> <rect x="104" y="168" width="48" height="24" fill="#f5caa6"/> <polygon points="92,184 128,216 128,184" fill="#bae6fd"/> <polygon points="164,184 128,216 128,184" fill="#93c5fd"/> <rect x="36" y="192" width="184" height="64" fill="#0369a1"/> <rect x="64" y="192" width="128" height="64" fill="#0284c7"/> <rect x="40" y="208" width="176" height="4" fill="#075985"/> <rect x="40" y="228" width="176" height="4" fill="#075985"/> <rect x="40" y="248" width="176" height="4" fill="#075985"/> <rect x="126" y="192" width="4" height="64" fill="#075985"/> <rect x="196" y="172" width="36" height="84" fill="#14532d"/> <rect x="202" y="180" width="24" height="68" fill="#166534"/> <rect x="200" y="160" width="28" height="14" fill="#94a3b8"/> <rect x="204" y="156" width="20" height="6" fill="#cbd5e1"/> <rect x="208" y="200" width="12" height="8" fill="#22c55e" opacity="0.6"/> <rect x="32" y="228" width="24" height="28" fill="#f97316"/> <rect x="36" y="232" width="16" height="20" fill="#0f172a"/> <rect x="40" y="236" width="8" height="12" fill="#10e575"/></svg>`,
+      M_mba: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect width="256" height="256" fill="#070b14"/> <rect x="16" y="16" width="224" height="224" fill="#0c1220"/> <rect x="24" y="24" width="208" height="208" fill="#151728"/> <rect x="68" y="32" width="120" height="28" fill="#2a1208"/> <rect x="52" y="56" width="152" height="48" fill="#3d1e10"/> <rect x="44" y="96" width="40" height="88" fill="#2a1208"/> <rect x="172" y="96" width="40" height="88" fill="#2a1208"/> <rect x="80" y="40" width="96" height="16" fill="#542b17"/> <rect x="76" y="68" width="104" height="96" fill="#fde2d2"/> <rect x="84" y="76" width="88" height="80" fill="#feeddc"/> <polygon points="68,96 116,92 112,128 76,124" fill="#581c87"/> <polygon points="188,96 140,92 144,128 180,124" fill="#581c87"/> <rect x="114" y="100" width="28" height="6" fill="#581c87"/> <polygon points="74,100 110,96 108,122 80,120" fill="#2e1065"/> <polygon points="182,100 146,96 148,122 176,120" fill="#2e1065"/> <rect x="80" y="104" width="24" height="14" fill="#ffffff"/> <rect x="88" y="106" width="10" height="10" fill="#0284c7"/> <rect x="88" y="106" width="4" height="4" fill="#ffffff"/> <rect x="152" y="104" width="24" height="14" fill="#ffffff"/> <rect x="158" y="106" width="10" height="10" fill="#0284c7"/> <rect x="158" y="106" width="4" height="4" fill="#ffffff"/> <polygon points="76,98 108,94 108,98" fill="#000000"/> <polygon points="180,98 148,94 148,98" fill="#000000"/> <polygon points="78,118 104,98 110,98 84,118" fill="#c084fc" opacity="0.6"/> <polygon points="150,118 176,98 182,98 156,118" fill="#c084fc" opacity="0.6"/> <rect x="110" y="148" width="36" height="8" fill="#be123c"/> <rect x="114" y="150" width="28" height="4" fill="#e11d48"/> <rect x="122" y="150" width="12" height="2" fill="#fda4af"/> <rect x="52" y="128" width="6" height="6" fill="#38bdf8"/> <rect x="54" y="130" width="2" height="2" fill="#ffffff"/> <rect x="198" y="128" width="6" height="6" fill="#38bdf8"/> <rect x="200" y="130" width="2" height="2" fill="#ffffff"/> <rect x="108" y="164" width="40" height="28" fill="#fde2d2"/> <polygon points="100,188 128,224 156,188" fill="#ffffff"/> <polygon points="112,188 128,212 144,188" fill="#f1f5f9"/> <rect x="32" y="184" width="192" height="72" fill="#1e293b"/> <rect x="56" y="184" width="144" height="72" fill="#334155"/> <polygon points="68,184 100,256 56,256" fill="#0f172a"/> <polygon points="188,184 156,256 200,256" fill="#0f172a"/> <rect x="124" y="212" width="8" height="44" fill="#38bdf8"/> <rect x="118" y="232" width="20" height="24" fill="#ffffff"/> <rect x="122" y="236" width="12" height="8" fill="#0284c7"/></svg>`,
+      H_calle: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect width="256" height="256" fill="#07090e"/> <rect x="16" y="16" width="224" height="224" fill="#140f0d"/> <rect x="68" y="32" width="120" height="28" fill="#18181b"/> <rect x="76" y="24" width="104" height="16" fill="#27272a"/> <rect x="92" y="20" width="72" height="8" fill="#3f3f46"/> <rect x="52" y="60" width="20" height="48" fill="#18181b"/> <rect x="184" y="60" width="20" height="48" fill="#18181b"/> <rect x="72" y="64" width="112" height="96" fill="#fcd3bd"/> <rect x="80" y="72" width="96" height="80" fill="#fde2d2"/> <rect x="84" y="88" width="36" height="8" fill="#18181b"/> <rect x="136" y="88" width="14" height="8" fill="#18181b"/> <rect x="150" y="84" width="6" height="16" fill="#fcd3bd"/> <rect x="156" y="88" width="16" height="8" fill="#18181b"/> <rect x="88" y="104" width="28" height="14" fill="#ffffff"/> <rect x="96" y="106" width="12" height="10" fill="#18181b"/> <rect x="100" y="106" width="4" height="4" fill="#ffffff"/> <rect x="140" y="104" width="28" height="14" fill="#ffffff"/> <rect x="148" y="106" width="12" height="10" fill="#18181b"/> <rect x="152" y="106" width="4" height="4" fill="#ffffff"/> <rect x="76" y="132" width="104" height="36" fill="#78350f" opacity="0.30"/> <rect x="100" y="148" width="56" height="20" fill="#18181b"/> <rect x="112" y="152" width="32" height="8" fill="#fcd3bd"/> <rect x="112" y="148" width="32" height="4" fill="#9a3412"/> <rect x="128" y="148" width="6" height="4" fill="#fbbf24"/> <rect x="96" y="168" width="64" height="12" fill="#d97706"/> <rect x="104" y="172" width="48" height="8" fill="#fbbf24"/> <rect x="120" y="180" width="16" height="12" fill="#ffd700"/> <rect x="124" y="184" width="8" height="4" fill="#ffffff"/> <rect x="28" y="184" width="200" height="72" fill="#09090b"/> <rect x="52" y="184" width="152" height="72" fill="#18181b"/> <polygon points="52,184 116,256 36,256" fill="#27272a"/> <polygon points="204,184 140,256 220,256" fill="#27272a"/> <rect x="44" y="196" width="6" height="6" fill="#e2e8f0"/> <rect x="56" y="196" width="6" height="6" fill="#e2e8f0"/> <rect x="194" y="196" width="6" height="6" fill="#e2e8f0"/> <rect x="206" y="196" width="6" height="6" fill="#e2e8f0"/> <polygon points="128,192 144,256 140,256 124,192" fill="#fbbf24"/></svg>`,
+      M_calle: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect width="256" height="256" fill="#07090e"/> <rect x="16" y="16" width="224" height="224" fill="#180c0f"/> <rect x="100" y="12" width="56" height="32" fill="#18181b"/> <rect x="108" y="8" width="40" height="12" fill="#27272a"/> <rect x="68" y="36" width="120" height="32" fill="#18181b"/> <rect x="52" y="64" width="32" height="88" fill="#18181b"/> <rect x="172" y="64" width="32" height="88" fill="#18181b"/> <rect x="44" y="108" width="8" height="28" fill="#fbbf24"/> <rect x="48" y="112" width="4" height="20" fill="#07090e"/> <rect x="204" y="108" width="8" height="28" fill="#fbbf24"/> <rect x="204" y="112" width="4" height="20" fill="#07090e"/> <rect x="76" y="68" width="104" height="96" fill="#fcd3bd"/> <rect x="84" y="76" width="88" height="80" fill="#feeddc"/> <polygon points="76,88 116,84 116,90 80,94" fill="#09090b"/> <polygon points="180,88 140,84 140,90 176,94" fill="#09090b"/> <rect x="84" y="100" width="28" height="14" fill="#ffffff"/> <rect x="92" y="102" width="12" height="10" fill="#78350f"/> <rect x="96" y="102" width="4" height="4" fill="#ffffff"/> <rect x="144" y="100" width="28" height="14" fill="#ffffff"/> <rect x="152" y="102" width="12" height="10" fill="#78350f"/> <rect x="156" y="102" width="4" height="4" fill="#ffffff"/> <rect x="108" y="144" width="40" height="12" fill="#991b1b"/> <rect x="112" y="146" width="32" height="8" fill="#dc2626"/> <rect x="120" y="146" width="16" height="3" fill="#fca5a5"/> <rect x="108" y="164" width="40" height="24" fill="#fcd3bd"/> <rect x="104" y="172" width="48" height="8" fill="#09090b"/> <rect x="124" y="174" width="8" height="4" fill="#fbbf24"/> <rect x="28" y="184" width="200" height="72" fill="#7f1d1d"/> <rect x="48" y="184" width="160" height="72" fill="#b91c1c"/> <rect x="68" y="184" width="120" height="72" fill="#dc2626"/> <rect x="36" y="200" width="16" height="8" fill="#ffffff"/> <rect x="36" y="216" width="16" height="8" fill="#ffffff"/> <rect x="204" y="200" width="16" height="8" fill="#ffffff"/> <rect x="204" y="216" width="16" height="8" fill="#ffffff"/></svg>`,
+      H_trust: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect width="256" height="256" fill="#07090e"/> <rect x="16" y="16" width="224" height="224" fill="#141108"/> <rect x="64" y="24" width="128" height="32" fill="#d97706"/> <rect x="56" y="44" width="144" height="32" fill="#f59e0b"/> <rect x="80" y="20" width="96" height="20" fill="#fbbf24"/> <rect x="96" y="16" width="64" height="12" fill="#fef08a"/> <rect x="48" y="76" width="24" height="40" fill="#d97706"/> <rect x="184" y="76" width="24" height="40" fill="#d97706"/> <rect x="72" y="64" width="112" height="96" fill="#fba876"/> <rect x="80" y="72" width="96" height="80" fill="#fed7aa"/> <rect x="88" y="80" width="80" height="64" fill="#ffedd5"/> <rect x="84" y="88" width="36" height="8" fill="#b45309"/> <rect x="136" y="88" width="36" height="8" fill="#b45309"/> <rect x="88" y="104" width="28" height="14" fill="#ffffff"/> <rect x="96" y="106" width="12" height="10" fill="#0284c7"/> <rect x="100" y="106" width="4" height="4" fill="#ffffff"/> <rect x="140" y="104" width="28" height="14" fill="#ffffff"/> <rect x="150" y="106" width="12" height="10" fill="#0284c7"/> <rect x="154" y="106" width="4" height="4" fill="#ffffff"/> <rect x="110" y="148" width="36" height="10" fill="#ea580c"/> <rect x="112" y="150" width="32" height="6" fill="#ffffff"/> <rect x="48" y="184" width="160" height="72" fill="#f472b6"/> <polygon points="104,184 128,220 152,184" fill="#ffffff"/> <rect x="36" y="172" width="184" height="24" fill="#14532d"/> <rect x="48" y="176" width="160" height="16" fill="#16a34a"/> <rect x="112" y="192" width="32" height="36" fill="#15803d"/> <rect x="118" y="196" width="20" height="28" fill="#166534"/> <rect x="104" y="224" width="48" height="32" fill="#15803d"/> <rect x="204" y="188" width="16" height="28" fill="#ffffff" opacity="0.6"/> <rect x="208" y="192" width="8" height="16" fill="#fef08a"/> <rect x="210" y="216" width="4" height="24" fill="#94a3b8"/></svg>`,
+      M_trust: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect width="256" height="256" fill="#07090e"/> <rect x="16" y="16" width="224" height="224" fill="#180e14"/> <rect x="68" y="28" width="120" height="28" fill="#ca8a04"/> <rect x="52" y="48" width="152" height="40" fill="#facc15"/> <rect x="36" y="88" width="44" height="120" fill="#fde047"/> <rect x="176" y="88" width="44" height="120" fill="#fde047"/> <rect x="80" y="32" width="96" height="16" fill="#fef08a"/> <rect x="80" y="44" width="44" height="16" fill="#78350f"/> <rect x="132" y="44" width="44" height="16" fill="#78350f"/> <rect x="124" y="48" width="8" height="8" fill="#b45309"/> <rect x="84" y="48" width="36" height="8" fill="#18181b"/> <rect x="136" y="48" width="36" height="8" fill="#18181b"/> <rect x="76" y="68" width="104" height="96" fill="#fba876"/> <rect x="84" y="76" width="88" height="80" fill="#fed7aa"/> <rect x="84" y="100" width="28" height="14" fill="#ffffff"/> <rect x="92" y="102" width="12" height="10" fill="#0ea5e9"/> <rect x="96" y="102" width="4" height="4" fill="#ffffff"/> <rect x="144" y="100" width="28" height="14" fill="#ffffff"/> <rect x="152" y="102" width="12" height="10" fill="#0ea5e9"/> <rect x="156" y="102" width="4" height="4" fill="#ffffff"/> <rect x="110" y="146" width="36" height="10" fill="#e11d48"/> <rect x="114" y="148" width="28" height="6" fill="#fb7185"/> <rect x="122" y="148" width="12" height="2" fill="#ffffff"/> <rect x="96" y="172" width="64" height="8" fill="#ffffff"/> <rect x="100" y="174" width="56" height="4" fill="#f1f5f9"/> <rect x="32" y="184" width="192" height="72" fill="#be123c"/> <rect x="56" y="184" width="144" height="72" fill="#f43f5e"/> <polygon points="104,184 128,228 152,184" fill="#ffffff"/></svg>`,
+      H_tecnico: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect width="256" height="256" fill="#05070d"/> <rect x="16" y="16" width="224" height="224" fill="#090d18"/> <rect x="64" y="28" width="128" height="16" fill="#1e1b4b"/> <rect x="48" y="44" width="20" height="64" fill="#312e81"/> <rect x="52" y="56" width="12" height="40" fill="#38bdf8"/> <rect x="188" y="44" width="20" height="64" fill="#312e81"/> <rect x="192" y="56" width="12" height="40" fill="#a855f7"/> <rect x="76" y="36" width="104" height="28" fill="#1e293b"/> <rect x="88" y="28" width="80" height="16" fill="#334155"/> <rect x="104" y="24" width="48" height="12" fill="#475569"/> <rect x="72" y="64" width="112" height="96" fill="#fce7f3"/> <rect x="80" y="72" width="96" height="80" fill="#fde2d2"/> <rect x="68" y="92" width="56" height="44" fill="#0284c7"/> <rect x="132" y="92" width="56" height="44" fill="#0284c7"/> <rect x="120" y="104" width="16" height="8" fill="#0369a1"/> <rect x="72" y="96" width="48" height="36" fill="#080c14"/> <rect x="136" y="96" width="48" height="36" fill="#080c14"/> <text x="96" y="112" text-anchor="middle" font-family="monospace" font-size="8" font-weight="900" fill="#38bdf8">&gt; AI_RUN</text> <text x="96" y="124" text-anchor="middle" font-family="monospace" font-size="7" font-weight="800" fill="#10e575">val: 99%</text> <text x="160" y="112" text-anchor="middle" font-family="monospace" font-size="8" font-weight="900" fill="#38bdf8">&gt; PROMPT</text> <text x="160" y="124" text-anchor="middle" font-family="monospace" font-size="7" font-weight="800" fill="#a855f7">OK 200</text> <rect x="76" y="132" width="40" height="8" fill="#93c5fd" opacity="0.4"/> <rect x="140" y="132" width="40" height="8" fill="#93c5fd" opacity="0.4"/> <rect x="114" y="152" width="28" height="4" fill="#9f5438"/> <rect x="28" y="180" width="200" height="76" fill="#090d16"/> <rect x="52" y="180" width="152" height="76" fill="#1e1b4b"/> <polygon points="104,180 128,212 152,180" fill="#0f172a"/> <text x="128" y="244" text-anchor="middle" font-family="monospace" font-size="20" font-weight="900" fill="#38bdf8">&lt;/&gt;</text></svg>`,
+      M_tecnico: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect width="256" height="256" fill="#05070d"/> <rect x="16" y="16" width="224" height="224" fill="#091410"/> <rect x="68" y="28" width="120" height="28" fill="#0891b2"/> <rect x="52" y="48" width="152" height="44" fill="#06b6d4"/> <rect x="40" y="92" width="36" height="80" fill="#a855f7"/> <rect x="180" y="92" width="36" height="80" fill="#ec4899"/> <rect x="76" y="68" width="104" height="96" fill="#fde2d2"/> <rect x="84" y="76" width="88" height="80" fill="#feeddc"/> <rect x="72" y="92" width="52" height="40" fill="#047857"/> <rect x="132" y="92" width="52" height="40" fill="#047857"/> <rect x="120" y="104" width="16" height="6" fill="#064e3b"/> <rect x="76" y="96" width="44" height="32" fill="#022c22"/> <rect x="136" y="96" width="44" height="32" fill="#022c22"/> <text x="98" y="116" text-anchor="middle" font-family="monospace" font-size="9" font-weight="900" fill="#34d399">GPT-5</text> <text x="158" y="116" text-anchor="middle" font-family="monospace" font-size="9" font-weight="900" fill="#34d399">READY</text> <rect x="110" y="148" width="36" height="8" fill="#581c87"/> <rect x="114" y="150" width="28" height="4" fill="#7e22ce"/> <rect x="28" y="180" width="200" height="76" fill="#064e3b"/> <rect x="52" y="180" width="152" height="76" fill="#059669"/> <polygon points="104,180 128,216 152,180" fill="#022c22"/> <rect x="88" y="228" width="80" height="18" fill="#022c22"/> <text x="128" y="240" text-anchor="middle" font-family="monospace" font-size="7" font-weight="900" fill="#6ee7b7">PROMPT LEAD</text></svg>`,
+      H_transhumano: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect width="256" height="256" fill="#030408"/> <rect x="16" y="16" width="224" height="224" fill="#080c14"/> <rect x="68" y="24" width="120" height="36" fill="#334155"/> <rect x="56" y="48" width="144" height="32" fill="#475569"/> <rect x="80" y="28" width="96" height="12" fill="#00f0ff"/> <rect x="48" y="76" width="20" height="48" fill="#1e293b"/> <rect x="188" y="76" width="20" height="48" fill="#1e293b"/> <rect x="72" y="64" width="112" height="96" fill="#cbd5e1"/> <rect x="80" y="72" width="96" height="80" fill="#e2e8f0"/> <rect x="84" y="96" width="32" height="20" fill="#0f172a"/> <rect x="92" y="100" width="14" height="12" fill="#38bdf8"/> <rect x="96" y="102" width="4" height="4" fill="#ffffff"/> <rect x="136" y="92" width="44" height="28" fill="#00f0ff"/> <rect x="140" y="96" width="36" height="20" fill="#090d16"/> <circle cx="158" cy="106" r="6" fill="#ff0055"/> <circle cx="158" cy="106" r="2" fill="#ffffff"/> <rect x="156" y="94" width="4" height="24" fill="#00f0ff" opacity="0.7"/> <rect x="142" y="104" width="32" height="4" fill="#00f0ff" opacity="0.7"/> <rect x="84" y="136" width="24" height="4" fill="#00f0ff"/> <rect x="104" y="140" width="4" height="16" fill="#00f0ff"/> <rect x="148" y="136" width="24" height="4" fill="#00f0ff"/> <rect x="100" y="160" width="56" height="24" fill="#1e293b"/> <rect x="116" y="160" width="24" height="24" fill="#38bdf8"/> <rect x="28" y="180" width="200" height="76" fill="#09090b"/> <rect x="52" y="180" width="152" height="76" fill="#1e293b"/> <polygon points="96,180 128,240 160,180" fill="#020617"/> <rect x="124" y="184" width="8" height="72" fill="#00f0ff"/> <rect x="126" y="184" width="4" height="72" fill="#ffffff"/></svg>`,
+      M_transhumano: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect width="256" height="256" fill="#030408"/> <rect x="16" y="16" width="224" height="224" fill="#0c0818"/> <rect x="64" y="24" width="128" height="32" fill="#7e22ce"/> <rect x="48" y="48" width="160" height="44" fill="#a855f7"/> <rect x="32" y="88" width="40" height="120" fill="#c084fc"/> <rect x="184" y="88" width="40" height="120" fill="#c084fc"/> <rect x="36" y="120" width="8" height="60" fill="#00f0ff"/> <rect x="212" y="120" width="8" height="60" fill="#00f0ff"/> <rect x="76" y="68" width="104" height="96" fill="#e2e8f0"/> <rect x="84" y="76" width="88" height="80" fill="#f8fafc"/> <rect x="64" y="92" width="128" height="28" fill="#a855f7" opacity="0.4"/> <rect x="68" y="96" width="56" height="20" fill="#00f0ff"/> <rect x="74" y="100" width="44" height="12" fill="#042f1a"/> <circle cx="96" cy="106" r="4" fill="#38bdf8"/> <rect x="132" y="96" width="56" height="20" fill="#ffd700"/> <rect x="138" y="100" width="44" height="12" fill="#3d2100"/> <circle cx="160" cy="106" r="4" fill="#fbbf24"/> <rect x="110" y="146" width="36" height="8" fill="#7e22ce"/> <rect x="114" y="148" width="28" height="4" fill="#d8b4fe"/> <rect x="28" y="180" width="200" height="76" fill="#1e1b4b"/> <rect x="52" y="180" width="152" height="76" fill="#312e81"/> <polygon points="96,180 128,232 160,180" fill="#0f172a"/> <circle cx="128" cy="220" r="14" fill="#00f0ff"/> <circle cx="128" cy="220" r="8" fill="#ffffff"/></svg>`
     };
-
-    function avatarSVG(customState = null){
+function avatarSVG(customState = null){
       const st = customState || S;
       if(!st) return '';
       const g = st.gender || 'H';
@@ -1984,18 +2383,6 @@
       return `💼 ${rank.n} de ${areaName}`;
     }
 
-    
-    function percentilCamada(ovr){
-      const v = Number(ovr) || 36;
-      if(v <= 27) return 25;
-      if(v <= 36) return 50;
-      if(v <= 50) return 75;
-      if(v <= 65) return 85;
-      if(v <= 78) return 92;
-      if(v <= 88) return 96;
-      return 99;
-    }
-
     function costOfLivingFor(rank, tier){
       const rIdx = (rank && rank.i !== undefined) ? rank.i : 0;
       const t = tier || 1;
@@ -2012,7 +2399,7 @@
       return Math.round(base * rankMult * fit * repMult);
     }
 
-    /* ================= P0-1: UNIFICACIÓN MATEMÁTICA OVRCORE ================= */
+    /* ================= UNIFICACIÓN MATEMÁTICA OVRCORE ================= */
     function ovrCore({ comp, area, stats, age, tierBonus = 0, statusBonus = 0, penalties = 0 }){
       const compObj = comp || { ven: 20, pro: 20, fin: 20, ope: 20, mkt: 20, leg: 20 };
       const maxComp = Math.max(...Object.values(compObj), 20);
@@ -2021,16 +2408,13 @@
       const statTotal = ((st.vision||10) + (st.ejecucion||10) + (st.carisma||10) + (st.rosca||10)) * 0.12;
       const expYears = (age && age >= 22) ? (age - 22) : 0;
 
-      // Se sacó el término curComp (competencia del área ACTUAL): cambiar de
-      // área o de empresa ya no puede bajar el OVR. Sólo cuenta tu competencia
-      // máxima histórica. El peso subió de 0.22 a 0.32 para conservar la escala.
       let organic = 22 + maxComp * 0.32 + statTotal + expYears * 0.24;
       if(organic > 65){
         organic = 65 + (organic - 65) * 0.50;
       }
 
-      const clampedTierBonus = clamp(tierBonus, 14, 0); // 0..14 desde la empresa
-      const clampedStatusBonus = clamp(statusBonus, 20, 0); // 0..20 desde comodines
+      const clampedTierBonus = clamp(tierBonus, 14, 0);
+      const clampedStatusBonus = clamp(statusBonus, 20, 0);
 
       return clamp(organic + clampedTierBonus + clampedStatusBonus - penalties);
     }
@@ -2055,10 +2439,12 @@
       penalties: S.ovrPenalties || 0
     }) : 36;
 
-    /* ================= P0-3: CONTROL DE COMODINES Y ESTADO ================= */
+    /* ================= CONTROL DE COMODINES Y ESTADO ================= */
     let PACE = "int";
     let S = null;
     let wealthDrawerOpen = false;
+    let legajoModalOpen = false;
+    let legajoCurrentTab = 'stats';
 
     function getUnlockedTrophies(){
       try {
@@ -2140,9 +2526,8 @@
       } else {
         S.cash -= act.cost;
         if(act.statusGain) {
-          // P0-3: Status Bonus separado con clamp(0..20)
           S.statusBonus = clamp((S.statusBonus || 0) + act.statusGain, 20, 0);
-          S.purchasedOvrPoints = (S.purchasedOvrPoints || 0) + act.statusGain; // P1-5: tracker satírico
+          S.purchasedOvrPoints = (S.purchasedOvrPoints || 0) + act.statusGain;
         }
         if(act.trophy) unlockTrophy(act.trophy);
 
@@ -2154,7 +2539,6 @@
         };
       }
 
-      // Auto-colapsar desplegable
       wealthDrawerOpen = false;
       trackPeaks();
       renderApp();
@@ -2171,184 +2555,67 @@
       }
     }
 
-    
-    /* ================= LOGOS PROCEDURALES POR TIER ================= */
-    function hashEmpresa(s){
-      let h = 0;
-      const str = String(s || '');
-      for(let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) | 0;
-      return Math.abs(h);
-    }
-
-    const PALETA_TIER = {
-      1: ["#b45309", "#4d7c0f", "#a16207", "#9f1239", "#3f6212"],
-      2: ["#475569", "#1e40af", "#0f766e", "#7c2d12", "#334155"],
-      3: [["#a855f7","#ec4899"], ["#38bdf8","#6366f1"], ["#10e575","#0284c7"], ["#f59e0b","#ef4444"]],
-      4: ["#f8fafc"],
-      5: ["#ffffff"]
-    };
-
-    function logoTier1(co, h){
-      const c1 = PALETA_TIER[1][h % 5];
-      const c2 = PALETA_TIER[1][(h >> 3) % 5];
-      const rot = ((h % 5) - 2) * 0.9;
-      return `
-        <g transform="rotate(${rot} 18 18)">
-          <rect x="1" y="1" width="34" height="34" rx="3" fill="${c1}" stroke="${c2}" stroke-width="2.5"/>
-          <text x="18" y="24" text-anchor="middle" font-family="Impact, Arial Black, sans-serif" font-size="14" letter-spacing="-1" fill="#fff">${esc(co.ini || co.n.substring(0,2))}</text>
-        </g>
-      `;
-    }
-
-    function logoTier2(co, h){
-      const c = PALETA_TIER[2][h % 5];
-      return `
-        <rect width="36" height="36" rx="6" fill="${c}"/>
-        <text x="18" y="23" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="800" fill="#fff">${esc(co.ini || co.n.substring(0,2))}</text>
-      `;
-    }
-
-    function logoTier3(co, h, uid){
-      const [a, b] = PALETA_TIER[3][h % 4];
-      const glifos = [
-        `<circle cx="18" cy="18" r="7" fill="none" stroke="#fff" stroke-width="3.5"/>`,
-        `<path d="M11 23l7-10 7 10z" fill="#fff"/>`,
-        `<rect x="12" y="12" width="12" height="12" rx="4" fill="#fff"/>`,
-        `<path d="M12 18h12M18 12v12" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>`
-      ];
-      return `
-        <defs>
-          <linearGradient id="lg_${uid}" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="${a}"/><stop offset="100%" stop-color="${b}"/>
-          </linearGradient>
-        </defs>
-        <rect width="36" height="36" rx="12" fill="url(#lg_${uid})"/>
-        ${glifos[h % 4]}
-      `;
-    }
-
-    function logoTier4(co, h){
-      return `
-        <rect width="36" height="36" rx="8" fill="#0a0a0a" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-        <text x="18" y="22" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="300" letter-spacing="2" fill="#f8fafc">${esc(co.ini || co.n.substring(0,2))}</text>
-      `;
-    }
-
-    function logoTier5(co, h){
-      const marcas = [
-        `<circle cx="18" cy="18" r="2.5" fill="#fff"/>`,
-        `<line x1="10" y1="18" x2="26" y2="18" stroke="#fff" stroke-width="1.2"/>`,
-        `<circle cx="18" cy="18" r="7" fill="none" stroke="#fff" stroke-width="0.8"/>`
-      ];
-      return `<rect width="36" height="36" rx="8" fill="#000" stroke="#38bdf8" stroke-width="0.8"/>${marcas[h % 3]}`;
-    }
-
-    const GENERADORES_LOGO = { 1: logoTier1, 2: logoTier2, 3: logoTier3, 4: logoTier4, 5: logoTier5 };
-
-        function companyLogo(co, sm = false){
-      if(!co) return `<div class="company-logo ${sm?'sm':''}" style="background:#1e293b; color:var(--text-dim)">?</div>`;
-      if(co.t === 0 || co.isGig){
-        const c = co.gigData ? co.gigData.appLogoColor : '#00aff0';
-        return `
-          <div class="company-logo ${sm?'sm':''} logo-app" style="background:${c}; position:relative; border-radius:8px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.5);">
-            <span style="font-size:${sm?'0.75rem':'1.1rem'};">${co.ini || '📱'}</span>
-            <div style="position:absolute; top:-2px; right:-2px; width:7px; height:7px; background:#ef4444; border-radius:50%; border:1px solid #fff;"></div>
-          </div>
-        `;
-      }
-      const h = hashEmpresa(co.n);
-      const uid = (co.ini || 'CO') + '_' + (co.t || 1) + (sm ? '_s' : '_b') + '_' + h;
-      const gen = GENERADORES_LOGO[co.t] || logoTier2;
-      return `
-        <div class="company-logo ${sm?'sm':''} logo-t${co.t || 1}">
-          <svg viewBox="0 0 36 36">${gen(co, h, uid)}</svg>
-        </div>
-      `;
-    }
-
-
-    /* ================= P0-4: GENERADOR DE OFERTAS CON PERDÓN Y FALLBACK ================= */
-    
-    function activateGigEconomy(){
-      const gig = rnd(GIG_JOBS);
-      S.company = {
-        n: gig.n,
-        s: "Gig Economy",
-        t: 0,
-        ini: gig.ic,
-        isGig: true,
-        gigData: gig
-      };
-      S.area = "ope";
-      S.rank = { min: 0, n: gig.role, s: "GIG", isGig: true, tag: gig.tag };
-      S.gigConsecutiveYears = 1;
-      S.salary = gig.baseSalary;
-      S.badYears = 0;
-      playSfx('cash');
-
-      if(gig.id === 'onlyfans') unlockTrophy('onlyfans_star');
-
-      S.flash = {
-        good: true,
-        title: `📱 ¡Comenzaste en ${gig.n}! Ganás ${money(S.salary)}/año independiente.`,
-        ovrDelta: 0,
-        cashDelta: 0
-      };
-
-      trackPeaks();
-      renderApp();
-    }
-
-    
-    /* ================= CHANGAS INSTANTÁNEAS / SIDE HUSTLE (1 POR AÑO) ================= */
+    /* ================= POOL DE CHANGAS Y GIG ECONOMY ================= */
     const SIDE_HUSTLES = [
       {
         id: "rappi",
-        n: "RappiYa Express",
-        role: "Reparto en Lluvia",
+        n: "RattiYa Express",
+        role: "Rider en Dos Ruedas",
+        tag: "🛵 RIDER APP",
         ic: "🛵",
         baseCash: 12000,
-        desc: "Pedaleaste bajo la tormenta y te dejaron propina de $12K."
+        desc: "Pedaleaste bajo lluvia torrencial con mochila prestada y te dejaron propinas en billetes de $100 arrugados.",
+        color: "#ff441f"
       },
       {
         id: "uber",
         n: "UberFlete VIP",
-        role: "Viajes Nocturnos",
+        role: "Chofer de Aplicación",
+        tag: "🚗 CHOFER APP",
         ic: "🚗",
         baseCash: 15000,
-        desc: "Manejaste toda la noche en Palermo y sumaste $15K de caja limpia."
+        desc: "Manejaste toda la noche en Palermo con caramelos en la puerta y calificación 4.8★.",
+        color: "#111827"
       },
       {
         id: "onlyfans",
-        n: "OnlyFanes VIP",
-        role: "Suscripción Premium",
+        n: "OnlyFlanes VIP",
+        role: "Creador de Contenido VIP",
+        tag: "🔞 ONLYFANES",
         ic: "🔞",
         baseCash: 20000,
-        desc: "Se viralizó una foto de pies y entraron $20K en suscripciones."
+        desc: "Se viralizó una foto de pies, cayeron suscripciones en dólares y pánico de que un directivo te reconozca.",
+        color: "#00aff0"
       },
       {
         id: "flex",
         n: "MercadoEnvíos Flex",
-        role: "Ronda de Envíos",
+        role: "Repartidor de Envíos",
+        tag: "📦 ENVIOS FLEX",
         ic: "📦",
         baseCash: 14000,
-        desc: "Entregaste 30 paquetes en 24 horas y cobraste $14K."
+        desc: "Furgoneta cargada hasta el techo y entrega en 24 hs antes de que el algoritmo te banee.",
+        color: "#ca8a04"
       },
       {
         id: "workana",
-        n: "Workana Freelance",
-        role: "Changa de Código",
+        n: "Workana Global",
+        role: "Freelancer Nocturno",
+        tag: "💻 FREELANCE",
         ic: "💻",
         baseCash: 13000,
-        desc: "Codeaste un script nocturno para un cliente de afuera: +$13K."
+        desc: "Cobraste $5 USD la hora por un script nocturno para clientes de Singapur sin que te pesque la AFIP.",
+        color: "#1d72b8"
       },
       {
         id: "tiktok",
-        n: "Finfluencer TikTok",
+        n: "Finfluencer de TikTok",
         role: "Venta de Cursos Cripto",
+        tag: "📱 FINFLUENCER",
         ic: "📱",
         baseCash: 16000,
-        desc: "Subiste un reel de trading y vendiste 3 cursos: +$16K."
+        desc: "Subiste reels prometiendo libertad financiera desde un auto alquilado y vendiste 3 cursos.",
+        color: "#be123c"
       }
     ];
 
@@ -2362,7 +2629,7 @@
 
       const hustle = rnd(SIDE_HUSTLES);
       S.gigStreak = (S.gigStreak || 0) + 1;
-      const decayRate = Math.pow(0.85, S.gigStreak - 1);
+      const decayRate = Math.pow(0.88, S.gigStreak - 1);
       const netCash = Math.round(hustle.baseCash * decayRate);
 
       S.cash += netCash;
@@ -2393,7 +2660,6 @@
 
     function makeOffers(tier, n, exclude){
       S.firedCompanies = S.firedCompanies || [];
-      // P0-4: Las empresas te perdonan tras 8 años
       S.firedCompanies = S.firedCompanies.filter(f => (typeof f === 'object' ? (S.age - f.age < 8) : false));
       const firedNames = S.firedCompanies.map(f => (typeof f === 'object' ? f.name : f));
 
@@ -2407,7 +2673,7 @@
         let previewVal = previewOvr(offeredArea, co.t);
         
         if(currentOvr > 40 && previewVal <= 40){
-          previewVal = 41; // Garantiza mínimo Analista si superaste la etapa pasante
+          previewVal = 41;
         }
 
         const offeredRank = rankOf(previewVal);
@@ -2418,7 +2684,6 @@
         });
       }
 
-      // P0-4: Red de seguridad inquebrantable (nunca devolver lista vacía)
       if(!out.length){
         const fallbackCo = COMPANIES.find(c => c.t === 1) || COMPANIES[0];
         out.push({
@@ -2438,7 +2703,6 @@
         const c = S.offers[i];
         S.company = { ...c };
         S.area = c.area;
-        // P0-1: Exacto cargo contratado
         S.rank = { ...c.offeredRank };
         S.yearsInCurrentCompany = 1;
         S.gigConsecutiveYears = 0;
@@ -2449,7 +2713,6 @@
         S.badYears = 0;
         if(c.t >= 3) unlockTrophy('unicornio');
       } else if(S.company) {
-        // Quedarse en la misma empresa
         S.yearsInCurrentCompany = (S.yearsInCurrentCompany || 1) + 1;
         const currentTier = S.company ? S.company.t : 1;
         const standardSalary = salaryFor(S.company, S.area, S.rank);
@@ -2464,7 +2727,7 @@
           if(S.salary === 0 && S.rank.i > 0){
             S.salary = standardSalary;
           } else {
-            S.salary = Math.max(standardSalary, Math.round(S.salary * 1.05));
+            S.salary = Math.max(standardSalary, Math.round(S.salary * 0.90 + standardSalary * 0.10));
           }
           if(S.comp && S.area) S.comp[S.area] = clamp((S.comp[S.area]||20) + 1);
         }
@@ -2473,7 +2736,7 @@
       advanceYear();
     }
 
-    /* ================= P0-2: RESOLUCIÓN ÚNICA Y LIMPIA DE EVENTOS ================= */
+    /* ================= RESOLUCIÓN DE EVENTOS ================= */
     let pendingEventResult = null;
 
     function resolveChoice(i){
@@ -2559,7 +2822,7 @@
       advanceYear();
     }
 
-    /* ================= MOTOR DE AVANCE TEMPORAL Y BALANCE ================= */
+    /* ================= MOTOR DE AVANCE TEMPORAL ================= */
     function trackPeaks(){
       if(!S) return;
       const curOvr = computeOvr();
@@ -2574,14 +2837,11 @@
       S.usedWealthThisRound = false;
       S.usedGigThisRound = false;
 
-      // P0-3: Decaimiento natural del status comprado (-2 por año)
       if(S.statusBonus > 0){
         S.statusBonus = Math.max(0, S.statusBonus - (1 * stepYears));
       }
 
-      
-
-      // P1-4: Crisis de los 40 con Agencia basada en Reputación y Rosca
+      // Crisis de los 40
       if(prevAge < 40 && S.age >= 40 && !S.crisis40Triggered){
         S.crisis40Triggered = true;
         const base = 0.45;
@@ -2629,26 +2889,22 @@
       const coTier = S.company ? S.company.t : 1;
       const gen = ((S.stats.vision||10) + (S.stats.ejecucion||10) + (S.stats.carisma||10) + (S.stats.rosca||10)) / 4;
       
-      // P1-1b: Exigencia calibrada para crecimiento sostenible
       const exigencia = (coTier - 1) * 5.5 + (S.rank ? S.rank.i : 0) * 2.0;
       const perf = clamp(36 + c * 0.38 + gen * 0.28 + rndInt(-8, 8) - exigencia);
 
       if(perf >= 42){
-        // Año exitoso: aprendizaje y recuperación de penalidades
         const skillGain = Math.max(1, Math.round(1.0 * stepYears * (1 + (coTier - 1) * 0.20)));
         S.comp[S.area] = clamp((S.comp[S.area] || 20) + skillGain);
         S.stats.ejecucion = clamp((S.stats.ejecucion || 10) + Math.max(1, Math.round(0.4 * stepYears)));
         S.stats.vision = clamp((S.stats.vision || 10) + Math.max(1, Math.round(0.3 * stepYears)));
         S.stats.rosca = clamp((S.stats.rosca || 10) + Math.max(1, Math.round(0.3 * stepYears)));
         
-        // P1-1a: Decaimiento de penalizaciones en años buenos
         if(S.ovrPenalties > 0){
           S.ovrPenalties = Math.max(0, S.ovrPenalties - 1.5 * stepYears);
         }
         S.badYears = 0;
       } else {
         S.badYears++;
-        // P1-2: Carisma amortigua la pérdida de reputación
         const carismaShield = 1 - ((S.stats.carisma || 10) / 200);
         S.rep = clamp((S.rep || 50) - 1.5 * carismaShield);
       }
@@ -2657,12 +2913,10 @@
       const targetRank = rankOf(computeOvr());
       let promotionOccurred = false;
 
-      // Ascenso interno en la empresa
       if(S.company && targetRank.i > prevRank && perf >= 40){
         promotionOccurred = true;
         S.rank = targetRank;
         S.badYears = 0;
-        // P1-2: Carisma crece al ascender y tratar con niveles superiores
         S.stats.carisma = clamp((S.stats.carisma || 10) + 1);
         
         if(S.rank.i >= 3) unlockTrophy('ascenso');
@@ -2679,7 +2933,6 @@
         };
       }
 
-      // Salario y Ahorro Neto en Gig Economy vs Corporativo
       if(S.company && S.company.isGig){
         S.gigConsecutiveYears = (S.gigConsecutiveYears || 1) + 1;
         const decayRate = Math.pow(0.82, S.gigConsecutiveYears - 1);
@@ -2709,7 +2962,6 @@
       S.cash += netSavings;
       trackPeaks();
 
-      // Registro en Timeline
       S.rows.unshift({
         age: S.age,
         co: S.company,
@@ -2720,10 +2972,8 @@
         cash: S.cash
       });
 
-      // Condiciones de Derrota
       if(S.cash < -800000) return endGame("Bancarrota Financiera");
 
-      // Despido desafiante con ventana en llamas
       if(!promotionOccurred && S.badYears >= 3){
         if(S.company) S.firedCompanies.push({ name: S.company.n, age: S.age });
         const firedFrom = S.company ? S.company.n : 'la empresa';
@@ -2738,10 +2988,10 @@
         S.milestones.push({
           tone: "fire-flames",
           ic: "🔥",
-          kick: "DESPIDO FULMINANTE",
+          kick: "FULMINANTE",
           title: "¡TE RAJARON!",
-          sub: `El directorio de ${firedFrom} rescindió tu contrato sin anestesia. Perdiste el cargo, tu currículum sufre -6 OVR y quedás en la calle.`,
-          cta: "SALIR A BUSCAR LABURO"
+          sub: `${firedFrom} rescindió tu contrato. Quedás en la calle.`,
+          cta: "BUSCAR LABURO"
         });
         S.offers = makeOffers(Math.max(1, accessibleTier() - 1), 3);
         S.phase = "offer";
@@ -2749,7 +2999,6 @@
         return;
       }
 
-      // Condición de Jubilación
       const retireTarget = RETIRE_AGES[Math.min(S.extensiones, RETIRE_AGES.length - 1)];
       if(S.age >= retireTarget){
         const nextCost = EXT_COSTS[S.extensiones];
@@ -2762,7 +3011,6 @@
         }
       }
 
-            // P1-6: Decisiones críticas de gestión SOLO para cargos de Director para arriba (rank.i >= 4)
       const isDirectorOrHigher = S.company && S.rank && ((S.rank.i !== undefined ? S.rank.i : (RANKS.findIndex(r => r.n === S.rank.n))) >= 4 || (S.rank.min !== undefined && S.rank.min >= 70));
       const maxEventsByPace = { exp: 2, nor: 4, int: 6 }[S.pace] || 4;
       S.eventsTriggeredCount = S.eventsTriggeredCount || 0;
@@ -2823,6 +3071,263 @@
       S.endReason = reason;
       playSfx(S.cash >= 0 ? 'cash' : 'bad');
       renderApp();
+    }
+
+    /* ================= CONTROL DEL MODAL DE LEGAJO EJECUTIVO ================= */
+    function openLegajoModal(){
+      if(!S) return;
+      legajoModalOpen = true;
+      playSfx('click');
+      renderLegajoModal();
+    }
+
+    function closeLegajoModal(){
+      legajoModalOpen = false;
+      playSfx('click');
+      renderLegajoModal();
+    }
+
+    function switchLegajoTab(tab){
+      legajoCurrentTab = tab;
+      playSfx('click');
+      renderLegajoModal();
+    }
+
+    function renderLegajoModal(){
+      const container = document.getElementById("legajoModalContainer");
+      if(!container) return;
+      if(!legajoModalOpen || !S || S.phase === 'end'){
+        container.innerHTML = "";
+        return;
+      }
+
+      const ov = computeOvr();
+      const curAreaName = S.area ? areaById(S.area).n : 'Sin Asignar';
+      const curRankName = S.rank ? S.rank.n : 'Pasas manteca';
+
+      const stats = S.stats || { vision: 10, ejecucion: 10, carisma: 10, rosca: 10 };
+      const comp = S.comp || { ven: 20, pro: 20, fin: 20, ope: 20, mkt: 20, leg: 20 };
+
+      const pctStat = val => Math.min(100, Math.round(((val || 0) / 32) * 100));
+
+      container.innerHTML = `
+        <div class="legajo-backdrop" role="dialog" aria-modal="true" onclick="if(event.target===this)closeLegajoModal()">
+          <div class="legajo-sheet">
+            
+            <div class="legajo-head">
+              <div class="legajo-avatar-wrap">
+                ${avatarSVG(S)}
+              </div>
+              <div class="legajo-id-block">
+                <span class="sub-kicker">📂 LEGAJO EJECUTIVO • EXPEDIENTE RRHH</span>
+                <h2>${esc(S.apellido)}</h2>
+                <p>${S.age} años • ${esc(curRankName)} en ${esc(curAreaName)} • ${esc(S.company ? S.company.n : 'Sin Empleo')}</p>
+              </div>
+              <button type="button" class="close-legajo-btn" onclick="closeLegajoModal()" aria-label="Cerrar legajo">✕</button>
+            </div>
+
+            <div class="legajo-tabs">
+              <button type="button" class="leg-tab ${legajoCurrentTab==='stats'?'active':''}" onclick="switchLegajoTab('stats')">📊 Stats & Competencias</button>
+              <button type="button" class="leg-tab ${legajoCurrentTab==='timeline'?'active':''}" onclick="switchLegajoTab('timeline')">📜 Historial de Carrera (${(S.rows||[]).length})</button>
+            </div>
+
+            <div id="legPanelStats" style="display:${legajoCurrentTab==='stats'?'block':'none'};">
+              
+              <div class="leg-section-title">⚡ Atributos Ejecutivos Nucleares</div>
+              <div class="stats-four-grid">
+                <div class="stat-card-clean">
+                  <span class="s-ic" aria-hidden="true">👁️</span>
+                  <div class="s-info">
+                    <span class="s-label">Visión Estratégica</span>
+                    <div class="s-bar"><div class="s-fill" style="width:${pctStat(stats.vision)}%;"></div></div>
+                  </div>
+                  <b class="s-num">${stats.vision}</b>
+                </div>
+                <div class="stat-card-clean">
+                  <span class="s-ic" aria-hidden="true">⚡</span>
+                  <div class="s-info">
+                    <span class="s-label">Capacidad de Ejecución</span>
+                    <div class="s-bar"><div class="s-fill" style="width:${pctStat(stats.ejecucion)}%;"></div></div>
+                  </div>
+                  <b class="s-num">${stats.ejecucion}</b>
+                </div>
+                <div class="stat-card-clean">
+                  <span class="s-ic" aria-hidden="true">🎙️</span>
+                  <div class="s-info">
+                    <span class="s-label">Carisma & Pitch</span>
+                    <div class="s-bar"><div class="s-fill" style="width:${pctStat(stats.carisma)}%;"></div></div>
+                  </div>
+                  <b class="s-num">${stats.carisma}</b>
+                </div>
+                <div class="stat-card-clean">
+                  <span class="s-ic" aria-hidden="true">🍷</span>
+                  <div class="s-info">
+                    <span class="s-label">Rosca de Pasillo</span>
+                    <div class="s-bar"><div class="s-fill" style="width:${pctStat(stats.rosca)}%;"></div></div>
+                  </div>
+                  <b class="s-num">${stats.rosca}</b>
+                </div>
+              </div>
+
+              <div class="leg-section-title" style="margin-top:14px;">🏢 Competencias Departamentales</div>
+              <div class="comp-six-grid">
+                ${AREAS.map(a => {
+                  const val = comp[a.id] || 20;
+                  const isCurrent = S.area === a.id;
+                  return `
+                    <div class="comp-chip ${isCurrent?'active-role':''}">
+                      <span class="c-name">${esc(a.n)}${isCurrent ? ' (Puesto)' : ''}</span>
+                      <b class="c-val">${val} pts</b>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+
+              <div style="margin-top:14px; background:#080c14; border:1px solid var(--border); border-radius:10px; padding:10px; font-size:0.72rem; color:var(--text-muted); line-height:1.4;">
+                <b style="color:var(--gold);">💡 Calificación OVR:</b> Tu puntaje global (${ov} OVR) se calcula según tu especialidad máxima (<strong>${Math.max(...Object.values(comp))} pts</strong>), tus atributos ejecutivos, tu experiencia acumulada y el prestigio corporativo.
+              </div>
+            </div>
+
+            <div id="legPanelTimeline" style="display:${legajoCurrentTab==='timeline'?'block':'none'};">
+              <div class="t-table-header">
+                <span>Edad</span>
+                <span>Empresa & Puesto</span>
+                <span style="text-align:right;">OVR</span>
+                <span style="text-align:right;">Patrimonio</span>
+              </div>
+              <div class="t-table-rows">
+                ${(S.rows && S.rows.length) ? S.rows.map((r, idx) => {
+                  const isCurrent = idx === 0;
+                  const coName = r.co ? r.co.n : 'Sin Empleo';
+                  const roleName = r.rank ? r.rank.n : 'Pasas manteca';
+                  const areaName = r.area ? areaById(r.area).n : '';
+                  return `
+                    <div class="t-table-row ${isCurrent?'current':''}">
+                      <span class="t-age">${r.age}a</span>
+                      <span class="t-role">${r.rank && r.rank.isUnpaid ? '🧈' : '💼'} ${esc(roleName)}${areaName ? ` en ${esc(areaName)}` : ''} • ${esc(coName)}</span>
+                      <span class="t-ovr">${r.ovr}</span>
+                      <span class="t-cash">${money(r.cash)}</span>
+                    </div>
+                  `;
+                }).join('') : `<div style="text-align:center; padding:16px; color:var(--text-dim); font-size:0.75rem;">Aún no hay años registrados.</div>`}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      `;
+    }
+
+    /* ================= GENERADOR PROCEDURAL DE EPITAFIO CORPORATIVO ================= */
+    function generateEpitaph(state){
+      if(!state) return { who: "", lived: "", leaves: "", rawText: "" };
+      
+      const o = ORIGINS.find(x => x.id === state.origin) || ORIGINS[0];
+      const maxOvr = state.maxOvr || 36;
+      const maxRank = state.maxRank ? state.maxRank.n : "Pasas manteca";
+      const finalCash = state.cash || 0;
+      const firedCount = (state.firedCompanies || []).length;
+      const boughtOvr = state.purchasedOvrPoints || 0;
+      const isTranshuman = state.extensiones > 0;
+      const totalYears = (state.age || 22) - 22;
+
+      let who = "";
+      if (isTranshuman) {
+        who = `${state.apellido}, el Inmortal de Silicio. Trascendió la biología humana acumulando prótesis neuronales y sillones en directorios de corporaciones Tier 5.`;
+      } else if (maxOvr >= 90) {
+        who = `${state.apellido}, Monarca Supremo del Directorio. Alcanzó el rango de ${maxRank} dominando el mercado de capitales y la rosca política sin tocar un solo archivo Excel operativo.`;
+      } else if (maxOvr >= 75) {
+        who = `${state.apellido}, Tiburón de Mandos Medios y Director Consolidado. Sobrevivió a reestructuraciones masivas, fusiones hostiles y volantazos de la macroeconomía argentina.`;
+      } else if (finalCash < 0) {
+        who = `${state.apellido}, Mártir del Monotributo y los Cursos de Trading. Creyó en la meritocracia corporativa y pagó caro cada café de especialidad y título de postgrado.`;
+      } else {
+        who = `${state.apellido}, Gladiador de la Oficina Tradicional. Aguantó ${totalYears} años ininterrumpidos de reuniones que pudieron haber sido un mail.`;
+      }
+
+      let lived = "";
+      if (o.id === 'trust') {
+        lived = `Vivió blindado por el fideicomiso y los departamentos en alquiler de la familia. Cambió de empresa cada vez que las cosas se complicaron y jamás supo cuánto cuesta un viaje en subte.`;
+      } else if (boughtOvr >= 12) {
+        lived = `Vivió a base de lobby en Puerto Madero, publinotas compradas en medios económicos, penthouse con amenities y autos deportivos a juego con el blazer.`;
+      } else if (firedCount >= 2) {
+        lived = `Vivió al filo de la cornisa. Conoció el fuego de ${firedCount} despidos fulminantes, pero siempre encontró otra Pyme o startup donde vender humo.`;
+      } else if (o.id === 'calle') {
+        lived = `Vivió en la trinchera del barro corporativo como Lobo de WS. Sin contactos ni padrinos, cada ascenso y cada mango fueron arrancados a pura muñeca y cintura de calle.`;
+      } else if (o.id === 'tecnico') {
+        lived = `Vivió pegado a la terminal, haciendo pasar prompts de IA por código propio y rezando que ningún directivo le pida explicar la arquitectura en vivo.`;
+      } else {
+        lived = `Vivió a base de café recalentado, pánico de fin de mes, aguantar jefes tóxicos y fingiendo entender dashboards de métricas en inglés con diploma de MBA.`;
+      }
+
+      let leaves = "";
+      if (finalCash >= 1500000) {
+        leaves = `Deja una fortuna colosal de ${money(finalCash)}, 3 unidades en torre premium, acciones preferenciales y una causa por evasión felizmente prescripta en la AFIP.`;
+      } else if (finalCash > 0) {
+        leaves = `Deja ${money(finalCash)} rindiendo en una cuenta remunerada, 14 tarjetas de presentación sin valor y un chaleco Uniqlo colgado en su ex-oficina.`;
+      } else {
+        leaves = `Deja una deuda de ${money(finalCash)}, una mochila térmica gastada de reparto y un hilo de LinkedIn con 12 reacciones sobre liderazgo empático y resiliencia.`;
+      }
+
+      const rawText = `🏛️ EPITAFIO CORPORATIVO: ${state.apellido}\n` +
+        `• 22 a ${state.age} años | Rango Máximo: ${maxRank} (OVR ${maxOvr})\n\n` +
+        `⚰️ ¿QUIÉN FUE?\n${who}\n\n` +
+        `🍷 ¿CÓMO VIVIÓ?\n${lived}\n\n` +
+        `💰 ¿QUÉ DEJA?\n${leaves}\n\n` +
+        `Simulador: Market CAPo (https://marketcapo.app)`;
+
+      return { who, lived, leaves, rawText };
+    }
+
+    function copyEpitaphToClipboard(){
+      if(!S) return;
+      try {
+        const ep = generateEpitaph(S);
+        const textToCopy = ep.rawText || `🏛️ EPITAFIO: ${S.apellido} • OVR ${S.maxOvr}`;
+        
+        if(navigator.clipboard && window.isSecureContext){
+          navigator.clipboard.writeText(textToCopy)
+            .then(() => showCopyFeedback())
+            .catch(() => fallbackCopy(textToCopy));
+        } else {
+          fallbackCopy(textToCopy);
+        }
+      } catch(e){
+        fallbackCopy(`🏛️ EPITAFIO: ${S.apellido} • OVR ${S.maxOvr}`);
+      }
+    }
+
+    function fallbackCopy(text){
+      try {
+        const t = document.createElement("textarea");
+        t.value = text;
+        t.style.position = "fixed";
+        t.style.left = "-9999px";
+        t.style.top = "0";
+        document.body.appendChild(t);
+        t.focus();
+        t.select();
+        document.execCommand('copy');
+        document.body.removeChild(t);
+        showCopyFeedback();
+      } catch(err){
+        const container = document.getElementById("copyFeedbackSlot");
+        if(container){
+          container.innerHTML = `<span class="copy-success-toast" style="background:#3b82f6; color:#fff;">📋 Copiado</span>`;
+        }
+      }
+    }
+
+    function showCopyFeedback(){
+      const container = document.getElementById("copyFeedbackSlot");
+      if(container){
+        container.innerHTML = `<span class="copy-success-toast">✨ ¡Epitafio copiado al portapapeles!</span>`;
+        setTimeout(() => { if(container) container.innerHTML = ''; }, 3500);
+      }
+      playSfx('cash');
+    }
+
+    function shareEpitaphSocial(){
+      copyEpitaphToClipboard();
     }
 
     /* ================= COMPONENTES VISUALES HTML ================= */
@@ -2890,7 +3395,7 @@
       `;
     }
 
-            function buildIdentityHTML(){
+    function buildIdentityHTML(){
       const ov = computeOvr();
       const o = ORIGINS.find(x => x.id === S.origin) || ORIGINS[0];
       const annualCost = costOfLivingFor(S.rank, S.company ? S.company.t : 1);
@@ -2913,9 +3418,12 @@
               <small>OVR</small>
               <b id="ovrNum">${S.displayOvr !== undefined ? S.displayOvr : ov}</b>
             </div>
-            <div class="avatarbox">
-              ${avatarSVG(S, "perfil")}
+            
+            <div class="avatarbox clickable-avatar" role="button" tabindex="0" onclick="openLegajoModal()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openLegajoModal();}" title="Tocá para abrir tu Legajo Ejecutivo, Stats y Timeline">
+              ${avatarSVG(S)}
+              <div class="avatar-tap-hint">📂 LEGAJO</div>
             </div>
+
             <div class="player-meta">
               <div class="tags-row">
                 ${S.company ? `
@@ -2946,6 +3454,34 @@
             </div>
           </div>
         </article>
+      `;
+    }
+
+    function buildGigWidgetHTML(){
+      const isAvailable = !S.usedGigThisRound;
+
+      return `
+        <div class="gig-card-box ${isAvailable ? 'is-available' : ''}" id="gigWidgetBox">
+          <div class="gig-card-header">
+            <span class="gig-tag">📱 Gig Economy - Sos tu propio Jefe</span>
+            <span class="gig-status ${isAvailable ? 'available' : 'used'}">${isAvailable ? '✨ 1 Changa Disponible' : '🔒 Usada este año'}</span>
+          </div>
+          <div class="gig-card-body">
+            <div class="gig-card-main">
+              <div class="gig-icon-large ${isAvailable ? 'active-glow' : ''}">
+                ${isAvailable ? '🛵' : '🔒'}
+              </div>
+              <div class="gig-info">
+                <h3>Hacer Changa Instantánea</h3>
+                <p>Inyección de caja al azar (OnlyFans, Uber, Rappi, Workana). <strong>No termina tu turno</strong>.</p>
+              </div>
+            </div>
+            <button type="button" class="gig-hustle-btn ${isAvailable ? 'active-glow' : 'used'}" onclick="${isAvailable ? 'executeSideHustle()' : ''}">
+              <span>${isAvailable ? '🛵' : '🔒'}</span>
+              <span>${isAvailable ? 'Sortear Changa' : 'Usada'}</span>
+            </button>
+          </div>
+        </div>
       `;
     }
 
@@ -2990,7 +3526,7 @@
       `;
     }
 
-                function buildDecisionHTML(){
+    function buildDecisionHTML(){
       if(S.phase === "longevity"){
         const nextCost = EXT_COSTS[S.extensiones];
         return `
@@ -3051,35 +3587,6 @@
       `;
     }
 
-    
-    function buildGigWidgetHTML(){
-      const isAvailable = !S.usedGigThisRound;
-      const stepYears = { int: 1, nor: 2, exp: 4 }[S.pace] || 1;
-      const nextYear = S.age + stepYears;
-
-      return `
-        <div class="gig-card-box ${isAvailable ? 'is-available' : ''}" id="gigWidgetBox">
-          <div class="gig-card-header">
-            <span class="gig-tag">📱 Gig Economy - Sos tu propio Jefe</span>
-            <span class="gig-status ${isAvailable ? 'available' : 'used'}">${isAvailable ? '✨ 1 Changa Disponible' : '🔒 Usada este año'}</span>
-          </div>
-          <div class="gig-card-body">
-            <div class="gig-icon-large ${isAvailable ? 'active-glow' : ''}">
-              ${isAvailable ? '🛵' : '🔒'}
-            </div>
-            <div class="gig-info">
-              <h3>Hacer Changa Instantánea</h3>
-              <p>Inyección de caja al azar (OnlyFans, Uber, Rappi, Workana). <strong>No termina tu turno</strong>.</p>
-            </div>
-            <button type="button" class="gig-hustle-btn ${isAvailable ? 'active-glow' : 'used'}" onclick="${isAvailable ? 'executeSideHustle()' : ''}">
-              <span>${isAvailable ? '🛵' : '🔒'}</span>
-              <span>${isAvailable ? 'Sortear Changa' : 'Usada'}</span>
-            </button>
-          </div>
-        </div>
-      `;
-    }
-
     function buildEndHTML(){
       const unlockedMeta = getUnlockedTrophies();
       const unlockedCount = ALL_TROPHIES.filter(t => unlockedMeta[t.id]).length;
@@ -3124,9 +3631,9 @@
       });
 
       const o = ORIGINS.find(x => x.id === S.origin) || ORIGINS[0];
-      const initialHeritage = o.cash > 0 ? o.cash : 0;
       const boughtOvr = S.purchasedOvrPoints || 0;
       const organicMaxOvr = Math.max(36, S.maxOvr - boughtOvr);
+      const epitaph = generateEpitaph(S);
 
       return `
         <div class="end-wrap" style="max-width:760px; margin:0 auto; padding: 20px 14px; width:100%;">
@@ -3140,14 +3647,56 @@
             </div>
           </div>
 
-          <!-- Balance Satírico de Mérito vs Herencia -->
-          <div style="background: var(--card-inner); border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px; margin: 12px 0; font-size: 0.76rem; color: var(--text-muted); line-height: 1.45;">
+          <div class="tombstone-card" id="epitaphCard">
+            <div class="tombstone-glow"></div>
+            
+            <div class="tombstone-header">
+              <div class="cross-icon">🏛️</div>
+              <span class="rip-kicker">IN MEMORIAM CORPORATIVA (2026)</span>
+              <h1 class="tomb-name">${esc(S.apellido)}</h1>
+              <span class="tomb-dates">22 a ${S.age} AÑOS • ${esc(S.maxRank ? S.maxRank.n.toUpperCase() : 'EJECUTIVO')}</span>
+            </div>
+
+            <div class="tombstone-body">
+              <div class="epitaph-block">
+                <span class="ep-tag">¿QUIÉN FUE?</span>
+                <p class="ep-text">${esc(epitaph.who)}</p>
+              </div>
+
+              <div class="epitaph-block">
+                <span class="ep-tag">¿CÓMO VIVIÓ?</span>
+                <p class="ep-text">${esc(epitaph.lived)}</p>
+              </div>
+
+              <div class="epitaph-block">
+                <span class="ep-tag">¿QUÉ DEJA?</span>
+                <p class="ep-text">${esc(epitaph.leaves)}</p>
+              </div>
+            </div>
+
+            <div class="tombstone-footer">
+              <div class="badge-row">
+                <span class="t-pill gold">OVR ${S.maxOvr}</span>
+                <span class="t-pill">GRADE ${scoreGrade}</span>
+                <span class="t-pill">${(S.firedCompanies||[]).length} DESPIDOS</span>
+              </div>
+              <div class="app-watermark">Market CAPo • marketcapo.app</div>
+            </div>
+          </div>
+
+          <div class="share-actions-row">
+            <button type="button" class="btn-share-card" onclick="copyEpitaphToClipboard()" style="width:100%; max-width:320px; padding:12px; font-size:0.84rem;">
+              📋 Copiar Epitafio al Portapapeles
+            </button>
+          </div>
+          <div id="copyFeedbackSlot" style="text-align:center; min-height:24px; margin-top:4px;"></div>
+
+          <div style="background: var(--card-inner); border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px; margin: 16px 0 12px; font-size: 0.76rem; color: var(--text-muted); line-height: 1.45;">
             <b style="color:var(--gold); display:block; margin-bottom:3px;">📊 Auditoría de Mérito vs. Billetera:</b>
             OVR Ganado Trabajando: <strong style="color:#fff;">${organicMaxOvr} pts</strong> • OVR Comprado con Guita: <strong style="color:var(--hot-pink);">${boughtOvr} pts</strong><br>
             ${o.id === 'trust' ? '🏛️ <em>"El 80% de tu éxito fue nacer en la familia correcta."</em>' : '🥊 <em>"Cada peso y punto de OVR fue ganado a pulmón en la trinchera."</em>'}
           </div>
 
-          <!-- 4 KPIs Clave -->
           <div class="end-stat-grid" style="width:100%;">
             <div class="end-stat">
               <div class="l">OVR Máximo</div>
@@ -3167,7 +3716,6 @@
             </div>
           </div>
 
-          <!-- Meta-Progresión de Trofeos Persistentes -->
           <div style="background: var(--card-inner); border: 1px solid var(--border); border-radius: 16px; padding: 16px; width: 100%; text-align: left; margin-top: 12px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
               <h3 style="font-family: var(--font-brand); font-size: 0.94rem; font-weight: 900; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; gap: 6px;">
@@ -3193,7 +3741,6 @@
             </div>
           </div>
 
-          <!-- Resumen de Empresas Transitadas -->
           <div style="background: var(--card-inner); border: 1px solid var(--border); border-radius: 16px; padding: 14px; width: 100%; text-align: left; margin-top: 12px;">
             <h3 style="font-family: var(--font-brand); font-size: 0.88rem; font-weight: 900; text-transform: uppercase; color: var(--electric-blue); margin-bottom: 8px;">
               🏢 Currículum Vitae (Empresas Transitadas)
@@ -3321,39 +3868,7 @@
       renderApp();
     }
 
-    /* ================= RENDERIZADOR PRINCIPAL Y ROUTER ================= */
-    let currentTab = 'game';
-
-    function switchTab(tab){
-      currentTab = tab;
-      const btnGame = document.getElementById("tabGameBtn");
-      const btnTimeline = document.getElementById("tabTimelineBtn");
-      const panelGame = document.getElementById("gamePanel");
-      const panelTimeline = document.getElementById("timelinePanel");
-
-      if(btnGame && btnTimeline){
-        btnGame.className = `tab-btn ${tab==='game'?'active':''}`;
-        btnTimeline.className = `tab-btn ${tab==='timeline'?'active':''}`;
-      }
-      if(panelGame && panelTimeline){
-        if(tab === 'game'){
-          panelGame.classList.remove("is-hidden-mobile");
-          panelTimeline.classList.add("is-hidden-mobile");
-        } else {
-          panelGame.classList.add("is-hidden-mobile");
-          panelTimeline.classList.remove("is-hidden-mobile");
-        }
-      }
-    }
-
-    /* ================= ANIMACIÓN DEL CONTADOR DE OVR =================
-       S.displayOvr es la posición actual del contador; computeOvr() es el
-       valor real. tickOvr es lo ÚNICO que las acerca: si se borra esta
-       función o la llamada del final de renderApp, el badge se congela.
-
-       Al cambiar de dirección (venía subiendo y ahora baja, o al revés) se
-       saca la clase contraria ANTES de agregar la nueva, para que nunca
-       queden "rising" y "falling" pegadas juntas. ==================== */
+    /* ================= ANIMACIÓN DEL CONTADOR DE OVR ================= */
     let ovrTickTimer = null;
     const CLASES_OVR = ["ovr-bronce","ovr-plata","ovr-esmeralda","ovr-zafiro","ovr-oro","ovr-sayayin"];
 
@@ -3405,59 +3920,53 @@
 
     function renderApp(){
       const board = document.getElementById("board");
-      const nav = document.getElementById("mobileNav");
       if(!board) return;
 
       if(!S){
-        if(nav) nav.style.display = "none";
         board.style.gridTemplateColumns = "1fr";
         board.innerHTML = buildLandingHTML();
         renderOverlay();
         renderEventModal();
+        renderLegajoModal();
         saveRun();
         return;
       }
 
       if(S.phase === "setup"){
-        if(nav) nav.style.display = "none";
         board.style.gridTemplateColumns = "1fr";
         board.innerHTML = buildSetupHTML();
         renderOverlay();
         renderEventModal();
+        renderLegajoModal();
         saveRun();
         return;
       }
 
       if(S.phase === "end"){
-        if(nav) nav.style.display = "none";
         board.style.gridTemplateColumns = "1fr";
         board.innerHTML = buildEndHTML();
         renderOverlay();
         renderEventModal();
+        renderLegajoModal();
         saveRun();
         return;
       }
 
-      // En partida activa
-      if(nav) nav.style.display = "grid";
       board.innerHTML = `
-        <div class="tab-panel ${currentTab==='game'?'':'is-hidden-mobile'}" id="gamePanel">
-          <div class="left-col">
-            ${buildIdentityHTML()}
-            ${buildWealthHTML()}
-            ${S.flash ? `<div class="flash ${S.flash.good?'good':'bad'}"><div class="fh"><span>${esc(S.flash.title)}</span></div></div>` : ''}
-            ${buildDecisionHTML()}
-          </div>
-        </div>
-        <div class="tab-panel ${currentTab==='timeline'?'':'is-hidden-mobile'}" id="timelinePanel">
+        <div class="left-col">
+          ${buildIdentityHTML()}
+          ${buildWealthHTML()}
+          ${S.flash ? `<div class="flash ${S.flash.good?'good':'bad'}"><div class="fh"><span>${esc(S.flash.title)}</span></div></div>` : ''}
+          ${buildDecisionHTML()}
           ${buildGigWidgetHTML()}
         </div>
       `;
 
       renderOverlay();
       renderEventModal();
-      tickOvr();               // ← anima el badge hasta el OVR real
-      saveRun(); // P0-5: Guardado automático constante
+      renderLegajoModal();
+      tickOvr();
+      saveRun();
     }
 
     function initSetup(){
@@ -3479,9 +3988,9 @@
 
       const inputEl = document.getElementById("setupInputApellido");
       let finalName = "";
-      if(inputEl && inputEl.value.trim()){
+      if(inputEl && typeof inputEl.value === 'string' && inputEl.value.trim()){
         finalName = inputEl.value.trim().toUpperCase();
-      } else if(S.apellido && S.apellido.trim()){
+      } else if(S && S.apellido && S.apellido.trim()){
         finalName = S.apellido.trim().toUpperCase();
       } else {
         const sampleNames = ["JAVIER", "SANTIAGO", "MARTÍN", "FACUNDO", "CAMILA", "LUCÍA", "MATÍAS", "VALENTINA", "JOAQUÍN", "SOFÍA"];
@@ -3516,6 +4025,7 @@
         crisis40Triggered: false,
         
         usedWealthThisRound: false,
+        usedGigThisRound: false,
         purchasedOnce: {},
         cooldowns: {},
         equityCompanies: [],
@@ -3532,15 +4042,21 @@
       renderApp();
     }
 
-    // Inicialización automática
-    if(typeof window !== "undefined" && typeof window.addEventListener === "function") { window.addEventListener("DOMContentLoaded", () => {
-      const saved = loadRun();
-      const continueBtn = document.getElementById("continueBtnLanding");
-      if(saved && continueBtn){
-        continueBtn.style.display = "inline-block";
-        continueBtn.textContent = `▶️ Continuar Carrera (${saved.apellido} - Edad ${saved.age})`;
-      }
-    });
+    if(typeof window !== "undefined" && typeof window.addEventListener === "function") {
+      window.addEventListener("keydown", (e) => {
+        if(e.key === "Escape" && legajoModalOpen){
+          closeLegajoModal();
+        }
+      });
+
+      window.addEventListener("DOMContentLoaded", () => {
+        const saved = loadRun();
+        const continueBtn = document.getElementById("continueBtnLanding");
+        if(saved && continueBtn){
+          continueBtn.style.display = "inline-block";
+          continueBtn.textContent = `▶️ Continuar Carrera (${saved.apellido} - Edad ${saved.age})`;
+        }
+      });
     }
 
   </script>
