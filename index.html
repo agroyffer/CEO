@@ -6,6 +6,22 @@
   <meta name="theme-color" content="#07090e">
   <meta name="description" content="Market CAPo - Simulador satírico de carrera corporativa roguelite. Hacete de abajo, aguantá los puestos y llegá al directorio.">
   <title>Market CAPo - Hacete de abajo</title>
+
+  <!-- Preview al compartir el link (WhatsApp, X, LinkedIn, Telegram) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Market CAPo">
+  <meta property="og:locale" content="es_AR">
+  <meta property="og:url" content="https://agroyffer.github.io/CEO/">
+  <meta property="og:title" content="Market CAPo - Hacete de abajo">
+  <meta property="og:description" content="Simulador satirico de carrera corporativa. Conseguite un laburo honesto, aguanta los puestos que te toquen y llega al directorio. O al corchazo.">
+  <meta property="og:image" content="https://agroyffer.github.io/CEO/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Market CAPo · Simulador satírico de carrera corporativa">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Market CAPo - Hacete de abajo">
+  <meta name="twitter:description" content="Simulador satirico de carrera corporativa. Llega al directorio. O al corchazo.">
+  <meta name="twitter:image" content="https://agroyffer.github.io/CEO/og.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Space+Grotesk:wght@600;700;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
@@ -50,6 +66,8 @@
     }
 
     html, body {
+      max-width: 100%;
+      overflow-x: hidden;
       width: 100%;
       min-height: 100vh;
       background-color: var(--bg);
@@ -157,6 +175,7 @@
     /* Layout Centrado */
     .board {
       width: 100%;
+      min-width: 0;
       max-width: 580px;
       margin: 0 auto;
       background: var(--card-bg);
@@ -191,6 +210,8 @@
       flex-direction: column;
       gap: 10px;
       width: 100%;
+      min-width: 0;
+      max-width: 100%;
     }
 
     
@@ -242,6 +263,7 @@
       display: flex;
       gap: 12px;
       align-items: center;
+      min-width: 0;
     }
 
     /* OVR Gold Badge */
@@ -370,6 +392,7 @@
     }
     .tags-row {
       display: flex;
+      min-width: 0;
       gap: 5px;
       margin-bottom: 3px;
       flex-wrap: wrap;
@@ -388,6 +411,8 @@
       display: flex;
       align-items: center;
       gap: 7px;
+      min-width: 0;
+      overflow: hidden;
       font-size: 1.05rem;
       font-weight: 800;
       margin-bottom: 2px;
@@ -750,7 +775,8 @@
       border: 1px solid var(--border);
       position: relative;
     }
-    .event-art-box img {
+    .event-art-box img,
+    .event-art-box svg {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -944,6 +970,28 @@
       50% { box-shadow: 0 0 50px #ff5500, 0 0 90px rgba(255, 120, 0, 0.75); }
     }
 
+    /* Firma para que la captura compartida se pueda rastrear.
+       Estos dos modales son los que los jugadores mandan al grupo,
+       asi que la imagen tiene que decir de que juego es. */
+    .share-sig {
+      margin-top: 12px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      font-family: var(--font-num);
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      opacity: 0.75;
+      user-select: none;
+    }
+    .share-sig .dot { color: var(--money); }
+
     .mile .ic { font-size: 2.5rem; line-height: 1; margin-bottom: 8px; }
     .mile .kick { font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 4px; }
     .mile h3 { font-size: 1.45rem; font-weight: 900; margin-bottom: 6px; }
@@ -1015,6 +1063,15 @@
     }
     .origin-card:hover, .origin-card:focus-visible { border-color: var(--electric-blue); outline: none; }
     .origin-card.on { background: #111a2d; border-color: var(--electric-blue); box-shadow: 0 4px 12px rgba(56,189,248,0.2); }
+
+    .origin-card.locked {
+      opacity: 0.42;
+      filter: grayscale(1);
+      cursor: not-allowed;
+      border-style: dashed !important;
+      pointer-events: none;
+    }
+    .origin-card.locked .tx small { color: var(--cyber-amber); }
     .origin-card .ic { font-size: 1.1rem; }
     .origin-card .tx b { font-size: 0.78rem; font-weight: 700; display: block; margin-bottom: 2px; }
     .origin-card .tx small { font-size: 0.68rem; color: var(--text-muted); line-height: 1.3; display: block; }
@@ -1654,6 +1711,14 @@
     const esc = s => String(s || '').replace(/[&<>"']/g, c =>
       ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+    /* ================= IDENTIDAD Y URL CANONICA =================
+       Un solo lugar donde vive la direccion del juego. El dia que
+       compres el dominio, se cambia aca y se actualiza en todos lados:
+       la firma de los modales, la marca de agua de la lapida y el
+       texto que se copia al portapapeles. */
+    const URL_JUEGO = "agroyffer.github.io/CEO";
+    const URL_JUEGO_FULL = "https://agroyffer.github.io/CEO/";
+
     /* ================= CONSTANTES DEL JUEGO ================= */
     const GAME = {
       hero: "Hacete de abajo",
@@ -1717,6 +1782,61 @@
         rep: 60,
         stats: { vision: 12, ejecucion: 4, carisma: 14, rosca: 20 },
         comp: { ven: 16, pro: 8, fin: 14, ope: 8, mkt: 30, leg: 10 }
+      },
+      /* ================= ORIGENES DESBLOQUEABLES =================
+         Los trofeos no dan bonus numericos anunciados, porque eso seria
+         decirle al jugador que le conviene hacer. Dan ORIGENES: la unica
+         decision que se toma con informacion completa antes de empezar,
+         y la que ya define el tono de toda la carrera. */
+      {
+        id: "sindical",
+        n: "Delegado Gremial",
+        d: "Sabés dónde está enterrado cada cuerpo.",
+        ic: "📢",
+        cash: 8000,
+        rep: 55,
+        stats: { vision: 6, ejecucion: 4, carisma: 20, rosca: 30 },
+        comp: { ven: 20, pro: 6, fin: 10, ope: 30, mkt: 12, leg: 32 },
+        lockedBy: "purga",
+        lockText: "Se desbloquea con el trofeo Inmune a la Purga."
+      },
+      {
+        id: "estado",
+        n: "Hijo de proveedor del Estado",
+        d: "El apellido abre licitaciones. Y expedientes.",
+        ic: "🏛️",
+        cash: 120000,
+        rep: 65,
+        stats: { vision: 10, ejecucion: 6, carisma: 18, rosca: 26 },
+        comp: { ven: 30, pro: 6, fin: 20, ope: 10, mkt: 14, leg: 34 },
+        lockedBy: "compliance",
+        lockText: "Se desbloquea con el trofeo Inmunidad Penal.",
+        arranqueSucio: true
+      },
+      {
+        id: "miami",
+        n: "Volvió de Miami",
+        d: "Trece años afuera. Acá no te conoce nadie.",
+        ic: "🌴",
+        cash: 260000,
+        rep: 22,
+        stats: { vision: 20, ejecucion: 14, carisma: 18, rosca: 2 },
+        comp: { ven: 28, pro: 20, fin: 30, ope: 12, mkt: 26, leg: 8 },
+        lockedBy: "millonario",
+        lockText: "Se desbloquea con el trofeo Club del Millón.",
+        edadInicial: 35
+      },
+      {
+        id: "quebrado",
+        n: "Fundador quebrado",
+        d: "Tu startup murió. La deuda no.",
+        ic: "📉",
+        cash: -180000,
+        rep: 30,
+        stats: { vision: 30, ejecucion: 18, carisma: 10, rosca: 4 },
+        comp: { ven: 26, pro: 34, fin: 18, ope: 24, mkt: 24, leg: 6 },
+        lockedBy: "unicornio",
+        lockText: "Se desbloquea con el trofeo Fichaje Unicornio."
       },
       {
         id: "tecnico",
@@ -1919,16 +2039,22 @@
       }
     ];
 
+    /* ================= ARTE DE EVENTOS =================
+       Antes eran 9 fotos de banco hotlinkeadas a Unsplash: 9 pedidos
+       HTTP a un dominio de terceros, peso en 4G, el juego roto si
+       cambian una URL, y ademas era la unica parte del juego que no
+       parecia del juego. Ahora es SVG propio con la misma paleta que
+       los logos y los avatares, embebido en el archivo. */
     const EVENT_IMAGES = {
-      cut: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80",
-      party: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=800&q=80",
-      board: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
-      compliance: "https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=800&q=80",
-      asado: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80",
-      pitch: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80",
-      ai: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
-      crypto: "https://images.unsplash.com/photo-1622979135225-d2ba269bc1df?auto=format&fit=crop&w=800&q=80",
-      hr: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800&q=80"
+      cut: `<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="ag" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2d1116"/><stop offset="100%" stop-color="#07090e"/></linearGradient></defs><rect width="800" height="300" fill="url(#ag)"/><rect x="-20" y="224" width="48" height="76" fill="#160a0e" opacity=".85"/><rect x="38" y="114" width="47" height="186" fill="#160a0e" opacity=".85"/><rect x="103" y="120" width="68" height="180" fill="#160a0e" opacity=".85"/><rect x="131" y="230" width="7" height="9" fill="#38bdf8" opacity="0.22"/><rect x="177" y="130" width="64" height="170" fill="#160a0e" opacity=".85"/><rect x="251" y="182" width="86" height="118" fill="#160a0e" opacity=".85"/><rect x="301" y="248" width="7" height="9" fill="#38bdf8" opacity="0.22"/><rect x="348" y="235" width="41" height="65" fill="#160a0e" opacity=".85"/><rect x="395" y="238" width="81" height="62" fill="#160a0e" opacity=".85"/><rect x="488" y="185" width="83" height="115" fill="#160a0e" opacity=".85"/><rect x="585" y="128" width="54" height="172" fill="#160a0e" opacity=".85"/><rect x="613" y="238" width="7" height="9" fill="#38bdf8" opacity="0.22"/><rect x="655" y="123" width="54" height="177" fill="#160a0e" opacity=".85"/><rect x="683" y="233" width="7" height="9" fill="#38bdf8" opacity="0.22"/><rect x="723" y="215" width="81" height="85" fill="#160a0e" opacity=".85"/><rect x="812" y="165" width="80" height="135" fill="#160a0e" opacity=".85"/><rect x="840" y="231" width="7" height="9" fill="#38bdf8" opacity="0.22"/><rect x="862" y="231" width="7" height="9" fill="#38bdf8" opacity="0.22"/><rect x="60" y="90" width="46" height="170" fill="#f43f5e" opacity="0.85"/><rect x="140" y="116" width="46" height="144" fill="#f43f5e" opacity="0.76"/><rect x="220" y="142" width="46" height="118" fill="#f43f5e" opacity="0.67"/><rect x="300" y="168" width="46" height="92" fill="#f43f5e" opacity="0.58"/><rect x="380" y="194" width="46" height="66" fill="#f43f5e" opacity="0.49"/><rect x="460" y="220" width="46" height="40" fill="#f43f5e" opacity="0.4"/><rect x="540" y="246" width="46" height="14" fill="#f43f5e" opacity="0.31"/><rect x="620" y="272" width="46" height="8" fill="#f43f5e" opacity="0.22"/><path d="M40 80 L740 250" stroke="#f43f5e" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="740" cy="250" r="11" fill="#f43f5e"/></svg>`,
+      board: `<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#111c30"/><stop offset="100%" stop-color="#06080f"/></linearGradient></defs><rect width="800" height="300" fill="url(#bg)"/><ellipse cx="400" cy="150" rx="300" ry="52" fill="#0f1a2e" stroke="#334155" stroke-width="3"/><ellipse cx="400" cy="145" rx="290" ry="45" fill="#16233c"/><rect x="110" y="78" width="52" height="30" rx="7" fill="#1e293b" opacity="0.9"/><rect x="205" y="196" width="52" height="30" rx="7" fill="#1e293b" opacity="0.9"/><rect x="300" y="78" width="52" height="30" rx="7" fill="#1e293b" opacity="0.9"/><rect x="395" y="196" width="52" height="30" rx="7" fill="#f43f5e" opacity="1"/><rect x="490" y="78" width="52" height="30" rx="7" fill="#1e293b" opacity="0.9"/><rect x="585" y="196" width="52" height="30" rx="7" fill="#1e293b" opacity="0.9"/><rect x="680" y="78" width="52" height="30" rx="7" fill="#1e293b" opacity="0.9"/><rect x="330" y="128" width="140" height="34" rx="4" fill="#0b1220" stroke="#38bdf8" stroke-width="2"/></svg>`,
+      compliance: `<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#141b2b"/><stop offset="100%" stop-color="#070a12"/></linearGradient></defs><rect width="800" height="300" fill="url(#cg)"/><g transform="translate(60,50)"><rect width="82" height="96" rx="5" fill="#e2e8f0" opacity="0.13"/><rect x="12" y="16" width="58" height="6" fill="#94a3b8" opacity="0.5"/><rect x="12" y="30" width="46" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="44" width="58" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="58" width="34" height="6" fill="#94a3b8" opacity="0.35"/></g><g transform="translate(180,50)"><rect width="82" height="96" rx="5" fill="#e2e8f0" opacity="0.13"/><rect x="12" y="16" width="58" height="6" fill="#94a3b8" opacity="0.5"/><rect x="12" y="30" width="46" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="44" width="58" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="58" width="34" height="6" fill="#94a3b8" opacity="0.35"/></g><g transform="translate(300,50)"><rect width="82" height="96" rx="5" fill="#e2e8f0" opacity="0.13"/><rect x="12" y="16" width="58" height="6" fill="#94a3b8" opacity="0.5"/><rect x="12" y="30" width="46" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="44" width="58" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="58" width="34" height="6" fill="#94a3b8" opacity="0.35"/></g><g transform="translate(420,50)"><rect width="82" height="96" rx="5" fill="#e2e8f0" opacity="0.13"/><rect x="12" y="16" width="58" height="6" fill="#94a3b8" opacity="0.5"/><rect x="12" y="30" width="46" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="44" width="58" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="58" width="34" height="6" fill="#94a3b8" opacity="0.35"/></g><g transform="translate(540,50)"><rect width="82" height="96" rx="5" fill="#e2e8f0" opacity="0.13"/><rect x="12" y="16" width="58" height="6" fill="#94a3b8" opacity="0.5"/><rect x="12" y="30" width="46" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="44" width="58" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="58" width="34" height="6" fill="#94a3b8" opacity="0.35"/></g><g transform="translate(660,50)"><rect width="82" height="96" rx="5" fill="#e2e8f0" opacity="0.13"/><rect x="12" y="16" width="58" height="6" fill="#94a3b8" opacity="0.5"/><rect x="12" y="30" width="46" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="44" width="58" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="58" width="34" height="6" fill="#94a3b8" opacity="0.35"/></g><g transform="translate(60,160)"><rect width="82" height="96" rx="5" fill="#e2e8f0" opacity="0.13"/><rect x="12" y="16" width="58" height="6" fill="#94a3b8" opacity="0.5"/><rect x="12" y="30" width="46" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="44" width="58" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="58" width="34" height="6" fill="#94a3b8" opacity="0.35"/></g><g transform="translate(180,160)"><rect width="82" height="96" rx="5" fill="#e2e8f0" opacity="0.13"/><rect x="12" y="16" width="58" height="6" fill="#94a3b8" opacity="0.5"/><rect x="12" y="30" width="46" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="44" width="58" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="58" width="34" height="6" fill="#94a3b8" opacity="0.35"/></g><g transform="translate(300,160)"><rect width="82" height="96" rx="5" fill="#e2e8f0" opacity="0.13"/><rect x="12" y="16" width="58" height="6" fill="#94a3b8" opacity="0.5"/><rect x="12" y="30" width="46" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="44" width="58" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="58" width="34" height="6" fill="#94a3b8" opacity="0.35"/></g><g transform="translate(420,160)"><rect width="82" height="96" rx="5" fill="#e2e8f0" opacity="0.13"/><rect x="12" y="16" width="58" height="6" fill="#94a3b8" opacity="0.5"/><rect x="12" y="30" width="46" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="44" width="58" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="58" width="34" height="6" fill="#94a3b8" opacity="0.35"/></g><g transform="translate(540,160)"><rect width="82" height="96" rx="5" fill="#e2e8f0" opacity="0.13"/><rect x="12" y="16" width="58" height="6" fill="#94a3b8" opacity="0.5"/><rect x="12" y="30" width="46" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="44" width="58" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="58" width="34" height="6" fill="#94a3b8" opacity="0.35"/></g><g transform="translate(660,160)"><rect width="82" height="96" rx="5" fill="#e2e8f0" opacity="0.13"/><rect x="12" y="16" width="58" height="6" fill="#94a3b8" opacity="0.5"/><rect x="12" y="30" width="46" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="44" width="58" height="6" fill="#94a3b8" opacity="0.35"/><rect x="12" y="58" width="34" height="6" fill="#94a3b8" opacity="0.35"/></g><circle cx="600" cy="180" r="66" fill="none" stroke="#fbbf24" stroke-width="8"/><circle cx="600" cy="180" r="58" fill="#fbbf24" opacity="0.10"/><rect x="646" y="222" width="86" height="15" rx="7" fill="#fbbf24" transform="rotate(42 646 222)"/></svg>`,
+      asado: `<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="dg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2a1a10"/><stop offset="100%" stop-color="#0a0705"/></linearGradient></defs><rect width="800" height="300" fill="url(#dg)"/><path d="M200 120 q22 -40 0 -78 q-22 -38 0 -76" stroke="#fbbf24" stroke-width="4" fill="none" opacity="0.18"/><path d="M320 120 q22 -40 0 -78 q-22 -38 0 -76" stroke="#fbbf24" stroke-width="4" fill="none" opacity="0.18"/><path d="M440 120 q22 -40 0 -78 q-22 -38 0 -76" stroke="#fbbf24" stroke-width="4" fill="none" opacity="0.18"/><path d="M560 120 q22 -40 0 -78 q-22 -38 0 -76" stroke="#fbbf24" stroke-width="4" fill="none" opacity="0.18"/><rect x="150" y="150" width="500" height="26" rx="6" fill="#3f3f46"/><rect x="170" y="130" width="30" height="16" rx="4" fill="#9a3412"/><rect x="174" y="134" width="22" height="8" rx="3" fill="#c2410c"/><rect x="214" y="130" width="30" height="16" rx="4" fill="#9a3412"/><rect x="218" y="134" width="22" height="8" rx="3" fill="#c2410c"/><rect x="258" y="130" width="30" height="16" rx="4" fill="#9a3412"/><rect x="262" y="134" width="22" height="8" rx="3" fill="#c2410c"/><rect x="302" y="130" width="30" height="16" rx="4" fill="#9a3412"/><rect x="306" y="134" width="22" height="8" rx="3" fill="#c2410c"/><rect x="346" y="130" width="30" height="16" rx="4" fill="#9a3412"/><rect x="350" y="134" width="22" height="8" rx="3" fill="#c2410c"/><rect x="390" y="130" width="30" height="16" rx="4" fill="#9a3412"/><rect x="394" y="134" width="22" height="8" rx="3" fill="#c2410c"/><rect x="434" y="130" width="30" height="16" rx="4" fill="#9a3412"/><rect x="438" y="134" width="22" height="8" rx="3" fill="#c2410c"/><rect x="478" y="130" width="30" height="16" rx="4" fill="#9a3412"/><rect x="482" y="134" width="22" height="8" rx="3" fill="#c2410c"/><rect x="522" y="130" width="30" height="16" rx="4" fill="#9a3412"/><rect x="526" y="134" width="22" height="8" rx="3" fill="#c2410c"/><rect x="566" y="130" width="30" height="16" rx="4" fill="#9a3412"/><rect x="570" y="134" width="22" height="8" rx="3" fill="#c2410c"/><rect x="610" y="130" width="30" height="16" rx="4" fill="#9a3412"/><rect x="614" y="134" width="22" height="8" rx="3" fill="#c2410c"/><rect x="150" y="176" width="500" height="46" rx="6" fill="#1c1917"/><ellipse cx="190" cy="200" rx="17" ry="9" fill="#ea580c" opacity="0.35"/><ellipse cx="248" cy="200" rx="17" ry="9" fill="#ea580c" opacity="0.55"/><ellipse cx="306" cy="200" rx="17" ry="9" fill="#ea580c" opacity="0.75"/><ellipse cx="364" cy="200" rx="17" ry="9" fill="#ea580c" opacity="0.35"/><ellipse cx="422" cy="200" rx="17" ry="9" fill="#ea580c" opacity="0.55"/><ellipse cx="480" cy="200" rx="17" ry="9" fill="#ea580c" opacity="0.75"/><ellipse cx="538" cy="200" rx="17" ry="9" fill="#ea580c" opacity="0.35"/><ellipse cx="596" cy="200" rx="17" ry="9" fill="#ea580c" opacity="0.55"/><ellipse cx="654" cy="200" rx="17" ry="9" fill="#ea580c" opacity="0.75"/><rect x="180" y="222" width="40" height="60" fill="#27272a"/><rect x="580" y="222" width="40" height="60" fill="#27272a"/></svg>`,
+      pitch: `<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="eg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#101a2e"/><stop offset="100%" stop-color="#06080f"/></linearGradient></defs><rect width="800" height="300" fill="url(#eg)"/><rect x="120" y="40" width="560" height="200" rx="10" fill="#0b1220" stroke="#38bdf8" stroke-width="3"/><path d="M160 210 L280 170 L390 190 L500 105 L640 70" stroke="#10e575" stroke-width="6" fill="none" stroke-linejoin="round" stroke-linecap="round"/><path d="M160 210 L280 170 L390 190 L500 105 L640 70 L640 220 L160 220 Z" fill="#10e575" opacity="0.13"/><circle cx="280" cy="170" r="8" fill="#10e575"/><circle cx="390" cy="190" r="8" fill="#10e575"/><circle cx="500" cy="105" r="8" fill="#10e575"/><circle cx="640" cy="70" r="8" fill="#10e575"/><rect x="330" y="252" width="140" height="10" rx="5" fill="#334155"/></svg>`,
+      ai: `<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="fg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1a1240"/><stop offset="100%" stop-color="#07060f"/></linearGradient></defs><rect width="800" height="300" fill="url(#fg)"/><line x1="120" y1="70" x2="300" y2="70" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="120" y1="70" x2="120" y2="150" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="120" y1="70" x2="300" y2="150" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="300" y1="70" x2="480" y2="70" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="300" y1="70" x2="120" y2="150" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="300" y1="70" x2="300" y2="150" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="300" y1="70" x2="480" y2="150" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="480" y1="70" x2="660" y2="70" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="480" y1="70" x2="300" y2="150" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="480" y1="70" x2="480" y2="150" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="480" y1="70" x2="660" y2="150" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="660" y1="70" x2="480" y2="150" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="660" y1="70" x2="660" y2="150" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="120" y1="150" x2="300" y2="150" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="120" y1="150" x2="120" y2="230" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="120" y1="150" x2="300" y2="230" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="300" y1="150" x2="480" y2="150" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="300" y1="150" x2="120" y2="230" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="300" y1="150" x2="300" y2="230" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="300" y1="150" x2="480" y2="230" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="480" y1="150" x2="660" y2="150" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="480" y1="150" x2="300" y2="230" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="480" y1="150" x2="480" y2="230" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="480" y1="150" x2="660" y2="230" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="660" y1="150" x2="480" y2="230" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="660" y1="150" x2="660" y2="230" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="120" y1="230" x2="300" y2="230" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="300" y1="230" x2="480" y2="230" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><line x1="480" y1="230" x2="660" y2="230" stroke="#a855f7" stroke-width="1.6" opacity="0.35"/><circle cx="120" cy="70" r="11" fill="#0b0720" stroke="#a855f7" stroke-width="3"/><circle cx="120" cy="70" r="4" fill="#c084fc"/><circle cx="300" cy="70" r="11" fill="#0b0720" stroke="#a855f7" stroke-width="3"/><circle cx="300" cy="70" r="4" fill="#c084fc"/><circle cx="480" cy="70" r="11" fill="#0b0720" stroke="#a855f7" stroke-width="3"/><circle cx="480" cy="70" r="4" fill="#c084fc"/><circle cx="660" cy="70" r="11" fill="#0b0720" stroke="#a855f7" stroke-width="3"/><circle cx="660" cy="70" r="4" fill="#c084fc"/><circle cx="120" cy="150" r="11" fill="#0b0720" stroke="#a855f7" stroke-width="3"/><circle cx="120" cy="150" r="4" fill="#c084fc"/><circle cx="300" cy="150" r="11" fill="#0b0720" stroke="#a855f7" stroke-width="3"/><circle cx="300" cy="150" r="4" fill="#c084fc"/><circle cx="480" cy="150" r="11" fill="#0b0720" stroke="#a855f7" stroke-width="3"/><circle cx="480" cy="150" r="4" fill="#c084fc"/><circle cx="660" cy="150" r="11" fill="#0b0720" stroke="#a855f7" stroke-width="3"/><circle cx="660" cy="150" r="4" fill="#c084fc"/><circle cx="120" cy="230" r="11" fill="#0b0720" stroke="#a855f7" stroke-width="3"/><circle cx="120" cy="230" r="4" fill="#c084fc"/><circle cx="300" cy="230" r="11" fill="#0b0720" stroke="#a855f7" stroke-width="3"/><circle cx="300" cy="230" r="4" fill="#c084fc"/><circle cx="480" cy="230" r="11" fill="#0b0720" stroke="#a855f7" stroke-width="3"/><circle cx="480" cy="230" r="4" fill="#c084fc"/><circle cx="660" cy="230" r="11" fill="#0b0720" stroke="#a855f7" stroke-width="3"/><circle cx="660" cy="230" r="4" fill="#c084fc"/></svg>`,
+      crypto: `<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#241019"/><stop offset="100%" stop-color="#07090e"/></linearGradient></defs><rect width="800" height="300" fill="url(#gg)"/><rect x="40" y="102" width="18" height="43" fill="#f43f5e"/><rect x="47" y="90" width="4" height="67" fill="#f43f5e" opacity="0.65"/><rect x="78" y="115" width="18" height="30" fill="#f43f5e"/><rect x="85" y="103" width="4" height="54" fill="#f43f5e" opacity="0.65"/><rect x="116" y="136" width="18" height="22" fill="#10e575"/><rect x="123" y="124" width="4" height="46" fill="#10e575" opacity="0.65"/><rect x="154" y="152" width="18" height="31" fill="#f43f5e"/><rect x="161" y="140" width="4" height="55" fill="#f43f5e" opacity="0.65"/><rect x="192" y="147" width="18" height="19" fill="#f43f5e"/><rect x="199" y="135" width="4" height="43" fill="#f43f5e" opacity="0.65"/><rect x="230" y="140" width="18" height="18" fill="#f43f5e"/><rect x="237" y="128" width="4" height="42" fill="#f43f5e" opacity="0.65"/><rect x="268" y="164" width="18" height="17" fill="#f43f5e"/><rect x="275" y="152" width="4" height="41" fill="#f43f5e" opacity="0.65"/><rect x="306" y="173" width="18" height="46" fill="#f43f5e"/><rect x="313" y="161" width="4" height="70" fill="#f43f5e" opacity="0.65"/><rect x="344" y="196" width="18" height="36" fill="#10e575"/><rect x="351" y="184" width="4" height="60" fill="#10e575" opacity="0.65"/><rect x="382" y="180" width="18" height="42" fill="#f43f5e"/><rect x="389" y="168" width="4" height="66" fill="#f43f5e" opacity="0.65"/><rect x="420" y="167" width="18" height="17" fill="#10e575"/><rect x="427" y="155" width="4" height="41" fill="#10e575" opacity="0.65"/><rect x="458" y="166" width="18" height="35" fill="#10e575"/><rect x="465" y="154" width="4" height="59" fill="#10e575" opacity="0.65"/><rect x="496" y="179" width="18" height="26" fill="#f43f5e"/><rect x="503" y="167" width="4" height="50" fill="#f43f5e" opacity="0.65"/><rect x="534" y="175" width="18" height="32" fill="#10e575"/><rect x="541" y="163" width="4" height="56" fill="#10e575" opacity="0.65"/><rect x="572" y="177" width="18" height="31" fill="#10e575"/><rect x="579" y="165" width="4" height="55" fill="#10e575" opacity="0.65"/><rect x="610" y="166" width="18" height="30" fill="#f43f5e"/><rect x="617" y="154" width="4" height="54" fill="#f43f5e" opacity="0.65"/><rect x="648" y="176" width="18" height="33" fill="#f43f5e"/><rect x="655" y="164" width="4" height="57" fill="#f43f5e" opacity="0.65"/><rect x="686" y="165" width="18" height="38" fill="#10e575"/><rect x="693" y="153" width="4" height="62" fill="#10e575" opacity="0.65"/><rect x="724" y="163" width="18" height="32" fill="#10e575"/><rect x="731" y="151" width="4" height="56" fill="#10e575" opacity="0.65"/><rect x="762" y="151" width="18" height="34" fill="#f43f5e"/><rect x="769" y="139" width="4" height="58" fill="#f43f5e" opacity="0.65"/><path d="M40 80 L780 250" stroke="#f43f5e" stroke-width="3" stroke-dasharray="10 8" fill="none" opacity="0.75"/></svg>`,
+      hr: `<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="hg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#141d33"/><stop offset="100%" stop-color="#07090e"/></linearGradient></defs><rect width="800" height="300" fill="url(#hg)"/><g transform="translate(70,45)"><rect width="190" height="66" rx="16" fill="#0f766e" opacity="0.92"/><rect x="18" y="20" width="120" height="7" rx="3" fill="#94a3b8" opacity="0.7"/><rect x="18" y="36" width="86" height="7" rx="3" fill="#94a3b8" opacity="0.45"/></g><g transform="translate(320,45)"><rect width="168" height="66" rx="16" fill="#1e293b" opacity="0.92"/><rect x="18" y="20" width="100" height="7" rx="3" fill="#94a3b8" opacity="0.7"/><rect x="18" y="36" width="74" height="7" rx="3" fill="#94a3b8" opacity="0.45"/></g><g transform="translate(570,45)"><rect width="146" height="66" rx="16" fill="#0f766e" opacity="0.92"/><rect x="18" y="20" width="80" height="7" rx="3" fill="#94a3b8" opacity="0.7"/><rect x="18" y="36" width="62" height="7" rx="3" fill="#94a3b8" opacity="0.45"/></g><g transform="translate(70,150)"><rect width="190" height="66" rx="16" fill="#1e293b" opacity="0.92"/><rect x="18" y="20" width="120" height="7" rx="3" fill="#94a3b8" opacity="0.7"/><rect x="18" y="36" width="86" height="7" rx="3" fill="#94a3b8" opacity="0.45"/></g><g transform="translate(320,150)"><rect width="168" height="66" rx="16" fill="#0f766e" opacity="0.92"/><rect x="18" y="20" width="100" height="7" rx="3" fill="#94a3b8" opacity="0.7"/><rect x="18" y="36" width="74" height="7" rx="3" fill="#94a3b8" opacity="0.45"/></g><g transform="translate(570,150)"><rect width="146" height="66" rx="16" fill="#1e293b" opacity="0.92"/><rect x="18" y="20" width="80" height="7" rx="3" fill="#94a3b8" opacity="0.7"/><rect x="18" y="36" width="62" height="7" rx="3" fill="#94a3b8" opacity="0.45"/></g><circle cx="700" cy="220" r="34" fill="#f43f5e" opacity="0.9"/><text x="700" y="234" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="38" fill="#fff">!</text></svg>`,
+      party: `<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="ig" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1b1338"/><stop offset="100%" stop-color="#07060f"/></linearGradient></defs><rect width="800" height="300" fill="url(#ig)"/><rect x="-20" y="145" width="69" height="155" fill="#0d0a1c" opacity=".9"/><rect x="8" y="211" width="7" height="9" fill="#38bdf8" opacity="0.22"/><rect x="8" y="233" width="7" height="9" fill="#38bdf8" opacity="0.22"/><rect x="65" y="154" width="40" height="146" fill="#0d0a1c" opacity=".9"/><rect x="119" y="220" width="69" height="80" fill="#0d0a1c" opacity=".9"/><rect x="199" y="230" width="75" height="70" fill="#0d0a1c" opacity=".9"/><rect x="291" y="197" width="64" height="103" fill="#0d0a1c" opacity=".9"/><rect x="372" y="132" width="68" height="168" fill="#0d0a1c" opacity=".9"/><rect x="400" y="198" width="7" height="9" fill="#38bdf8" opacity="0.22"/><rect x="400" y="220" width="7" height="9" fill="#38bdf8" opacity="0.22"/><rect x="400" y="242" width="7" height="9" fill="#38bdf8" opacity="0.22"/><rect x="454" y="224" width="77" height="76" fill="#0d0a1c" opacity=".9"/><rect x="549" y="142" width="84" height="158" fill="#0d0a1c" opacity=".9"/><rect x="599" y="230" width="7" height="9" fill="#38bdf8" opacity="0.22"/><rect x="642" y="133" width="86" height="167" fill="#0d0a1c" opacity=".9"/><rect x="692" y="221" width="7" height="9" fill="#38bdf8" opacity="0.22"/><rect x="739" y="189" width="42" height="111" fill="#0d0a1c" opacity=".9"/><rect x="798" y="135" width="40" height="165" fill="#0d0a1c" opacity=".9"/><rect x="647" y="140" width="11" height="14" fill="#10e575" opacity=".7" transform="rotate(31 400 150)"/><rect x="674" y="36" width="8" height="7" fill="#a855f7" opacity=".7" transform="rotate(31 400 150)"/><rect x="399" y="62" width="9" height="6" fill="#38bdf8" opacity=".7" transform="rotate(35 400 150)"/><rect x="196" y="209" width="8" height="7" fill="#38bdf8" opacity=".9" transform="rotate(79 400 150)"/><rect x="465" y="74" width="8" height="6" fill="#10e575" opacity=".5" transform="rotate(27 400 150)"/><rect x="179" y="95" width="10" height="11" fill="#38bdf8" opacity=".9" transform="rotate(86 400 150)"/><rect x="650" y="114" width="8" height="9" fill="#fbbf24" opacity=".7" transform="rotate(2 400 150)"/><rect x="379" y="222" width="8" height="8" fill="#a855f7" opacity=".5" transform="rotate(42 400 150)"/><rect x="318" y="11" width="11" height="7" fill="#a855f7" opacity=".7" transform="rotate(39 400 150)"/><rect x="502" y="171" width="8" height="13" fill="#fbbf24" opacity=".9" transform="rotate(22 400 150)"/><rect x="68" y="141" width="6" height="11" fill="#fbbf24" opacity=".5" transform="rotate(70 400 150)"/><rect x="438" y="197" width="12" height="6" fill="#fbbf24" opacity=".5" transform="rotate(90 400 150)"/><rect x="195" y="110" width="7" height="9" fill="#fbbf24" opacity=".7" transform="rotate(65 400 150)"/><rect x="373" y="278" width="10" height="13" fill="#10e575" opacity=".9" transform="rotate(47 400 150)"/><rect x="312" y="28" width="12" height="7" fill="#38bdf8" opacity=".7" transform="rotate(65 400 150)"/><rect x="635" y="195" width="8" height="11" fill="#a855f7" opacity=".9" transform="rotate(69 400 150)"/><rect x="104" y="169" width="11" height="10" fill="#38bdf8" opacity=".5" transform="rotate(80 400 150)"/><rect x="162" y="168" width="13" height="8" fill="#10e575" opacity=".5" transform="rotate(76 400 150)"/><rect x="556" y="217" width="6" height="9" fill="#f43f5e" opacity=".7" transform="rotate(32 400 150)"/><rect x="476" y="225" width="8" height="6" fill="#10e575" opacity=".7" transform="rotate(42 400 150)"/><rect x="222" y="76" width="8" height="12" fill="#10e575" opacity=".5" transform="rotate(55 400 150)"/><rect x="391" y="86" width="6" height="12" fill="#a855f7" opacity=".5" transform="rotate(58 400 150)"/><rect x="645" y="96" width="14" height="13" fill="#fbbf24" opacity=".9" transform="rotate(40 400 150)"/><rect x="500" y="150" width="10" height="13" fill="#fbbf24" opacity=".5" transform="rotate(14 400 150)"/><rect x="396" y="101" width="13" height="11" fill="#38bdf8" opacity=".5" transform="rotate(62 400 150)"/><rect x="288" y="273" width="14" height="14" fill="#a855f7" opacity=".5" transform="rotate(45 400 150)"/><rect x="721" y="27" width="10" height="11" fill="#f43f5e" opacity=".9" transform="rotate(85 400 150)"/><rect x="297" y="258" width="10" height="10" fill="#a855f7" opacity=".9" transform="rotate(22 400 150)"/><rect x="604" y="15" width="13" height="14" fill="#a855f7" opacity=".7" transform="rotate(85 400 150)"/><rect x="290" y="247" width="10" height="14" fill="#a855f7" opacity=".7" transform="rotate(35 400 150)"/><rect x="669" y="186" width="12" height="11" fill="#38bdf8" opacity=".9" transform="rotate(57 400 150)"/><rect x="383" y="181" width="14" height="8" fill="#f43f5e" opacity=".5" transform="rotate(25 400 150)"/><rect x="380" y="254" width="10" height="7" fill="#fbbf24" opacity=".5" transform="rotate(78 400 150)"/><rect x="604" y="274" width="12" height="10" fill="#f43f5e" opacity=".9" transform="rotate(81 400 150)"/><rect x="287" y="24" width="9" height="8" fill="#f43f5e" opacity=".7" transform="rotate(79 400 150)"/><rect x="675" y="102" width="9" height="8" fill="#10e575" opacity=".7" transform="rotate(28 400 150)"/><rect x="179" y="37" width="8" height="7" fill="#a855f7" opacity=".5" transform="rotate(61 400 150)"/><rect x="208" y="28" width="12" height="13" fill="#a855f7" opacity=".7" transform="rotate(84 400 150)"/><rect x="636" y="46" width="9" height="9" fill="#a855f7" opacity=".5" transform="rotate(44 400 150)"/><rect x="425" y="152" width="12" height="7" fill="#f43f5e" opacity=".7" transform="rotate(4 400 150)"/><rect x="573" y="164" width="7" height="10" fill="#f43f5e" opacity=".9" transform="rotate(43 400 150)"/><rect x="604" y="160" width="11" height="8" fill="#fbbf24" opacity=".7" transform="rotate(72 400 150)"/><rect x="667" y="199" width="13" height="8" fill="#38bdf8" opacity=".9" transform="rotate(48 400 150)"/><rect x="587" y="254" width="9" height="8" fill="#f43f5e" opacity=".5" transform="rotate(44 400 150)"/><rect x="687" y="10" width="12" height="7" fill="#a855f7" opacity=".9" transform="rotate(78 400 150)"/><rect x="562" y="82" width="11" height="12" fill="#fbbf24" opacity=".7" transform="rotate(28 400 150)"/><rect x="515" y="159" width="13" height="12" fill="#fbbf24" opacity=".5" transform="rotate(76 400 150)"/><rect x="618" y="143" width="10" height="13" fill="#a855f7" opacity=".7" transform="rotate(2 400 150)"/><rect x="336" y="167" width="13" height="10" fill="#38bdf8" opacity=".7" transform="rotate(3 400 150)"/><rect x="134" y="237" width="9" height="10" fill="#10e575" opacity=".5" transform="rotate(50 400 150)"/><rect x="23" y="255" width="14" height="14" fill="#a855f7" opacity=".5" transform="rotate(60 400 150)"/><rect x="47" y="135" width="13" height="10" fill="#38bdf8" opacity=".9" transform="rotate(36 400 150)"/><rect x="310" y="262" width="13" height="14" fill="#f43f5e" opacity=".9" transform="rotate(15 400 150)"/><rect x="26" y="74" width="10" height="10" fill="#f43f5e" opacity=".9" transform="rotate(43 400 150)"/><rect x="638" y="161" width="14" height="6" fill="#fbbf24" opacity=".7" transform="rotate(46 400 150)"/><rect x="708" y="77" width="6" height="6" fill="#a855f7" opacity=".9" transform="rotate(58 400 150)"/><rect x="712" y="65" width="14" height="9" fill="#10e575" opacity=".7" transform="rotate(54 400 150)"/><rect x="619" y="256" width="12" height="13" fill="#fbbf24" opacity=".9" transform="rotate(25 400 150)"/><rect x="313" y="248" width="7" height="10" fill="#10e575" opacity=".9" transform="rotate(55 400 150)"/><rect x="606" y="156" width="13" height="10" fill="#38bdf8" opacity=".5" transform="rotate(61 400 150)"/><rect x="721" y="264" width="11" height="14" fill="#38bdf8" opacity=".7" transform="rotate(74 400 150)"/><rect x="564" y="34" width="7" height="9" fill="#a855f7" opacity=".5" transform="rotate(8 400 150)"/><rect x="689" y="23" width="11" height="12" fill="#10e575" opacity=".7" transform="rotate(89 400 150)"/><rect x="508" y="35" width="7" height="7" fill="#38bdf8" opacity=".9" transform="rotate(82 400 150)"/><rect x="123" y="78" width="10" height="13" fill="#38bdf8" opacity=".5" transform="rotate(78 400 150)"/><rect x="199" y="221" width="8" height="7" fill="#f43f5e" opacity=".5" transform="rotate(5 400 150)"/><rect x="578" y="65" width="12" height="7" fill="#a855f7" opacity=".5" transform="rotate(73 400 150)"/><rect x="599" y="70" width="12" height="8" fill="#10e575" opacity=".7" transform="rotate(11 400 150)"/><rect x="332" y="260" width="13" height="11" fill="#a855f7" opacity=".5" transform="rotate(17 400 150)"/><rect x="724" y="160" width="8" height="14" fill="#a855f7" opacity=".9" transform="rotate(70 400 150)"/></svg>`
     };
 
     const EVENTS = [
@@ -2130,6 +2256,14 @@
     const COMPANY_LOGOS = {"Kiosco Cripto SRL": {"bg": "#f59e0b", "fg": "#ffffff", "ticker": "KIOS", "svg": "<circle cx=\"18\" cy=\"18\" r=\"14\" fill=\"#f59e0b\"/><text x=\"18\" y=\"24\" text-anchor=\"middle\" font-family=\"monospace\" font-weight=\"900\" font-size=\"16\" fill=\"#fff\">\u20bf</text>"}, "AppMiPyme": {"bg": "#0284c7", "fg": "#ffffff", "ticker": "PYME", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#0284c7\"/><path d=\"M11 22a6 6 0 0 1 1-11.8A7 7 0 0 1 25 12a5 5 0 0 1 0 10z\" fill=\"#ffffff\"/><circle cx=\"18\" cy=\"18\" r=\"2.5\" fill=\"#0284c7\"/>"}, "Empanada Valley": {"bg": "#ea580c", "fg": "#ffffff", "ticker": "EMPA", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#ea580c\"/><path d=\"M8 23c0-7 5-13 10-13s10 6 10 13z\" fill=\"#fde047\"/><path d=\"M7 23h22\" stroke=\"#b45309\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>"}, "Coworking El Nido": {"bg": "#10b981", "fg": "#ffffff", "ticker": "NIDO", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#10b981\"/><circle cx=\"18\" cy=\"18\" r=\"10\" fill=\"#064e3b\"/><ellipse cx=\"18\" cy=\"18\" rx=\"6\" ry=\"8\" fill=\"#ffffff\"/><circle cx=\"18\" cy=\"18\" r=\"3\" fill=\"#10b981\"/>"}, "Estudio & Asociados": {"bg": "#334155", "fg": "#ffffff", "ticker": "ESTU", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#334155\"/><path d=\"M18 7v22M10 13l8-3 8 3M8 19l4-6 4 6zM20 19l4-6 4 6z\" stroke=\"#fbbf24\" stroke-width=\"2\" fill=\"none\" stroke-linejoin=\"round\"/>"}, "Agencia Humo & Viral": {"bg": "#ec4899", "fg": "#ffffff", "ticker": "HUMO", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#ec4899\"/><path d=\"M18 6c2 4-2 7 2 11s6 3 6 7a8 8 0 0 1-16 0c0-6 4-9 8-18z\" fill=\"#fef08a\"/>"}, "DistriLog\u00edstica Sur": {"bg": "#475569", "fg": "#ffffff", "ticker": "DSUR", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#475569\"/><rect x=\"7\" y=\"12\" width=\"14\" height=\"12\" rx=\"2\" fill=\"#38bdf8\"/><path d=\"M21 15l6 2v7h-6z\" fill=\"#0284c7\"/><circle cx=\"12\" cy=\"25\" r=\"2.5\" fill=\"#0f172a\"/><circle cx=\"23\" cy=\"25\" r=\"2.5\" fill=\"#0f172a\"/>"}, "Caf\u00e9 de Especialidad": {"bg": "#78350f", "fg": "#ffffff", "ticker": "CAFE", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#78350f\"/><rect x=\"10\" y=\"14\" width=\"14\" height=\"11\" rx=\"3\" fill=\"#fef3c7\"/><path d=\"M24 16h3a3 3 0 0 1 0 6h-3\" stroke=\"#fef3c7\" stroke-width=\"2\" fill=\"none\"/><path d=\"M13 10q2-3 0-4M17 10q2-3 0-4M21 10q2-3 0-4\" stroke=\"#fde68a\" stroke-width=\"1.5\" fill=\"none\" stroke-linecap=\"round\"/>"}, "Software Factory 1999": {"bg": "#0f172a", "fg": "#10e575", "ticker": "SF99", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#0f172a\" stroke=\"#10e575\" stroke-width=\"1.5\"/><text x=\"18\" y=\"23\" text-anchor=\"middle\" font-family=\"monospace\" font-weight=\"900\" font-size=\"12\" fill=\"#10e575\">&gt;_</text>"}, "Melon Cash": {"bg": "#84cc16", "fg": "#14532d", "ticker": "MELN", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#84cc16\"/><path d=\"M8 14c0 10 8 15 10 15s10-5 10-15z\" fill=\"#ef4444\"/><ellipse cx=\"18\" cy=\"14\" rx=\"10\" ry=\"3\" fill=\"#84cc16\"/><circle cx=\"15\" cy=\"19\" r=\"1\" fill=\"#000\"/><circle cx=\"21\" cy=\"19\" r=\"1\" fill=\"#000\"/><circle cx=\"18\" cy=\"23\" r=\"1\" fill=\"#000\"/>"}, "Vaquita Pagos": {"bg": "#8b5cf6", "fg": "#ffffff", "ticker": "VAQU", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#8b5cf6\"/><circle cx=\"18\" cy=\"19\" r=\"8\" fill=\"#fdf4ff\"/><circle cx=\"15\" cy=\"18\" r=\"1.5\" fill=\"#000\"/><circle cx=\"21\" cy=\"18\" r=\"1.5\" fill=\"#000\"/><ellipse cx=\"18\" cy=\"22\" rx=\"4\" ry=\"2\" fill=\"#f472b6\"/><path d=\"M12 12l-2-4M24 12l2-4\" stroke=\"#fbbf24\" stroke-width=\"2\" stroke-linecap=\"round\"/>"}, "TiendaNube Express": {"bg": "#2563eb", "fg": "#ffffff", "ticker": "TNUB", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#2563eb\"/><path d=\"M10 23a6 6 0 0 1 1-11.8A7 7 0 0 1 25 13a5 5 0 0 1 0 10z\" fill=\"#ffffff\"/><path d=\"M16 16v5M16 21l3-3M16 21l-3-3\" stroke=\"#2563eb\" stroke-width=\"2\" stroke-linecap=\"round\"/>"}, "Despegarte": {"bg": "#dc2626", "fg": "#ffffff", "ticker": "DESP", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#dc2626\"/><path d=\"M9 25l18-9-7-2-2-6-3 4-1-1v4l-5 2z\" fill=\"#ffffff\"/>"}, "InmoClick": {"bg": "#059669", "fg": "#ffffff", "ticker": "INMO", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#059669\"/><path d=\"M9 17l9-8 9 8v10H9z\" fill=\"#ffffff\"/><rect x=\"15\" y=\"20\" width=\"6\" height=\"7\" fill=\"#059669\"/>"}, "L\u00e1cteos La Sure\u00f1a": {"bg": "#0284c7", "fg": "#ffffff", "ticker": "LSUR", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#0284c7\"/><path d=\"M18 7c3 5 7 9 7 13a7 7 0 0 1-14 0c0-4 4-8 7-13z\" fill=\"#ffffff\"/>"}, "Tarjeta Ilimitada": {"bg": "#1e293b", "fg": "#fbbf24", "ticker": "TLIM", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#1e293b\" stroke=\"#fbbf24\" stroke-width=\"1.5\"/><rect x=\"7\" y=\"10\" width=\"22\" height=\"16\" rx=\"3\" fill=\"#334155\"/><rect x=\"10\" y=\"14\" width=\"5\" height=\"4\" rx=\"1\" fill=\"#fbbf24\"/><path d=\"M7 16h22\" stroke=\"#0f172a\" stroke-width=\"2\"/>"}, "ElectroGalaxia": {"bg": "#4338ca", "fg": "#f59e0b", "ticker": "EGAL", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#4338ca\"/><circle cx=\"18\" cy=\"18\" r=\"6\" fill=\"#f59e0b\"/><ellipse cx=\"18\" cy=\"18\" rx=\"13\" ry=\"4\" fill=\"none\" stroke=\"#38bdf8\" stroke-width=\"2\" transform=\"rotate(-25 18 18)\"/>"}, "CloudLatam": {"bg": "#0369a1", "fg": "#ffffff", "ticker": "CLAT", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#0369a1\"/><rect x=\"8\" y=\"10\" width=\"20\" height=\"6\" rx=\"2\" fill=\"#e0f2fe\"/><rect x=\"8\" y=\"18\" width=\"20\" height=\"6\" rx=\"2\" fill=\"#e0f2fe\"/><circle cx=\"12\" cy=\"13\" r=\"1\" fill=\"#0284c7\"/><circle cx=\"12\" cy=\"21\" r=\"1\" fill=\"#0284c7\"/>"}, "Mercado Libre\u00f1o": {"bg": "#ffe600", "fg": "#2d3277", "ticker": "MELI", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#ffe600\"/><path d=\"M9 19c3-5 7-5 9-1 2-4 6-4 9 1l-3 3-6-3-6 3z\" fill=\"#2d3277\"/>"}, "Globanthic": {"bg": "#10e575", "fg": "#042f1a", "ticker": "GLOB", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#10e575\"/><text x=\"18\" y=\"26\" text-anchor=\"middle\" font-family=\"Arial, sans-serif\" font-weight=\"900\" font-size=\"22\" fill=\"#042f1a\">G</text>"}, "AuthCero": {"bg": "#18181b", "fg": "#eb5424", "ticker": "AUTH", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#18181b\" stroke=\"#eb5424\" stroke-width=\"1.5\"/><path d=\"M18 7l9 4v7c0 6-9 11-9 11s-9-5-9-11v-7z\" fill=\"#eb5424\"/><circle cx=\"18\" cy=\"16\" r=\"2.5\" fill=\"#fff\"/>"}, "Ual\u00e1zo": {"bg": "#ffffff", "fg": "#e11d48", "ticker": "UALA", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#ffffff\" stroke=\"#e11d48\" stroke-width=\"1.5\"/><path d=\"M11 11v7a7 7 0 0 0 14 0v-7\" stroke=\"#e11d48\" stroke-width=\"4.5\" fill=\"none\" stroke-linecap=\"round\"/>"}, "AgroSoja Corp": {"bg": "#15803d", "fg": "#fbbf24", "ticker": "SOJA", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#15803d\"/><circle cx=\"18\" cy=\"14\" r=\"5\" fill=\"#fbbf24\"/><path d=\"M18 19v10M12 23c3 0 6 3 6 6M24 23c-3 0-6 3-6 6\" stroke=\"#fbbf24\" stroke-width=\"2\" stroke-linecap=\"round\"/>"}, "Cerveza Patagonia Global": {"bg": "#1e3a5f", "fg": "#ffffff", "ticker": "PATA", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#1e3a5f\"/><path d=\"M6 26l8-14 6 8 4-4 6 10z\" fill=\"#ffffff\"/><path d=\"M14 12l2 4 4-2z\" fill=\"#38bdf8\"/>"}, "Biog\u00e9nesis Andina": {"bg": "#047857", "fg": "#38bdf8", "ticker": "BGEN", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#047857\"/><path d=\"M12 8c6 5 6 15 12 20M24 8c-6 5-6 15-12 20\" stroke=\"#38bdf8\" stroke-width=\"2.5\" stroke-linecap=\"round\"/><circle cx=\"18\" cy=\"18\" r=\"3\" fill=\"#ffffff\"/>"}, "Gargle Argentina": {"bg": "#ffffff", "fg": "#4285f4", "ticker": "GOOG", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#ffffff\" stroke=\"#e2e8f0\" stroke-width=\"1\"/><path d=\"M18 10a8 8 0 0 1 5.7 2.4l-2.4 2.4A4.6 4.6 0 0 0 18 13.4a4.6 4.6 0 0 0 0 9.2 4.6 4.6 0 0 0 4.6-4.6H18v-3.4h8a8 8 0 1 1-8-5z\" fill=\"#4285f4\"/>"}, "MacroMonopolio Bank": {"bg": "#0c1b33", "fg": "#ffd700", "ticker": "MMBK", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#0c1b33\" stroke=\"#ffd700\" stroke-width=\"1.5\"/><path d=\"M8 14l10-6 10 6v3H8zM11 17v7M15 17v7M21 17v7M25 17v7M7 24h22v4H7z\" fill=\"#ffd700\"/>"}, "PetroNacional": {"bg": "#1c1917", "fg": "#f97316", "ticker": "PETR", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#1c1917\" stroke=\"#f97316\" stroke-width=\"1.5\"/><path d=\"M18 7c4 6 7 10 7 14a7 7 0 0 1-14 0c0-4 3-8 7-14z\" fill=\"#f97316\"/><circle cx=\"18\" cy=\"22\" r=\"2.5\" fill=\"#fef08a\"/>"}, "Telecomunicaciones Patria": {"bg": "#0284c7", "fg": "#ffffff", "ticker": "TPAT", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#0284c7\"/><path d=\"M18 16v12M14 28h8\" stroke=\"#ffffff\" stroke-width=\"2.5\" stroke-linecap=\"round\"/><circle cx=\"18\" cy=\"14\" r=\"3\" fill=\"#fde047\"/><path d=\"M12 11a8 8 0 0 1 12 0M9 8a13 13 0 0 1 18 0\" stroke=\"#ffffff\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\"/>"}, "Prometeus AI": {"bg": "#09090b", "fg": "#a855f7", "ticker": "PRAI", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#09090b\" stroke=\"#a855f7\" stroke-width=\"1.5\"/><circle cx=\"18\" cy=\"18\" r=\"8\" fill=\"#581c87\"/><path d=\"M18 10v16M10 18h16M13 13l10 10M13 23l10-10\" stroke=\"#c084fc\" stroke-width=\"1.5\"/><circle cx=\"18\" cy=\"18\" r=\"3\" fill=\"#ffffff\"/>"}, "Cortex Neural Corp": {"bg": "#020617", "fg": "#00f0ff", "ticker": "CRTX", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#020617\" stroke=\"#00f0ff\" stroke-width=\"1.5\"/><rect x=\"11\" y=\"11\" width=\"14\" height=\"14\" rx=\"3\" fill=\"#0f172a\" stroke=\"#00f0ff\" stroke-width=\"1.5\"/><circle cx=\"18\" cy=\"18\" r=\"3\" fill=\"#ff0055\"/><path d=\"M18 6v5M18 25v5M6 18h5M25 18h5\" stroke=\"#00f0ff\" stroke-width=\"1.5\"/>"}, "Orbital Helium Mining": {"bg": "#030712", "fg": "#38bdf8", "ticker": "ORBT", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#030712\" stroke=\"#38bdf8\" stroke-width=\"1.5\"/><circle cx=\"18\" cy=\"18\" r=\"7\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"1.5\"/><ellipse cx=\"18\" cy=\"18\" rx=\"14\" ry=\"5\" fill=\"none\" stroke=\"#f59e0b\" stroke-width=\"1.5\" transform=\"rotate(-30 18 18)\"/><circle cx=\"28\" cy=\"12\" r=\"2\" fill=\"#ffd700\"/>"}, "Fondo Soberano Atl\u00e1ntico": {"bg": "#081b33", "fg": "#ffd700", "ticker": "FSAT", "svg": "<rect width=\"36\" height=\"36\" rx=\"10\" fill=\"#081b33\" stroke=\"#ffd700\" stroke-width=\"1.5\"/><path d=\"M18 7v20M12 11l6-4 6 4M12 18h12\" stroke=\"#ffd700\" stroke-width=\"2\" stroke-linecap=\"round\" fill=\"none\"/><circle cx=\"18\" cy=\"12\" r=\"2\" fill=\"#38bdf8\"/>"}};
 
     function companyLogo(co, sm = false, isContract = false){
+      const claveMemo = `logo|${co ? co.n : 'none'}|${sm?1:0}|${isContract?1:0}`;
+      if(_cacheSVG[claveMemo] !== undefined) return _cacheSVG[claveMemo];
+      const salida = companyLogoBuild(co, sm, isContract);
+      _cacheSVG[claveMemo] = salida;
+      return salida;
+    }
+
+    function companyLogoBuild(co, sm = false, isContract = false){
       const badgeClass = `company-logo ${sm?'sm':''} ${isContract?'contract-badge':''}`;
       if(!co) {
         return `<div class="${badgeClass}" style="background:#1e293b; color:var(--text-dim); font-size:${sm?'0.75rem':'1rem'}; font-weight:800;">?</div>`;
@@ -2163,6 +2297,22 @@
 
     /* ================= PERSISTENCIA DE PARTIDA (AUTO-SAVE) ================= */
     const SAVE_KEY = 'market_capo_run_v1';
+
+    /* saveRun corria en las 5 salidas de renderApp, o sea en cada click,
+       y hace un JSON.stringify del estado completo (43 filas de timeline
+       a los 65 años) contra localStorage, que es sincrono y bloquea el
+       hilo principal. En una compu no se nota; en el Android donde la
+       gente lo abre cuando se lo pasan por WhatsApp, si.
+       Ahora se agenda para cuando el navegador este libre y se colapsan
+       varias llamadas seguidas en una sola escritura. */
+    let saveTimer = null;
+    const agendarGuardado = () => {
+      if(saveTimer) return;
+      const correr = () => { saveTimer = null; saveRun(); };
+      saveTimer = (typeof requestIdleCallback === "function")
+        ? requestIdleCallback(correr, { timeout: 1200 })
+        : setTimeout(correr, 250);
+    };
 
     function saveRun(){
       if(!S || S.phase === 'end') {
@@ -2288,6 +2438,14 @@
 
     /* ================= AVATARES HD 256x256 PIXEL ART ================= */
     const ARG_FIXED_AVATARS = {
+      H_sindical: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect x="0" y="0" width="256" height="256" fill="#07090e"/> <rect x="16" y="16" width="224" height="224" fill="#101820"/> <rect x="60" y="28" width="136" height="24" fill="#1e3a8a"/> <rect x="68" y="20" width="120" height="12" fill="#1d4ed8"/> <rect x="56" y="48" width="144" height="10" fill="#1e3a8a"/> <rect x="60" y="52" width="136" height="6" fill="#172554"/> <rect x="52" y="60" width="20" height="48" fill="#1c1917"/> <rect x="184" y="60" width="20" height="48" fill="#1c1917"/> <rect x="56" y="96" width="16" height="28" fill="#e0a884"/> <rect x="184" y="96" width="16" height="28" fill="#e0a884"/> <rect x="72" y="64" width="112" height="96" fill="#e0a884"/> <rect x="80" y="72" width="96" height="80" fill="#f0bc98"/> <rect x="88" y="80" width="80" height="64" fill="#fbd0ae"/> <rect x="100" y="126" width="56" height="12" fill="#1c1917"/> <rect x="96" y="132" width="64" height="8" fill="#292524"/> <rect x="84" y="88" width="36" height="8" fill="#24160e"/> <rect x="136" y="88" width="36" height="8" fill="#24160e"/> <rect x="88" y="104" width="28" height="14" fill="#ffffff"/> <rect x="96" y="106" width="12" height="10" fill="#18181b"/> <rect x="100" y="106" width="4" height="4" fill="#ffffff"/> <rect x="140" y="104" width="28" height="14" fill="#ffffff"/> <rect x="148" y="106" width="12" height="10" fill="#18181b"/> <rect x="152" y="106" width="4" height="4" fill="#ffffff"/> <rect x="76" y="132" width="104" height="36" fill="#3a2518" opacity="0.28"/> <rect x="112" y="148" width="32" height="6" fill="#8a4b32"/> <rect x="28" y="184" width="200" height="72" fill="#1e3a8a"/> <rect x="52" y="184" width="152" height="72" fill="#1d4ed8"/> <rect x="28" y="196" width="200" height="12" fill="#fbbf24"/> <rect x="112" y="184" width="32" height="72" fill="#f8fafc"/> <rect x="116" y="200" width="24" height="10" fill="#dc2626"/> <rect x="120" y="216" width="16" height="8" fill="#fbbf24"/> </svg>`,
+      M_sindical: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect x="0" y="0" width="256" height="256" fill="#07090e"/> <rect x="16" y="16" width="224" height="224" fill="#101820"/> <rect x="64" y="24" width="128" height="40" fill="#1c1917"/> <rect x="48" y="44" width="24" height="64" fill="#1c1917"/> <rect x="184" y="44" width="24" height="64" fill="#1c1917"/> <rect x="108" y="12" width="40" height="16" fill="#292524"/> <rect x="116" y="4" width="24" height="10" fill="#1c1917"/> <rect x="52" y="60" width="20" height="48" fill="#1c1917"/> <rect x="184" y="60" width="20" height="48" fill="#1c1917"/> <rect x="56" y="96" width="16" height="28" fill="#d99b7c"/> <rect x="184" y="96" width="16" height="28" fill="#d99b7c"/> <rect x="72" y="64" width="112" height="96" fill="#d99b7c"/> <rect x="80" y="72" width="96" height="80" fill="#eeb492"/> <rect x="88" y="80" width="80" height="64" fill="#f9cbaa"/> <rect x="84" y="88" width="36" height="8" fill="#24160e"/> <rect x="136" y="88" width="36" height="8" fill="#24160e"/> <rect x="88" y="104" width="28" height="14" fill="#ffffff"/> <rect x="96" y="106" width="12" height="10" fill="#3f2718"/> <rect x="100" y="106" width="4" height="4" fill="#ffffff"/> <rect x="140" y="104" width="28" height="14" fill="#ffffff"/> <rect x="148" y="106" width="12" height="10" fill="#3f2718"/> <rect x="152" y="106" width="4" height="4" fill="#ffffff"/> <rect x="76" y="132" width="104" height="36" fill="#3a2518" opacity="0.28"/> <rect x="112" y="148" width="32" height="6" fill="#8a4b32"/> <rect x="28" y="184" width="200" height="72" fill="#18181b"/> <rect x="60" y="184" width="136" height="72" fill="#f97316"/> <rect x="60" y="200" width="136" height="10" fill="#fef08a"/> <rect x="60" y="224" width="136" height="10" fill="#fef08a"/> <rect x="112" y="184" width="32" height="40" fill="#e2e8f0"/> <rect x="116" y="236" width="24" height="20" fill="#fbbf24"/> </svg>`,
+      H_estado: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect x="0" y="0" width="256" height="256" fill="#07090e"/> <rect x="16" y="16" width="224" height="224" fill="#0d1220"/> <rect x="64" y="32" width="128" height="28" fill="#0f0d0c"/> <rect x="72" y="24" width="112" height="12" fill="#1c1917"/> <rect x="64" y="44" width="128" height="8" fill="#292524"/> <rect x="120" y="24" width="16" height="20" fill="#3f3f46"/> <rect x="52" y="60" width="20" height="48" fill="#0f0d0c"/> <rect x="184" y="60" width="20" height="48" fill="#0f0d0c"/> <rect x="56" y="96" width="16" height="28" fill="#e6b494"/> <rect x="184" y="96" width="16" height="28" fill="#e6b494"/> <rect x="72" y="64" width="112" height="96" fill="#e6b494"/> <rect x="80" y="72" width="96" height="80" fill="#f4c9ad"/> <rect x="88" y="80" width="80" height="64" fill="#fbdcc4"/> <rect x="84" y="88" width="36" height="8" fill="#24160e"/> <rect x="136" y="88" width="36" height="8" fill="#24160e"/> <rect x="88" y="104" width="28" height="14" fill="#ffffff"/> <rect x="96" y="106" width="12" height="10" fill="#1e293b"/> <rect x="100" y="106" width="4" height="4" fill="#ffffff"/> <rect x="140" y="104" width="28" height="14" fill="#ffffff"/> <rect x="148" y="106" width="12" height="10" fill="#1e293b"/> <rect x="152" y="106" width="4" height="4" fill="#ffffff"/> <rect x="76" y="132" width="104" height="36" fill="#3a2518" opacity="0.28"/> <rect x="112" y="148" width="32" height="6" fill="#8a4b32"/> <rect x="28" y="184" width="200" height="72" fill="#0f172a"/> <rect x="48" y="184" width="160" height="72" fill="#1e293b"/> <polygon points="104,184 128,220 92,232" fill="#f8fafc"/> <polygon points="152,184 128,220 164,232" fill="#f8fafc"/> <rect x="120" y="196" width="16" height="60" fill="#38bdf8"/> <rect x="120" y="196" width="16" height="10" fill="#0ea5e9"/> <rect x="60" y="200" width="20" height="20" fill="#ffffff"/> <rect x="64" y="204" width="12" height="4" fill="#38bdf8"/> <rect x="64" y="210" width="12" height="4" fill="#fbbf24"/> <rect x="64" y="214" width="12" height="4" fill="#38bdf8"/> </svg>`,
+      M_estado: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect x="0" y="0" width="256" height="256" fill="#07090e"/> <rect x="16" y="16" width="224" height="224" fill="#0d1220"/> <rect x="60" y="24" width="136" height="44" fill="#1a1512"/> <rect x="44" y="48" width="28" height="72" fill="#1a1512"/> <rect x="184" y="48" width="28" height="72" fill="#1a1512"/> <rect x="72" y="16" width="112" height="12" fill="#2a211b"/> <rect x="52" y="60" width="20" height="48" fill="#1a1512"/> <rect x="184" y="60" width="20" height="48" fill="#1a1512"/> <rect x="56" y="96" width="16" height="28" fill="#e0ab8b"/> <rect x="184" y="96" width="16" height="28" fill="#e0ab8b"/> <rect x="72" y="64" width="112" height="96" fill="#e0ab8b"/> <rect x="80" y="72" width="96" height="80" fill="#f0c2a4"/> <rect x="88" y="80" width="80" height="64" fill="#f9d6bd"/> <rect x="84" y="88" width="36" height="8" fill="#24160e"/> <rect x="136" y="88" width="36" height="8" fill="#24160e"/> <rect x="88" y="104" width="28" height="14" fill="#ffffff"/> <rect x="96" y="106" width="12" height="10" fill="#1e293b"/> <rect x="100" y="106" width="4" height="4" fill="#ffffff"/> <rect x="140" y="104" width="28" height="14" fill="#ffffff"/> <rect x="148" y="106" width="12" height="10" fill="#1e293b"/> <rect x="152" y="106" width="4" height="4" fill="#ffffff"/> <rect x="76" y="132" width="104" height="36" fill="#3a2518" opacity="0.28"/> <rect x="112" y="148" width="32" height="6" fill="#8a4b32"/> <rect x="28" y="184" width="200" height="72" fill="#0f172a"/> <rect x="52" y="184" width="152" height="72" fill="#1e293b"/> <rect x="112" y="184" width="32" height="72" fill="#f8fafc"/> <rect x="96" y="196" width="64" height="10" fill="#a855f7"/> <rect x="60" y="200" width="20" height="20" fill="#ffffff"/> <rect x="64" y="204" width="12" height="4" fill="#38bdf8"/> <rect x="64" y="210" width="12" height="4" fill="#fbbf24"/> <rect x="64" y="214" width="12" height="4" fill="#38bdf8"/> </svg>`,
+      H_miami: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect x="0" y="0" width="256" height="256" fill="#07090e"/> <rect x="16" y="16" width="224" height="224" fill="#132029"/> <rect x="64" y="28" width="128" height="28" fill="#94a3b8"/> <rect x="72" y="20" width="112" height="12" fill="#cbd5e1"/> <rect x="64" y="44" width="128" height="8" fill="#64748b"/> <rect x="52" y="60" width="20" height="48" fill="#94a3b8"/> <rect x="184" y="60" width="20" height="48" fill="#94a3b8"/> <rect x="56" y="96" width="16" height="28" fill="#c98a5e"/> <rect x="184" y="96" width="16" height="28" fill="#c98a5e"/> <rect x="72" y="64" width="112" height="96" fill="#c98a5e"/> <rect x="80" y="72" width="96" height="80" fill="#dda276"/> <rect x="88" y="80" width="80" height="64" fill="#eeb98f"/> <rect x="80" y="96" width="96" height="26" fill="#0f172a"/> <rect x="84" y="100" width="36" height="18" fill="#1e293b"/> <rect x="136" y="100" width="36" height="18" fill="#1e293b"/> <rect x="120" y="102" width="16" height="6" fill="#0f172a"/> <rect x="88" y="102" width="8" height="6" fill="#38bdf8" opacity="0.5"/> <rect x="140" y="102" width="8" height="6" fill="#38bdf8" opacity="0.5"/> <rect x="84" y="88" width="36" height="8" fill="#64748b"/> <rect x="136" y="88" width="36" height="8" fill="#64748b"/> <rect x="88" y="104" width="28" height="14" fill="#ffffff"/> <rect x="96" y="106" width="12" height="10" fill="#0f172a"/> <rect x="100" y="106" width="4" height="4" fill="#ffffff"/> <rect x="140" y="104" width="28" height="14" fill="#ffffff"/> <rect x="148" y="106" width="12" height="10" fill="#0f172a"/> <rect x="152" y="106" width="4" height="4" fill="#ffffff"/> <rect x="76" y="132" width="104" height="36" fill="#3a2518" opacity="0.28"/> <rect x="112" y="148" width="32" height="6" fill="#8a4b32"/> <rect x="28" y="184" width="200" height="72" fill="#0e7490"/> <rect x="52" y="184" width="152" height="72" fill="#06b6d4"/> <rect x="70" y="196" width="18" height="18" fill="#fb7185"/> <rect x="150" y="206" width="18" height="18" fill="#fb7185"/> <rect x="96" y="232" width="18" height="18" fill="#fb7185"/> <rect x="178" y="192" width="16" height="16" fill="#a3e635"/> <rect x="60" y="236" width="16" height="16" fill="#a3e635"/> <polygon points="112,184 128,232 144,184" fill="#0f172a"/> <rect x="120" y="184" width="16" height="20" fill="#c98a5e"/> <rect x="112" y="196" width="32" height="8" fill="#fbbf24"/> </svg>`,
+      M_miami: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect x="0" y="0" width="256" height="256" fill="#07090e"/> <rect x="16" y="16" width="224" height="224" fill="#132029"/> <rect x="60" y="20" width="136" height="48" fill="#fbbf24"/> <rect x="44" y="44" width="28" height="80" fill="#fbbf24"/> <rect x="184" y="44" width="28" height="80" fill="#fbbf24"/> <rect x="72" y="12" width="112" height="14" fill="#fde047"/> <rect x="56" y="56" width="144" height="8" fill="#f59e0b"/> <rect x="52" y="60" width="20" height="48" fill="#fbbf24"/> <rect x="184" y="60" width="20" height="48" fill="#fbbf24"/> <rect x="56" y="96" width="16" height="28" fill="#c78a62"/> <rect x="184" y="96" width="16" height="28" fill="#c78a62"/> <rect x="72" y="64" width="112" height="96" fill="#c78a62"/> <rect x="80" y="72" width="96" height="80" fill="#dba57c"/> <rect x="88" y="80" width="80" height="64" fill="#edbb94"/> <rect x="80" y="96" width="96" height="26" fill="#111827"/> <rect x="84" y="100" width="36" height="18" fill="#374151"/> <rect x="136" y="100" width="36" height="18" fill="#374151"/> <rect x="120" y="102" width="16" height="6" fill="#111827"/> <rect x="84" y="88" width="36" height="8" fill="#a16207"/> <rect x="136" y="88" width="36" height="8" fill="#a16207"/> <rect x="88" y="104" width="28" height="14" fill="#ffffff"/> <rect x="96" y="106" width="12" height="10" fill="#0f172a"/> <rect x="100" y="106" width="4" height="4" fill="#ffffff"/> <rect x="140" y="104" width="28" height="14" fill="#ffffff"/> <rect x="148" y="106" width="12" height="10" fill="#0f172a"/> <rect x="152" y="106" width="4" height="4" fill="#ffffff"/> <rect x="76" y="132" width="104" height="36" fill="#3a2518" opacity="0.28"/> <rect x="112" y="148" width="32" height="6" fill="#8a4b32"/> <rect x="28" y="184" width="200" height="72" fill="#be185d"/> <rect x="52" y="184" width="152" height="72" fill="#ec4899"/> <rect x="70" y="198" width="18" height="18" fill="#fde047"/> <rect x="152" y="210" width="18" height="18" fill="#fde047"/> <rect x="100" y="234" width="18" height="18" fill="#fde047"/> <rect x="112" y="184" width="32" height="26" fill="#c78a62"/> <rect x="116" y="206" width="24" height="8" fill="#ffffff"/> <rect x="122" y="212" width="12" height="26" fill="#fbbf24"/> </svg>`,
+      H_quebrado: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect x="0" y="0" width="256" height="256" fill="#07090e"/> <rect x="16" y="16" width="224" height="224" fill="#111015"/> <rect x="60" y="26" width="136" height="30" fill="#3f3f46"/> <rect x="52" y="18" width="40" height="20" fill="#52525b"/> <rect x="168" y="20" width="36" height="18" fill="#52525b"/> <rect x="96" y="14" width="52" height="14" fill="#3f3f46"/> <rect x="52" y="60" width="20" height="48" fill="#3f3f46"/> <rect x="184" y="60" width="20" height="48" fill="#3f3f46"/> <rect x="56" y="96" width="16" height="28" fill="#d9b193"/> <rect x="184" y="96" width="16" height="28" fill="#d9b193"/> <rect x="72" y="64" width="112" height="96" fill="#d9b193"/> <rect x="80" y="72" width="96" height="80" fill="#e8c3a7"/> <rect x="88" y="80" width="80" height="64" fill="#f2d4bd"/> <rect x="88" y="120" width="28" height="8" fill="#a16207" opacity="0.45"/> <rect x="140" y="120" width="28" height="8" fill="#a16207" opacity="0.45"/> <rect x="88" y="138" width="80" height="22" fill="#3f3f46" opacity="0.55"/> <rect x="96" y="150" width="64" height="14" fill="#3f3f46" opacity="0.75"/> <rect x="84" y="88" width="36" height="8" fill="#3f3f46"/> <rect x="136" y="88" width="36" height="8" fill="#3f3f46"/> <rect x="88" y="104" width="28" height="14" fill="#ffffff"/> <rect x="96" y="106" width="12" height="10" fill="#52525b"/> <rect x="100" y="106" width="4" height="4" fill="#ffffff"/> <rect x="140" y="104" width="28" height="14" fill="#ffffff"/> <rect x="148" y="106" width="12" height="10" fill="#52525b"/> <rect x="152" y="106" width="4" height="4" fill="#ffffff"/> <rect x="76" y="132" width="104" height="36" fill="#3a2518" opacity="0.28"/> <rect x="112" y="148" width="32" height="6" fill="#7f5a45"/> <rect x="28" y="184" width="200" height="72" fill="#27272a"/> <rect x="52" y="184" width="152" height="72" fill="#3f3f46"/> <polygon points="104,184 128,214 92,224" fill="#27272a"/> <polygon points="152,184 128,214 164,224" fill="#27272a"/> <rect x="106" y="214" width="6" height="42" fill="#a1a1aa"/> <rect x="144" y="214" width="6" height="42" fill="#a1a1aa"/> <rect x="96" y="236" width="64" height="14" fill="#18181b"/> <rect x="104" y="240" width="48" height="6" fill="#10e575" opacity="0.55"/> </svg>`,
+      M_quebrado: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect x="0" y="0" width="256" height="256" fill="#07090e"/> <rect x="16" y="16" width="224" height="224" fill="#111015"/> <rect x="58" y="22" width="140" height="42" fill="#44403c"/> <rect x="44" y="46" width="26" height="60" fill="#44403c"/> <rect x="186" y="46" width="26" height="60" fill="#44403c"/> <rect x="100" y="10" width="56" height="16" fill="#57534e"/> <rect x="80" y="52" width="96" height="10" fill="#57534e" opacity="0.6"/> <rect x="52" y="60" width="20" height="48" fill="#44403c"/> <rect x="184" y="60" width="20" height="48" fill="#44403c"/> <rect x="56" y="96" width="16" height="28" fill="#d7ab8d"/> <rect x="184" y="96" width="16" height="28" fill="#d7ab8d"/> <rect x="72" y="64" width="112" height="96" fill="#d7ab8d"/> <rect x="80" y="72" width="96" height="80" fill="#e7c0a2"/> <rect x="88" y="80" width="80" height="64" fill="#f1d1b8"/> <rect x="88" y="120" width="28" height="8" fill="#a16207" opacity="0.45"/> <rect x="140" y="120" width="28" height="8" fill="#a16207" opacity="0.45"/> <rect x="84" y="88" width="36" height="8" fill="#44403c"/> <rect x="136" y="88" width="36" height="8" fill="#44403c"/> <rect x="88" y="104" width="28" height="14" fill="#ffffff"/> <rect x="96" y="106" width="12" height="10" fill="#57534e"/> <rect x="100" y="106" width="4" height="4" fill="#ffffff"/> <rect x="140" y="104" width="28" height="14" fill="#ffffff"/> <rect x="148" y="106" width="12" height="10" fill="#57534e"/> <rect x="152" y="106" width="4" height="4" fill="#ffffff"/> <rect x="76" y="132" width="104" height="36" fill="#3a2518" opacity="0.28"/> <rect x="112" y="148" width="32" height="6" fill="#8a5c47"/> <rect x="28" y="184" width="200" height="72" fill="#292524"/> <rect x="52" y="184" width="152" height="72" fill="#44403c"/> <polygon points="104,184 128,214 92,224" fill="#292524"/> <polygon points="152,184 128,214 164,224" fill="#292524"/> <rect x="106" y="214" width="6" height="42" fill="#a8a29e"/> <rect x="144" y="214" width="6" height="42" fill="#a8a29e"/> <rect x="96" y="236" width="64" height="14" fill="#1c1917"/> <rect x="104" y="240" width="48" height="6" fill="#f43f5e" opacity="0.6"/> </svg>`,
       H_mba: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect width="256" height="256" fill="#070b14"/> <rect x="16" y="16" width="224" height="224" fill="#0c1220"/> <rect x="24" y="24" width="208" height="208" fill="#10182b"/> <rect x="76" y="28" width="104" height="20" fill="#1e130c"/> <rect x="68" y="44" width="120" height="28" fill="#2b1a10"/> <rect x="80" y="32" width="96" height="12" fill="#3f2718"/> <rect x="92" y="36" width="72" height="6" fill="#5a3822"/> <rect x="60" y="68" width="16" height="40" fill="#1e130c"/> <rect x="180" y="68" width="16" height="40" fill="#1e130c"/> <rect x="56" y="96" width="16" height="28" fill="#dca084"/> <rect x="60" y="102" width="8" height="16" fill="#b8775c"/> <rect x="184" y="96" width="16" height="28" fill="#dca084"/> <rect x="188" y="102" width="8" height="16" fill="#b8775c"/> <rect x="72" y="64" width="112" height="96" fill="#f5caa6"/> <rect x="80" y="72" width="96" height="80" fill="#fbdcc4"/> <rect x="88" y="80" width="80" height="64" fill="#feebd9"/> <rect x="76" y="132" width="104" height="36" fill="#3a2518" opacity="0.35"/> <rect x="88" y="144" width="80" height="28" fill="#3a2518" opacity="0.50"/> <rect x="104" y="156" width="48" height="12" fill="#2b1a10" opacity="0.60"/> <rect x="84" y="88" width="36" height="8" fill="#24160e"/> <rect x="136" y="88" width="36" height="8" fill="#24160e"/> <rect x="76" y="96" width="48" height="36" fill="#090d16"/> <rect x="132" y="96" width="48" height="36" fill="#090d16"/> <rect x="120" y="104" width="16" height="8" fill="#090d16"/> <rect x="82" y="102" width="36" height="24" fill="#0f172a"/> <rect x="138" y="102" width="36" height="24" fill="#0f172a"/> <rect x="90" y="106" width="20" height="16" fill="#ffffff"/> <rect x="98" y="108" width="10" height="12" fill="#0284c7"/> <rect x="102" y="110" width="4" height="6" fill="#042f1a"/> <rect x="98" y="108" width="4" height="4" fill="#ffffff"/> <rect x="146" y="106" width="20" height="16" fill="#ffffff"/> <rect x="154" y="108" width="10" height="12" fill="#0284c7"/> <rect x="158" y="110" width="4" height="6" fill="#042f1a"/> <rect x="154" y="108" width="4" height="4" fill="#ffffff"/> <polygon points="84,122 108,102 114,102 90,122" fill="#38bdf8" opacity="0.75"/> <polygon points="140,122 164,102 170,102 146,122" fill="#38bdf8" opacity="0.75"/> <rect x="122" y="116" width="12" height="24" fill="#e8ad8d"/> <rect x="116" y="136" width="24" height="6" fill="#d08e6c"/> <rect x="112" y="152" width="32" height="4" fill="#9f5438"/> <rect x="116" y="154" width="24" height="4" fill="#ffffff"/> <rect x="104" y="168" width="48" height="24" fill="#f5caa6"/> <polygon points="92,184 128,216 128,184" fill="#bae6fd"/> <polygon points="164,184 128,216 128,184" fill="#93c5fd"/> <rect x="36" y="192" width="184" height="64" fill="#0369a1"/> <rect x="64" y="192" width="128" height="64" fill="#0284c7"/> <rect x="40" y="208" width="176" height="4" fill="#075985"/> <rect x="40" y="228" width="176" height="4" fill="#075985"/> <rect x="40" y="248" width="176" height="4" fill="#075985"/> <rect x="126" y="192" width="4" height="64" fill="#075985"/> <rect x="196" y="172" width="36" height="84" fill="#14532d"/> <rect x="202" y="180" width="24" height="68" fill="#166534"/> <rect x="200" y="160" width="28" height="14" fill="#94a3b8"/> <rect x="204" y="156" width="20" height="6" fill="#cbd5e1"/> <rect x="208" y="200" width="12" height="8" fill="#22c55e" opacity="0.6"/> <rect x="32" y="228" width="24" height="28" fill="#f97316"/> <rect x="36" y="232" width="16" height="20" fill="#0f172a"/> <rect x="40" y="236" width="8" height="12" fill="#10e575"/></svg>`,
       M_mba: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect width="256" height="256" fill="#070b14"/> <rect x="16" y="16" width="224" height="224" fill="#0c1220"/> <rect x="24" y="24" width="208" height="208" fill="#151728"/> <rect x="68" y="32" width="120" height="28" fill="#2a1208"/> <rect x="52" y="56" width="152" height="48" fill="#3d1e10"/> <rect x="44" y="96" width="40" height="88" fill="#2a1208"/> <rect x="172" y="96" width="40" height="88" fill="#2a1208"/> <rect x="80" y="40" width="96" height="16" fill="#542b17"/> <rect x="76" y="68" width="104" height="96" fill="#fde2d2"/> <rect x="84" y="76" width="88" height="80" fill="#feeddc"/> <polygon points="68,96 116,92 112,128 76,124" fill="#581c87"/> <polygon points="188,96 140,92 144,128 180,124" fill="#581c87"/> <rect x="114" y="100" width="28" height="6" fill="#581c87"/> <polygon points="74,100 110,96 108,122 80,120" fill="#2e1065"/> <polygon points="182,100 146,96 148,122 176,120" fill="#2e1065"/> <rect x="80" y="104" width="24" height="14" fill="#ffffff"/> <rect x="88" y="106" width="10" height="10" fill="#0284c7"/> <rect x="88" y="106" width="4" height="4" fill="#ffffff"/> <rect x="152" y="104" width="24" height="14" fill="#ffffff"/> <rect x="158" y="106" width="10" height="10" fill="#0284c7"/> <rect x="158" y="106" width="4" height="4" fill="#ffffff"/> <polygon points="76,98 108,94 108,98" fill="#000000"/> <polygon points="180,98 148,94 148,98" fill="#000000"/> <polygon points="78,118 104,98 110,98 84,118" fill="#c084fc" opacity="0.6"/> <polygon points="150,118 176,98 182,98 156,118" fill="#c084fc" opacity="0.6"/> <rect x="110" y="148" width="36" height="8" fill="#be123c"/> <rect x="114" y="150" width="28" height="4" fill="#e11d48"/> <rect x="122" y="150" width="12" height="2" fill="#fda4af"/> <rect x="52" y="128" width="6" height="6" fill="#38bdf8"/> <rect x="54" y="130" width="2" height="2" fill="#ffffff"/> <rect x="198" y="128" width="6" height="6" fill="#38bdf8"/> <rect x="200" y="130" width="2" height="2" fill="#ffffff"/> <rect x="108" y="164" width="40" height="28" fill="#fde2d2"/> <polygon points="100,188 128,224 156,188" fill="#ffffff"/> <polygon points="112,188 128,212 144,188" fill="#f1f5f9"/> <rect x="32" y="184" width="192" height="72" fill="#1e293b"/> <rect x="56" y="184" width="144" height="72" fill="#334155"/> <polygon points="68,184 100,256 56,256" fill="#0f172a"/> <polygon points="188,184 156,256 200,256" fill="#0f172a"/> <rect x="124" y="212" width="8" height="44" fill="#38bdf8"/> <rect x="118" y="232" width="20" height="24" fill="#ffffff"/> <rect x="122" y="236" width="12" height="8" fill="#0284c7"/></svg>`,
       H_calle: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect width="256" height="256" fill="#07090e"/> <rect x="16" y="16" width="224" height="224" fill="#140f0d"/> <rect x="68" y="32" width="120" height="28" fill="#18181b"/> <rect x="76" y="24" width="104" height="16" fill="#27272a"/> <rect x="92" y="20" width="72" height="8" fill="#3f3f46"/> <rect x="52" y="60" width="20" height="48" fill="#18181b"/> <rect x="184" y="60" width="20" height="48" fill="#18181b"/> <rect x="72" y="64" width="112" height="96" fill="#fcd3bd"/> <rect x="80" y="72" width="96" height="80" fill="#fde2d2"/> <rect x="84" y="88" width="36" height="8" fill="#18181b"/> <rect x="136" y="88" width="14" height="8" fill="#18181b"/> <rect x="150" y="84" width="6" height="16" fill="#fcd3bd"/> <rect x="156" y="88" width="16" height="8" fill="#18181b"/> <rect x="88" y="104" width="28" height="14" fill="#ffffff"/> <rect x="96" y="106" width="12" height="10" fill="#18181b"/> <rect x="100" y="106" width="4" height="4" fill="#ffffff"/> <rect x="140" y="104" width="28" height="14" fill="#ffffff"/> <rect x="148" y="106" width="12" height="10" fill="#18181b"/> <rect x="152" y="106" width="4" height="4" fill="#ffffff"/> <rect x="76" y="132" width="104" height="36" fill="#78350f" opacity="0.30"/> <rect x="100" y="148" width="56" height="20" fill="#18181b"/> <rect x="112" y="152" width="32" height="8" fill="#fcd3bd"/> <rect x="112" y="148" width="32" height="4" fill="#9a3412"/> <rect x="128" y="148" width="6" height="4" fill="#fbbf24"/> <rect x="96" y="168" width="64" height="12" fill="#d97706"/> <rect x="104" y="172" width="48" height="8" fill="#fbbf24"/> <rect x="120" y="180" width="16" height="12" fill="#ffd700"/> <rect x="124" y="184" width="8" height="4" fill="#ffffff"/> <rect x="28" y="184" width="200" height="72" fill="#09090b"/> <rect x="52" y="184" width="152" height="72" fill="#18181b"/> <polygon points="52,184 116,256 36,256" fill="#27272a"/> <polygon points="204,184 140,256 220,256" fill="#27272a"/> <rect x="44" y="196" width="6" height="6" fill="#e2e8f0"/> <rect x="56" y="196" width="6" height="6" fill="#e2e8f0"/> <rect x="194" y="196" width="6" height="6" fill="#e2e8f0"/> <rect x="206" y="196" width="6" height="6" fill="#e2e8f0"/> <polygon points="128,192 144,256 140,256 124,192" fill="#fbbf24"/></svg>`,
@@ -2299,6 +2457,12 @@
       H_transhumano: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect width="256" height="256" fill="#030408"/> <rect x="16" y="16" width="224" height="224" fill="#080c14"/> <rect x="68" y="24" width="120" height="36" fill="#334155"/> <rect x="56" y="48" width="144" height="32" fill="#475569"/> <rect x="80" y="28" width="96" height="12" fill="#00f0ff"/> <rect x="48" y="76" width="20" height="48" fill="#1e293b"/> <rect x="188" y="76" width="20" height="48" fill="#1e293b"/> <rect x="72" y="64" width="112" height="96" fill="#cbd5e1"/> <rect x="80" y="72" width="96" height="80" fill="#e2e8f0"/> <rect x="84" y="96" width="32" height="20" fill="#0f172a"/> <rect x="92" y="100" width="14" height="12" fill="#38bdf8"/> <rect x="96" y="102" width="4" height="4" fill="#ffffff"/> <rect x="136" y="92" width="44" height="28" fill="#00f0ff"/> <rect x="140" y="96" width="36" height="20" fill="#090d16"/> <circle cx="158" cy="106" r="6" fill="#ff0055"/> <circle cx="158" cy="106" r="2" fill="#ffffff"/> <rect x="156" y="94" width="4" height="24" fill="#00f0ff" opacity="0.7"/> <rect x="142" y="104" width="32" height="4" fill="#00f0ff" opacity="0.7"/> <rect x="84" y="136" width="24" height="4" fill="#00f0ff"/> <rect x="104" y="140" width="4" height="16" fill="#00f0ff"/> <rect x="148" y="136" width="24" height="4" fill="#00f0ff"/> <rect x="100" y="160" width="56" height="24" fill="#1e293b"/> <rect x="116" y="160" width="24" height="24" fill="#38bdf8"/> <rect x="28" y="180" width="200" height="76" fill="#09090b"/> <rect x="52" y="180" width="152" height="76" fill="#1e293b"/> <polygon points="96,180 128,240 160,180" fill="#020617"/> <rect x="124" y="184" width="8" height="72" fill="#00f0ff"/> <rect x="126" y="184" width="4" height="72" fill="#ffffff"/></svg>`,
       M_transhumano: `<svg viewBox="0 0 256 256" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"> <rect width="256" height="256" fill="#030408"/> <rect x="16" y="16" width="224" height="224" fill="#0c0818"/> <rect x="64" y="24" width="128" height="32" fill="#7e22ce"/> <rect x="48" y="48" width="160" height="44" fill="#a855f7"/> <rect x="32" y="88" width="40" height="120" fill="#c084fc"/> <rect x="184" y="88" width="40" height="120" fill="#c084fc"/> <rect x="36" y="120" width="8" height="60" fill="#00f0ff"/> <rect x="212" y="120" width="8" height="60" fill="#00f0ff"/> <rect x="76" y="68" width="104" height="96" fill="#e2e8f0"/> <rect x="84" y="76" width="88" height="80" fill="#f8fafc"/> <rect x="64" y="92" width="128" height="28" fill="#a855f7" opacity="0.4"/> <rect x="68" y="96" width="56" height="20" fill="#00f0ff"/> <rect x="74" y="100" width="44" height="12" fill="#042f1a"/> <circle cx="96" cy="106" r="4" fill="#38bdf8"/> <rect x="132" y="96" width="56" height="20" fill="#ffd700"/> <rect x="138" y="100" width="44" height="12" fill="#3d2100"/> <circle cx="160" cy="106" r="4" fill="#fbbf24"/> <rect x="110" y="146" width="36" height="8" fill="#7e22ce"/> <rect x="114" y="148" width="28" height="4" fill="#d8b4fe"/> <rect x="28" y="180" width="200" height="76" fill="#1e1b4b"/> <rect x="52" y="180" width="152" height="76" fill="#312e81"/> <polygon points="96,180 128,232 160,180" fill="#0f172a"/> <circle cx="128" cy="220" r="14" fill="#00f0ff"/> <circle cx="128" cy="220" r="8" fill="#ffffff"/></svg>`
     };
+    /* El bloque de avatares son ~22.000 caracteres y companyLogo genera
+       el mismo SVG decenas de veces por partida. Como renderApp reescribe
+       todo el innerHTML en cada accion, eso se re-parseaba entero cada vez.
+       Un diccionario por clave lo resuelve sin cambiar nada mas. */
+    const _cacheSVG = Object.create(null);
+
 function avatarSVG(customState = null){
       const st = customState || S;
       if(!st) return '';
@@ -2419,6 +2583,13 @@ function avatarSVG(customState = null){
     let legajoModalOpen = false;
     let legajoCurrentTab = 'stats';
 
+    function origenDesbloqueado(o){
+      if(!o || !o.lockedBy) return true;
+      const t = getUnlockedTrophies();
+      return !!t[o.lockedBy];
+    }
+    function origenesDisponibles(){ return ORIGINS.filter(origenDesbloqueado); }
+
     function getUnlockedTrophies(){
       try {
         const stored = localStorage.getItem("market_capo_meta_trophies");
@@ -2484,8 +2655,12 @@ function avatarSVG(customState = null){
       if(act.cooldownYears) S.cooldowns[act.id] = S.age + act.cooldownYears;
       S.usedWealthThisRound = true;
 
+      if(act.id === 'bribe_compliance') S.arreglosCompliance = (S.arreglosCompliance || 0) + 1;
+
       if(act.isGamble){
+        S.timbasJugadas = (S.timbasJugadas || 0) + 1;
         const isWin = Math.random() < 0.50;
+        if(isWin) S.timbasGanadas = (S.timbasGanadas || 0) + 1;
         const diff = isWin ? 90000 : -30000;
         S.cash += diff;
         if(isWin) unlockTrophy('timba');
@@ -2606,6 +2781,7 @@ function avatarSVG(customState = null){
       const netCash = Math.round(hustle.baseCash * decayRate);
 
       S.cash += netCash;
+      S.changasHechas = (S.changasHechas || 0) + 1;
       S.usedGigThisRound = true;
       playSfx('cash');
 
@@ -2629,6 +2805,31 @@ function avatarSVG(customState = null){
       if(ov >= 70) return 3;
       if(ov >= 50) return 2;
       return 1;
+    }
+
+    /* ================= REGISTRO DE DESPIDOS =================
+       Dos listas con dos trabajos distintos, y por eso no se pueden
+       compartir:
+
+       S.firedCompanies  = VETOS. Se poda a los 8 años para que la
+                           empresa te vuelva a contratar. Solo la usa
+                           makeOffers.
+       S.historialDespidos = MEMORIA. No se borra nunca. La leen el
+                           epitafio, el contador de la lapida y el
+                           trofeo "Inmune a la Purga".
+
+       Antes las dos cosas salian de la misma lista podada, asi que a
+       los 8 años el juego se olvidaba de que te habian rajado: la
+       lapida mostraba 0 despidos, la rama del epitafio que habla del
+       fuego de los despidos no se disparaba nunca, y el 42% de los
+       despedidos cobraba el trofeo de no haber sido despedido jamas. */
+    function registrarDespido(empresa, edad, motivo){
+      if(!S) return;
+      S.firedCompanies = S.firedCompanies || [];
+      S.historialDespidos = S.historialDespidos || [];
+      const nombre = empresa || 'la empresa';
+      S.firedCompanies.push({ name: nombre, age: edad });
+      S.historialDespidos.push({ name: nombre, age: edad, motivo: motivo || 'rendimiento' });
     }
 
     function makeOffers(tier, n, exclude){
@@ -2679,6 +2880,7 @@ function avatarSVG(customState = null){
         S.rank = { ...c.offeredRank };
         S.yearsInCurrentCompany = 1;
         S.gigConsecutiveYears = 0;
+        S.cambiosDeEmpresa = (S.cambiosDeEmpresa || 0) + 1;
         
         const tierBoost = Math.min((c.t - 1) * 3.5, 14);
         S.tierBonus = Math.max(S.tierBonus || 0, tierBoost);
@@ -2740,21 +2942,53 @@ function avatarSVG(customState = null){
         if(S.rolling.spins > 10 && S.rolling.cur === S.rolling.targetIdx){
           let metricText = "";
           
+          /* El tope de tierBonus es 14 y cuando llegas a Director ya
+             esta lleno, asi que casi todo el OVR positivo de los eventos
+             se descartaba en silencio: la ruleta decia "+14 OVR" y el
+             numero no se movia. La injusticia invisible es la unica que
+             no hace reir, porque el jugador no llega a enterarse.
+             El tope se queda (no toca el balance) pero ahora se declara,
+             que es donde estaba el chiste todo este tiempo. */
           if(rollItem.type === "ovr"){
-            if(rollItem.val > 0) S.tierBonus = clamp((S.tierBonus||0) + rollItem.val, 14, 0);
-            else S.ovrPenalties = (S.ovrPenalties || 0) + Math.abs(rollItem.val);
-            metricText = `${rollItem.val > 0 ? '+' : ''}${rollItem.val} OVR`;
+            if(rollItem.val > 0){
+              const antes = clamp(S.tierBonus || 0, 14, 0);
+              S.tierBonus = clamp(antes + rollItem.val, 14, 0);
+              const entregado = clamp(S.tierBonus, 14, 0) - antes;
+              const perdido = rollItem.val - entregado;
+              if(perdido > 0 && entregado > 0){
+                metricText = `+${entregado} OVR · se te caen ${perdido} por el tope de la banda salarial`;
+              } else if(perdido > 0){
+                metricText = `+${rollItem.val} OVR · topeado a +0. Gracias por participar.`;
+              } else {
+                metricText = `+${entregado} OVR`;
+              }
+            } else {
+              S.ovrPenalties = (S.ovrPenalties || 0) + Math.abs(rollItem.val);
+              metricText = `${rollItem.val} OVR`;
+            }
           } else if(rollItem.type === "cash"){
             S.cash += rollItem.val;
             metricText = `${rollItem.val > 0 ? '+' : ''}${money(rollItem.val)}`;
           } else if(rollItem.type === "promote"){
+            /* Antes esto sumaba 6 a un contador ya topeado y recalculaba
+               el rango con el mismo OVR, asi que el "ASCENSO DIRECTO"
+               podia dejarte exactamente donde estabas y avisarte que
+               habias ascendido. Ahora el ascenso empuja el rango de
+               verdad, y si ya estabas arriba de todo lo dice. */
+            const rangoPrevio = S.rank ? (S.rank.i !== undefined ? S.rank.i : rankOf(computeOvr()).i) : 0;
             S.tierBonus = clamp((S.tierBonus || 0) + 6, 14, 0);
-            S.rank = rankOf(computeOvr());
-            metricText = "🎖️ Ascendido a " + S.rank.n;
+            if(rangoPrevio >= RANKS.length - 1){
+              S.rank = rankOf(computeOvr());
+              metricText = `🎖️ Ascendido a ${S.rank.n}. Ya eras ${S.rank.n}. Felicitaciones igual.`;
+            } else {
+              const nuevoIdx = Math.max(rangoPrevio + 1, rankOf(computeOvr()).i);
+              S.rank = { ...RANKS[Math.min(nuevoIdx, RANKS.length - 1)], i: Math.min(nuevoIdx, RANKS.length - 1) };
+              metricText = "🎖️ Ascendido a " + S.rank.n;
+            }
             unlockTrophy('ascenso');
           } else if(rollItem.type === "fire"){
             S.ovrPenalties = (S.ovrPenalties || 0) + 6;
-            if(S.company) S.firedCompanies.push({ name: S.company.n, age: S.age });
+            if(S.company) registrarDespido(S.company.n, S.age, 'evento');
             S.company = null;
             S.area = null;
             metricText = "⚠️ Contrato Rescindido (-6 OVR)";
@@ -2798,6 +3032,8 @@ function avatarSVG(customState = null){
     /* ================= MOTOR DE AVANCE TEMPORAL ================= */
     function trackPeaks(){
       if(!S) return;
+      // El trofeo "Club del Millon" estaba declarado y no se otorgaba nunca.
+      if((S.cash || 0) >= 1000000) unlockTrophy('millonario');
       const curOvr = computeOvr();
       if(curOvr > (S.maxOvr || 0)) S.maxOvr = curOvr;
       if(!S.maxRank || (S.rank && S.rank.i > S.maxRank.i)) S.maxRank = S.rank;
@@ -2822,7 +3058,8 @@ function avatarSVG(customState = null){
         const survivesCrisis = Math.random() < Math.min(0.90, base + escudo);
 
         if(!survivesCrisis){
-          if(S.company) S.firedCompanies.push({ name: S.company.n, age: S.age });
+          S.crisis40Fallida = true;
+          if(S.company) registrarDespido(S.company.n, S.age, 'crisis40');
           const firedFrom = S.company ? S.company.n : 'la empresa';
           S.company = null;
           S.area = null;
@@ -2930,6 +3167,10 @@ function avatarSVG(customState = null){
         S.salary = 0;
       }
 
+      if(!S.salary) S.aniosSinCobrar = (S.aniosSinCobrar || 0) + stepYears;
+      if(S.company) S.maxTierAlcanzado = Math.max(S.maxTierAlcanzado || 0, S.company.t || 0);
+      S.maxAntiguedad = Math.max(S.maxAntiguedad || 0, S.yearsInCurrentCompany || 0);
+
       const costOfLiving = costOfLivingFor(S.rank, coTier) * stepYears;
       const netSavings = Math.round(S.salary * 0.26 * stepYears - costOfLiving * 0.28);
       S.cash += netSavings;
@@ -2948,7 +3189,7 @@ function avatarSVG(customState = null){
       if(S.cash < -800000) return endGame("Bancarrota Financiera");
 
       if(!promotionOccurred && S.badYears >= 3){
-        if(S.company) S.firedCompanies.push({ name: S.company.n, age: S.age });
+        if(S.company) registrarDespido(S.company.n, S.age, 'rendimiento');
         const firedFrom = S.company ? S.company.n : 'la empresa';
         S.company = null;
         S.area = null;
@@ -3041,24 +3282,69 @@ function avatarSVG(customState = null){
 
     function endGame(reason){
       S.phase = "end";
-      S.endReason = reason;
+      S.finalId = determinarFinal(reason);
+      const meta = FINALES[S.finalId] || FINALES.jubilacion;
+      S.endReason = meta.titulo;
+      S.endIcon = meta.ic;
       playSfx(S.cash >= 0 ? 'cash' : 'bad');
       renderApp();
     }
 
     /* ================= CONTROL DEL MODAL DE LEGAJO EJECUTIVO ================= */
+    /* Guarda quien tenia el foco antes de abrir, para devolverselo al
+       cerrar. Sin esto el teclado queda huérfano en el body. */
+    let focoPrevioLegajo = null;
+
+    function fondoInerte(activo){
+      const board = document.getElementById("board");
+      if(board){
+        try { board.inert = activo; } catch(e){}
+        board.setAttribute("aria-hidden", activo ? "true" : "false");
+      }
+    }
+
     function openLegajoModal(){
       if(!S) return;
+      focoPrevioLegajo = document.activeElement;
       legajoModalOpen = true;
       playSfx('click');
       renderLegajoModal();
+      fondoInerte(true);
+      const sheet = document.querySelector(".legajo-sheet");
+      if(sheet){
+        const primero = sheet.querySelector("button, [tabindex]:not([tabindex='-1'])");
+        if(primero) primero.focus();
+      }
     }
 
     function closeLegajoModal(){
       legajoModalOpen = false;
       playSfx('click');
       renderLegajoModal();
+      fondoInerte(false);
+      if(focoPrevioLegajo && typeof focoPrevioLegajo.focus === "function"){
+        try { focoPrevioLegajo.focus(); } catch(e){}
+      }
+      focoPrevioLegajo = null;
     }
+
+    /* Escape cierra, y Tab no se escapa del modal abierto. Vale para el
+       legajo y para el modal de decision critica. */
+    document.addEventListener("keydown", function(e){
+      if(e.key === "Escape" && legajoModalOpen){
+        e.preventDefault();
+        closeLegajoModal();
+        return;
+      }
+      if(e.key !== "Tab") return;
+      const modal = document.querySelector(".legajo-sheet") || document.querySelector(".event-modal");
+      if(!modal) return;
+      const focusables = modal.querySelectorAll('button:not([disabled]), a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      if(!focusables.length) return;
+      const primero = focusables[0], ultimo = focusables[focusables.length - 1];
+      if(e.shiftKey && document.activeElement === primero){ e.preventDefault(); ultimo.focus(); }
+      else if(!e.shiftKey && document.activeElement === ultimo){ e.preventDefault(); primero.focus(); }
+    });
 
     function switchLegajoTab(tab){
       legajoCurrentTab = tab;
@@ -3081,7 +3367,13 @@ function avatarSVG(customState = null){
       const stats = S.stats || { vision: 10, ejecucion: 10, carisma: 10, rosca: 10 };
       const comp = S.comp || { ven: 20, pro: 20, fin: 20, ope: 20, mkt: 20, leg: 20 };
 
-      const pctStat = val => Math.min(100, Math.round(((val || 0) / 32) * 100));
+      /* El divisor era 32 fijo y las stats llegan a 99, asi que a los
+         35 años las cuatro barras quedaban clavadas al tope y dejaban
+         de informar justo en el panel que existe para informar.
+         Ahora la escala es relativa al perfil del propio jugador: la
+         barra muestra en que sos fuerte, que es el dato util. */
+      const techoStat = Math.max(32, stats.vision||0, stats.ejecucion||0, stats.carisma||0, stats.rosca||0);
+      const pctStat = val => Math.max(6, Math.min(100, Math.round(((val || 0) / techoStat) * 100)));
 
       container.innerHTML = `
         <div class="legajo-backdrop" role="dialog" aria-modal="true" onclick="if(event.target===this)closeLegajoModal()">
@@ -3191,64 +3483,307 @@ function avatarSVG(customState = null){
       `;
     }
 
+    /* ================= FINAL DE CARRERA =================
+       Antes habia tres finales (dorada, con deudas, bancarrota) y el
+       epitafio se armaba con promedios: maxOvr, cash, origen. Medido
+       sobre 40.000 carreras eso daba 13 textos realmente distintos y
+       el 95,8% de los jugadores recibia el mismo parrafo de cierre.
+
+       Ahora el final se elige con lo que efectivamente paso en la
+       carrera, y el epitafio se arma con hechos primero y origen al
+       final, que es el orden inverso al que tenia. */
+    const FINALES = {
+      bancarrota:    { titulo: "BANCARROTA",              ic: "🏦" },
+      causa_penal:   { titulo: "CAUSA PENAL",             ic: "⚖️" },
+      corchazo:      { titulo: "EL CORCHAZO",             ic: "🥩" },
+      miami:         { titulo: "SE FUE A MIAMI",          ic: "✈️" },
+      changa:        { titulo: "TODA UNA VIDA DE CHANGA", ic: "🛵" },
+      casa_materna:  { titulo: "VOLVIÓ A LO DE SU VIEJA", ic: "🏠" },
+      mando_medio:   { titulo: "JUBILADO DE MANDO MEDIO",  ic: "🗂️" },
+      jubilacion:    { titulo: "JUBILACIÓN DORADA",       ic: "🏖️" },
+      deudas:        { titulo: "JUBILACIÓN CON DEUDAS",   ic: "📉" }
+    };
+
+    function determinarFinal(motivoBase){
+      const c = S.cash || 0;
+      const despidos = (S.historialDespidos || []).length;
+      const rosca = (S.stats && S.stats.rosca) || 0;
+      const rankI = S.maxRank ? S.maxRank.i : 0;
+
+      if(motivoBase === "Bancarrota Financiera") return "bancarrota";
+
+      // Los finales raros se sortean una sola vez, al cerrar la carrera.
+      if((S.arreglosCompliance || 0) >= 2 && Math.random() < 0.45) return "causa_penal";
+      if(rankI >= 7 && rosca >= 38 && Math.random() < 0.14) return "corchazo";
+      if(c >= 400000 && despidos >= 2) return "miami";
+      if(((S.changasHechas || 0) >= 12 && c < 120000) || (S.aniosSinCobrar || 0) >= 14) return "changa";
+      if(c < 25000 && S.age >= 55) return "casa_materna";
+      if(c < 0) return "deudas";
+      if(rankI <= 3) return "mando_medio";
+      return "jubilacion";
+    }
+
     /* ================= GENERADOR PROCEDURAL DE EPITAFIO CORPORATIVO ================= */
     function generateEpitaph(state){
       if(!state) return { who: "", lived: "", leaves: "", rawText: "" };
-      
+      // Se cachea porque el generador sortea variantes: si no, el texto
+      // que se ve en pantalla y el que se copia al portapapeles serian
+      // distintos.
+      if(state.epitafioCache) return state.epitafioCache;
+
       const o = ORIGINS.find(x => x.id === state.origin) || ORIGINS[0];
+      const nombre = state.apellido || "EL EJECUTIVO";
       const maxOvr = state.maxOvr || 36;
       const maxRank = state.maxRank ? state.maxRank.n : "Pasas manteca";
-      const finalCash = state.cash || 0;
-      const firedCount = (state.firedCompanies || []).length;
-      const boughtOvr = state.purchasedOvrPoints || 0;
-      const isTranshuman = state.extensiones > 0;
-      const totalYears = (state.age || 22) - 22;
+      const plata = state.cash || 0;
+      const guita = money(Math.abs(plata));
+      const despidos = (state.historialDespidos || []).length;
+      const comprado = state.purchasedOvrPoints || 0;
+      const transhumano = (state.extensiones || 0) > 0;
+      const anios = (state.age || 22) - 22;
+      const final = state.finalId || 'jubilacion';
+      const timbas = state.timbasJugadas || 0;
+      const ganadas = state.timbasGanadas || 0;
+      const sinCobrar = state.aniosSinCobrar || 0;
+      const cambios = state.cambiosDeEmpresa || 0;
+      const antiguedad = state.maxAntiguedad || 0;
+      const changas = state.changasHechas || 0;
 
-      let who = "";
-      if (isTranshuman) {
-        who = `${state.apellido}, el Inmortal de Silicio. Trascendió la biología humana acumulando prótesis neuronales y sillones en directorios de corporaciones Tier 5.`;
-      } else if (maxOvr >= 90) {
-        who = `${state.apellido}, Monarca Supremo del Directorio. Alcanzó el rango de ${maxRank} dominando el mercado de capitales y la rosca política sin tocar un solo archivo Excel operativo.`;
-      } else if (maxOvr >= 75) {
-        who = `${state.apellido}, Tiburón de Mandos Medios y Director Consolidado. Sobrevivió a reestructuraciones masivas, fusiones hostiles y volantazos de la macroeconomía argentina.`;
-      } else if (finalCash < 0) {
-        who = `${state.apellido}, Mártir del Monotributo y los Cursos de Trading. Creyó en la meritocracia corporativa y pagó caro cada café de especialidad y título de postgrado.`;
+      /* --- 1. QUIEN FUE. El final manda; si no hubo final especial,
+             manda lo que logro. Ninguna linea es un titulo nobiliario:
+             siempre hay un objeto, un gesto o una cifra. --- */
+      const quienFue = {
+        bancarrota: [
+          `${nombre} tuvo razón sobre el mercado, pero tres años antes de tiempo y con plata que no era suya.`,
+          `${nombre} entendió el mercado mejor que nadie durante once meses seguidos. El doceavo lo entendió el mercado a él.`
+        ],
+        causa_penal: [
+          `${nombre}, el primer ejecutivo del rubro en explicarle a un fiscal qué es un fideicomiso financiero. No le salió.`,
+          `${nombre} pasó ${anios} años firmando cosas que no leía. Un juzgado las leyó todas.`
+        ],
+        corchazo: [
+          `${nombre} llegó al directorio de la única empresa donde las diferencias de criterio no se resuelven en el comité.`,
+          `${nombre} hizo la rosca perfecta. Con la gente equivocada.`
+        ],
+        miami: [
+          `${nombre} resolvió el mercado laboral argentino de la única manera comprobada: yéndose.`,
+          `${nombre} aguantó ${anios} años y después descubrió que el problema se arreglaba con un pasaje.`
+        ],
+        changa: [
+          `${nombre} tuvo ${anios} años de experiencia repartidos en cuarenta trabajos distintos, ninguno con recibo.`,
+          `${nombre} nunca dejó de trabajar. Nunca tampoco empezó a cobrar.`
+        ],
+        casa_materna: [
+          `A los ${state.age} volvió al cuarto donde había estudiado para el CBC. Estaba igual, incluso el escritorio.`,
+          `${nombre} terminó exactamente donde empezó, con ${anios} años de diferencia y una caja de tazas.`
+        ]
+      };
+
+      const quienFueExtra = {
+        mando_medio: [
+          `${nombre} llegó a ${maxRank} a los treinta y algo y ahí el organigrama decidió que estaba bien así.`,
+          `${nombre} fue el que sabía cómo funcionaban las cosas de verdad, que es el puesto que nunca se asciende.`,
+          `${nombre} capacitó a cuatro jefes distintos, todos más jóvenes que él, ninguno lo mencionó al irse.`
+        ]
+      };
+      let who;
+      if(quienFueExtra[final]){
+        who = rnd(quienFueExtra[final]);
+      } else if(quienFue[final]){
+        who = rnd(quienFue[final]);
+      } else if(transhumano){
+        who = rnd([
+          `${nombre} le compró ${(state.extensiones||1) * 10} años a la biología para seguir yendo a reuniones. Los usó todos.`,
+          `${nombre} trascendió el cuerpo humano y lo primero que hizo con eso fue pedir una silla en un directorio Tier 5.`
+        ]);
+      } else if(maxOvr >= 90){
+        who = rnd([
+          `${nombre} llegó a ${maxRank} y en ${anios} años nunca aprendió el nombre de nadie de Operaciones.`,
+          `${nombre} llegó a ${maxRank}. Firmó todo lo que había que firmar y no leyó nada de lo que firmó.`
+        ]);
+      } else if(maxOvr >= 75){
+        who = rnd([
+          `${nombre} llegó a ${maxRank} aprendiendo a decir "alineemos" medio segundo antes que el resto de la mesa.`,
+          `${nombre} sobrevivió ${anios} años de reestructuraciones sin que nadie pudiera explicar exactamente qué hacía.`,
+          `${nombre} llegó a ${maxRank} sin haber tomado nunca una decisión que no se pudiera atribuir a un comité.`,
+          `${nombre} fue ${maxRank} y de las ${Math.max(2, cambios)} empresas que pasó, en ninguna se quedaron con su teléfono.`
+        ]);
+      } else if(plata < 0){
+        who = rnd([
+          `${nombre} creyó en la meritocracia corporativa y la pagó en cuotas, con interés.`,
+          `${nombre} hizo todos los cursos que le pidieron. Ninguno figuraba en el convenio.`
+        ]);
       } else {
-        who = `${state.apellido}, Gladiador de la Oficina Tradicional. Aguantó ${totalYears} años ininterrumpidos de reuniones que pudieron haber sido un mail.`;
+        who = rnd([
+          `${nombre} aguantó ${anios} años de reuniones que pudieron haber sido un mail.`,
+          `${nombre} fue ${maxRank} y su mayor logro documentado es un proceso que hoy hace un script.`,
+          `${nombre} laburó ${anios} años y su nombre figura en una sola presentación, en la última diapositiva, en cuerpo 10.`
+        ]);
       }
 
-      let lived = "";
-      if (o.id === 'trust') {
-        lived = `Vivió blindado por el fideicomiso y los departamentos en alquiler de la familia. Cambió de empresa cada vez que las cosas se complicaron y jamás supo cuánto cuesta un viaje en subte.`;
-      } else if (boughtOvr >= 12) {
-        lived = `Vivió a base de lobby en Puerto Madero, publinotas compradas en medios económicos, penthouse con amenities y autos deportivos a juego con el blazer.`;
-      } else if (firedCount >= 2) {
-        lived = `Vivió al filo de la cornisa. Conoció el fuego de ${firedCount} despidos fulminantes, pero siempre encontró otra Pyme o startup donde vender humo.`;
-      } else if (o.id === 'calle') {
-        lived = `Vivió en la trinchera del barro corporativo como Lobo de WS. Sin contactos ni padrinos, cada ascenso y cada mango fueron arrancados a pura muñeca y cintura de calle.`;
-      } else if (o.id === 'tecnico') {
-        lived = `Vivió pegado a la terminal, haciendo pasar prompts de IA por código propio y rezando que ningún directivo le pida explicar la arquitectura en vivo.`;
+      /* --- 2. COMO VIVIO. Los hechos van primero y el origen queda de
+             ultimo desempate. Antes era al reves, y por eso el 100% de
+             este bloque lo decidia la pantalla de setup. --- */
+      let lived;
+      if(despidos >= 3){
+        lived = rnd([
+          `Lo rajaron ${despidos} veces. Terminó guardando las cosas del escritorio en una caja que dejaba abajo del escritorio.`,
+          `${despidos} despidos. Su cuenta de LinkedIn tenía más actividad que su cuenta bancaria.`,
+          `Lo echaron ${despidos} veces y ${despidos} veces dijo que había sido una decisión de común acuerdo.`
+        ]);
+      } else if(despidos === 2){
+        lived = rnd([
+          `Conoció dos veces el mail de las nueve de la mañana con asunto "reunión rápida". Las dos veces duró once minutos.`,
+          `Lo desvincularon dos veces con la misma frase sobre el rumbo de la compañía y dos veces la creyó.`
+        ]);
+      } else if(state.crisis40Fallida){
+        lived = rnd([
+          `A los 40 le dijeron que la empresa iba en otra dirección. La dirección era sin él.`,
+          `A los 40 lo invitaron a un café afuera de la oficina, que es donde se dan esas noticias.`
+        ]);
+      } else if(comprado >= 12){
+        lived = rnd([
+          `Vivió a base de lobby en Puerto Madero, publinotas en medios económicos y un auto que hacía juego con el blazer.`,
+          `Compró ${comprado} puntos de reputación al contado y después escribió un posteo sobre el valor del esfuerzo.`,
+          `Su carrera tuvo dos motores: uno era el trabajo y el otro salía más caro y andaba mejor.`
+        ]);
+      } else if(timbas >= 3){
+        lived = rnd([
+          `Puso la caja de la familia en un token ${timbas} veces. Le salió bien ${ganadas}, que es exactamente la cantidad de veces que lo cuenta.`,
+          `Jugó ${timbas} veces a la cripto y sigue explicando que la clave es la gestión del riesgo.`
+        ]);
+      } else if(sinCobrar >= 8){
+        lived = rnd([
+          `Pasó ${sinCobrar} años cobrando en experiencia. Todavía la está canjeando.`,
+          `${sinCobrar} años sin ver un peso, aprendiendo un montón, según le dijeron.`
+        ]);
+      } else if(changas >= 5){
+        lived = rnd([
+          `Tuvo un segundo laburo ${changas} veces y ninguna lo mencionó en el primero.`,
+          `Hizo ${changas} changas de noche para sostener un puesto que de día sonaba importante.`
+        ]);
+      } else if(cambios >= 6){
+        lived = rnd([
+          `Cambió de empresa ${cambios} veces. En el CV lo llamó "trayectoria diversa".`,
+          `${cambios} empresas en ${anios} años. Nunca llegó a saber dónde estaba el matafuegos en ninguna.`
+        ]);
+      } else if(antiguedad >= 12){
+        lived = rnd([
+          `Pasó ${antiguedad} años en la misma silla. La silla se rompió antes que él.`,
+          `${antiguedad} años en el mismo lugar. Le pusieron su nombre a una sala de reuniones y después se la sacaron.`
+        ]);
+      } else if((state.arreglosCompliance || 0) >= 1){
+        lived = rnd([
+          `Aprendió temprano que Compliance es un departamento y no una obligación.`,
+          `Nunca tuvo un problema legal que no se arreglara con un almuerzo.`
+        ]);
+      } else if(o.id === 'trust'){
+        lived = rnd([
+          `Vivió blindado por el fideicomiso y los departamentos en alquiler de la familia, y jamás supo cuánto cuesta un viaje en subte.`,
+          `Nunca le preocupó el sueldo, que es la única ventaja competitiva que no se puede aprender.`
+        ]);
+      } else if(o.id === 'calle'){
+        lived = rnd([
+          `Vivió sin contactos ni padrinos, sacándole cada ascenso al organigrama a pura muñeca y cintura.`,
+          `No conocía a nadie, así que se hizo conocer. Le llevó el doble de tiempo y lo cuenta el triple de veces.`
+        ]);
+      } else if(o.id === 'tecnico'){
+        lived = rnd([
+          `Vivió pegado a la terminal, haciendo pasar prompts por código propio y rezando que nadie le pida explicar la arquitectura en vivo.`,
+          `Automatizó su propio trabajo el segundo año y se pasó los otros ${Math.max(1, anios-2)} cuidando que no se notara.`
+        ]);
+      } else if(o.id === 'sindical'){
+        lived = rnd([
+          `Vivió sabiendo cosas. Nunca las usó todas juntas, que es exactamente por lo que nadie se animó a tocarlo.`,
+          `Nunca ganó una discusión técnica y nunca perdió una asamblea.`
+        ]);
+      } else if(o.id === 'estado'){
+        lived = rnd([
+          `Vivió de un apellido que abría licitaciones, y después del mismo apellido que abrió expedientes.`,
+          `Nunca tuvo que explicar cómo consiguió un contrato, que es el privilegio más caro que existe.`
+        ]);
+      } else if(o.id === 'miami'){
+        lived = rnd([
+          `Volvió con trece años de currículum que acá no le servían a nadie y una nostalgia que se le pasó a los cuatro meses.`,
+          `Explicó ${anios} años seguidos cómo se hacen las cosas afuera, en reuniones donde nadie le preguntó.`
+        ]);
+      } else if(o.id === 'quebrado'){
+        lived = rnd([
+          `Arrastró la deuda de su startup como quien arrastra un apellido: nunca la nombró y nunca dejó de pagarla.`,
+          `Todos los lunes pensó que esta vez sí iba a fundar de nuevo. ${anios} lunes.`
+        ]);
       } else {
-        lived = `Vivió a base de café recalentado, pánico de fin de mes, aguantar jefes tóxicos y fingiendo entender dashboards de métricas en inglés con diploma de MBA.`;
+        lived = rnd([
+          `Vivió a base de café recalentado, pánico de fin de mes y fingiendo entender dashboards en inglés con un posgrado en la pared.`,
+          `Usó la palabra "sinergia" en ${anios} años de reuniones y nunca nadie le pidió que la definiera.`,
+          `Pagó un posgrado en cuotas para poder decir en las reuniones lo mismo que decía antes.`
+        ]);
       }
 
-      let leaves = "";
-      if (finalCash >= 1500000) {
-        leaves = `Deja una fortuna colosal de ${money(finalCash)}, 3 unidades en torre premium, acciones preferenciales y una causa por evasión felizmente prescripta en la AFIP.`;
-      } else if (finalCash > 0) {
-        leaves = `Deja ${money(finalCash)} rindiendo en una cuenta remunerada, 14 tarjetas de presentación sin valor y un chaleco Uniqlo colgado en su ex-oficina.`;
+      /* --- 3. QUE DEJA. Seis tramos calibrados sobre la distribucion
+             real de patrimonio del motor, que se apinia entre $2K y
+             $25K. Los cortes viejos estaban en $0 y $1.500.000, o sea
+             fuera de donde vive la gente. --- */
+      let leaves;
+      if(plata < 0){
+        leaves = rnd([
+          `Deja una deuda de ${guita}, una mochila térmica con el logo despegado y un hilo de LinkedIn con 12 reacciones sobre resiliencia.`,
+          `Deja ${guita} en rojo, un plan de pagos a 84 cuotas y una tarjeta que solo entra en la máquina de café.`
+        ]);
+      } else if(plata < 8000){
+        leaves = rnd([
+          `Deja ${guita}, una caja con doce tazas de empresas que ya no existen y una credencial que todavía abre un edificio que cambió de dueño dos veces.`,
+          `Deja ${guita} y una carpeta de Drive con 400 archivos que nadie va a abrir nunca.`
+        ]);
+      } else if(plata < 18000){
+        leaves = rnd([
+          `Deja ${guita} en una caja de ahorro, 14 tarjetas de presentación sin valor y un chaleco Uniqlo colgado en su ex oficina.`,
+          `Deja ${guita}, tres mochilas de merchandising corporativo y una mesa de ping pong que ayudó a comprar.`
+        ]);
+      } else if(plata < 35000){
+        leaves = rnd([
+          `Deja ${guita}, un plazo fijo que renueva por WhatsApp y un grupo de ex compañeros donde hace años que no escribe nadie.`,
+          `Deja ${guita}, medio auto pagado y una suscripción a un diario económico que nunca leyó.`
+        ]);
+      } else if(plata < 80000){
+        leaves = rnd([
+          `Deja ${guita}, un monoambiente en Caballito que alquila mal y un contador que le cobra por decirle que espere.`,
+          `Deja ${guita}, un curso de sommelier a medio hacer y una bici que usó cuatro veces.`
+        ]);
+      } else if(plata < 200000){
+        leaves = rnd([
+          `Deja ${guita}, dos cocheras alquiladas en Villa Crespo y una cuenta en dólares que nunca le contó a nadie.`,
+          `Deja ${guita}, una casa en un country a 50 minutos de todo y un grupo de golf de los martes.`
+        ]);
+      } else if(plata < 600000){
+        leaves = rnd([
+          `Deja ${guita}, un departamento en torre con amenities que usa dos veces por año y un asesor financiero que le dice "campeón".`,
+          `Deja ${guita}, una lancha amarrada en el Tigre y una relación tensa con su único hijo.`
+        ]);
+      } else if(plata < 2000000){
+        leaves = rnd([
+          `Deja ${guita}, un fideicomiso armado por el mismo estudio que le armó el divorcio y una colección de relojes que nadie sabe valuar.`,
+          `Deja ${guita}, un piso en Puerto Madero y una fundación con su apellido que reparte doce becas por año.`
+        ]);
       } else {
-        leaves = `Deja una deuda de ${money(finalCash)}, una mochila térmica gastada de reparto y un hilo de LinkedIn con 12 reacciones sobre liderazgo empático y resiliencia.`;
+        leaves = rnd([
+          `Deja una fortuna de ${guita}, tres unidades en torre premium, acciones preferenciales y una causa por evasión felizmente prescripta en la AFIP.`,
+          `Deja ${guita}, un ala nueva en una universidad privada y una biografía autorizada que escribió un periodista al que le paga.`
+        ]);
       }
 
-      const rawText = `🏛️ EPITAFIO CORPORATIVO: ${state.apellido}\n` +
-        `• 22 a ${state.age} años | Rango Máximo: ${maxRank} (OVR ${maxOvr})\n\n` +
-        `⚰️ ¿QUIÉN FUE?\n${who}\n\n` +
-        `🍷 ¿CÓMO VIVIÓ?\n${lived}\n\n` +
-        `💰 ¿QUÉ DEJA?\n${leaves}\n\n` +
-        `Simulador: Market CAPo (https://marketcapo.app)`;
+      const meta = FINALES[final] || FINALES.jubilacion;
+      const rawText =
+        `${meta.ic} MARKET CAPo - ${meta.titulo}\n` +
+        `${nombre} | 22 a ${state.age} años | ${maxRank} | OVR ${maxOvr} | ${money(plata)}\n\n` +
+        `QUIÉN FUE\n${who}\n\n` +
+        `CÓMO VIVIÓ\n${lived}\n\n` +
+        `QUÉ DEJA\n${leaves}\n\n` +
+        `Hacete de abajo vos también:\n${URL_JUEGO_FULL}`;
 
-      return { who, lived, leaves, rawText };
+      const out = { who, lived, leaves, rawText, meta };
+      state.epitafioCache = out;
+      return out;
     }
 
     function copyEpitaphToClipboard(){
@@ -3326,15 +3861,29 @@ function avatarSVG(customState = null){
             <div>
               <label style="display:block; font-size:0.68rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-dim); margin-bottom:6px; font-weight:800;">Origen Socio-Académico</label>
               <div class="origin-list" role="radiogroup" aria-label="Origen socio-académico">
-                ${ORIGINS.map(x => `
-                  <div class="origin-card ${S.origin===x.id?'on':''}" role="radio" aria-checked="${S.origin===x.id}" tabindex="0" onclick="S.origin='${x.id}';renderApp()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();S.origin='${x.id}';renderApp();}">
-                    <div class="ic" aria-hidden="true">${x.ic}</div>
-                    <div class="tx">
-                      <b>${esc(x.n)}</b>
-                      <small>${esc(x.d)}</small>
+                ${ORIGINS.map(x => {
+                  const libre = origenDesbloqueado(x);
+                  if(!libre){
+                    return `
+                      <div class="origin-card locked" role="radio" aria-checked="false" aria-disabled="true" tabindex="-1" title="${esc(x.lockText || 'Bloqueado')}">
+                        <div class="ic" aria-hidden="true">🔒</div>
+                        <div class="tx">
+                          <b>${esc(x.n)}</b>
+                          <small>${esc(x.lockText || 'Todavía no lo desbloqueaste.')}</small>
+                        </div>
+                      </div>
+                    `;
+                  }
+                  return `
+                    <div class="origin-card ${S.origin===x.id?'on':''}" role="radio" aria-checked="${S.origin===x.id}" tabindex="0" onclick="S.origin='${x.id}';renderApp()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();S.origin='${x.id}';renderApp();}">
+                      <div class="ic" aria-hidden="true">${x.ic}</div>
+                      <div class="tx">
+                        <b>${esc(x.n)}</b>
+                        <small>${esc(x.d)}</small>
+                      </div>
                     </div>
-                  </div>
-                `).join('')}
+                  `;
+                }).join('')}
               </div>
             </div>
           </div>
@@ -3573,7 +4122,6 @@ function avatarSVG(customState = null){
         scoreGrade = "F";
         scoreTitle = "Retiro en Quiebra y Endeudado";
         scoreColor = "var(--hot-pink)";
-        S.endReason = "Jubilación con Deudas";
       } else if(S.maxOvr >= 90 && S.cash >= 2000000){
         scoreGrade = "S+";
         scoreTitle = "Leyenda Inmortal de Wall Street";
@@ -3593,7 +4141,7 @@ function avatarSVG(customState = null){
         scoreColor = "var(--cyber-amber)";
       }
 
-      if(!S.firedCompanies || S.firedCompanies.length === 0){
+      if(!S.historialDespidos || S.historialDespidos.length === 0){
         unlockTrophy('purga');
       }
 
@@ -3625,8 +4173,8 @@ function avatarSVG(customState = null){
             <div class="tombstone-glow"></div>
             
             <div class="tombstone-header">
-              <div class="cross-icon">🏛️</div>
-              <span class="rip-kicker">IN MEMORIAM CORPORATIVA (2026)</span>
+              <div class="cross-icon">${S.endIcon || '🏛️'}</div>
+              <span class="rip-kicker">EXPEDIENTE CERRADO • LEGAJO #${(1000 + (S.apellido || '').length * 137 + (S.age || 22) * 29) % 9000 + 1000}</span>
               <h1 class="tomb-name">${esc(S.apellido)}</h1>
               <span class="tomb-dates">22 a ${S.age} AÑOS • ${esc(S.maxRank ? S.maxRank.n.toUpperCase() : 'EJECUTIVO')}</span>
             </div>
@@ -3652,9 +4200,9 @@ function avatarSVG(customState = null){
               <div class="badge-row">
                 <span class="t-pill gold">OVR ${S.maxOvr}</span>
                 <span class="t-pill">GRADE ${scoreGrade}</span>
-                <span class="t-pill">${(S.firedCompanies||[]).length} DESPIDOS</span>
+                <span class="t-pill">${(S.historialDespidos||[]).length} DESPIDOS</span>
               </div>
-              <div class="app-watermark">Market CAPo • marketcapo.app</div>
+              <div class="app-watermark">Market CAPo • ${URL_JUEGO}</div>
             </div>
           </div>
 
@@ -3740,12 +4288,14 @@ function avatarSVG(customState = null){
       const container = document.getElementById("eventModalContainer");
       if(!container) return;
       if(!S || (S.phase !== "choice" && S.phase !== "rolling" && S.phase !== "event_result") || !S.choice){
+        if(container.innerHTML && !legajoModalOpen) fondoInerte(false);
         container.innerHTML = "";
         return;
       }
 
       const c = S.choice;
       const imgUrl = EVENT_IMAGES[c.imgKey] || EVENT_IMAGES.cut;
+      fondoInerte(true);
 
       if(S.phase === "event_result" && pendingEventResult){
         const res = pendingEventResult;
@@ -3760,6 +4310,7 @@ function avatarSVG(customState = null){
                   <span class="num ${isGood ? 'up' : 'down'}">${esc(res.metricText)}</span>
                 </div>
                 <button type="button" class="btn" style="margin-top:8px; width:100%;" onclick="finishEventAndAdvance()">CONTINUAR CARRERA</button>
+                <div class="share-sig"><span class="dot">$</span> MARKET CAPo · ${URL_JUEGO}</div>
               </div>
             </div>
           </div>
@@ -3772,8 +4323,8 @@ function avatarSVG(customState = null){
           <div class="event-modal">
             <div class="event-modal-badge">⚡ Decisión Crítica de Gestión</div>
             
-            <div class="event-art-box">
-              <img src="${imgUrl}" alt="${esc(c.t)}" width="800" height="450" loading="lazy" onerror="this.style.display='none';this.parentElement.classList.add('sin-arte')">
+            <div class="event-art-box" role="img" aria-label="${esc(c.t)}">
+              ${imgUrl}
               <div class="art-overlay"></div>
             </div>
 
@@ -3830,6 +4381,7 @@ function avatarSVG(customState = null){
             <h3>${esc(m.title)}</h3>
             <p class="sub">${esc(m.sub)}</p>
             <button type="button" class="btn" onclick="closeMilestone()">${esc(m.cta || 'Continuar')}</button>
+            <div class="share-sig"><span class="dot">$</span> MARKET CAPo · ${URL_JUEGO}</div>
           </div>
         </div>
       `;
@@ -3902,7 +4454,7 @@ function avatarSVG(customState = null){
         renderOverlay();
         renderEventModal();
         renderLegajoModal();
-        saveRun();
+        agendarGuardado();
         return;
       }
 
@@ -3912,7 +4464,7 @@ function avatarSVG(customState = null){
         renderOverlay();
         renderEventModal();
         renderLegajoModal();
-        saveRun();
+        agendarGuardado();
         return;
       }
 
@@ -3922,7 +4474,7 @@ function avatarSVG(customState = null){
         renderOverlay();
         renderEventModal();
         renderLegajoModal();
-        saveRun();
+        agendarGuardado();
         return;
       }
 
@@ -3930,7 +4482,7 @@ function avatarSVG(customState = null){
         <div class="left-col">
           ${buildIdentityHTML()}
           ${buildWealthHTML()}
-          ${S.flash ? `<div class="flash ${S.flash.good?'good':'bad'}"><div class="fh"><span>${esc(S.flash.title)}</span></div></div>` : ''}
+          ${S.flash ? `<div class="flash ${S.flash.good?'good':'bad'}" role="status" aria-live="polite"><div class="fh"><span>${esc(S.flash.title)}</span></div></div>` : ''}
           ${buildDecisionHTML()}
           ${buildGigWidgetHTML()}
         </div>
@@ -3940,14 +4492,14 @@ function avatarSVG(customState = null){
       renderEventModal();
       renderLegajoModal();
       tickOvr();
-      saveRun();
+      agendarGuardado();
     }
 
     function initSetup(){
       S = {
         phase: "setup",
         pace: PACE,
-        origin: "mba",
+        origin: (origenesDisponibles()[0] || ORIGINS[0]).id,
         gender: "H",
         apellido: ""
       };
@@ -3955,7 +4507,11 @@ function avatarSVG(customState = null){
     }
 
     function startCareer(){
-      const o = ORIGINS.find(x => x.id === S.origin) || ORIGINS[0];
+      let o = ORIGINS.find(x => x.id === S.origin);
+      // Red de seguridad: si alguien llega con un origen bloqueado
+      // (partida vieja guardada, o el trofeo se reseteo), cae al primero libre.
+      if(!o || !origenDesbloqueado(o)) o = origenesDisponibles()[0] || ORIGINS[0];
+      S.origin = o.id;
       const st = { ...o.stats }, comp = {};
       for(const k in o.comp) comp[k] = clamp(o.comp[k] + rndInt(-3, 3));
       for(const k in st) st[k] = clamp(st[k] + rndInt(-2, 2));
@@ -3985,7 +4541,7 @@ function avatarSVG(customState = null){
         statusBonus: 0,
         purchasedOvrPoints: 0,
         ovrPenalties: 0,
-        age: 22,
+        age: o.edadInicial || 22,
         cash: o.cash,
         salary: 0,
         company: null,
@@ -4004,6 +4560,22 @@ function avatarSVG(customState = null){
         cooldowns: {},
         equityCompanies: [],
         firedCompanies: [],
+        historialDespidos: [],
+        // Trazas de lo que efectivamente paso en la carrera. El epitafio
+        // se arma con esto y no con promedios, para que dos carreras
+        // distintas no terminen contadas con el mismo parrafo.
+        aniosSinCobrar: 0,
+        cambiosDeEmpresa: 0,
+        maxAntiguedad: 0,
+        maxTierAlcanzado: 0,
+        timbasJugadas: 0,
+        timbasGanadas: 0,
+        crisis40Fallida: false,
+        changasHechas: 0,
+        // El hijo del proveedor arranca con un expediente ya abierto:
+        // empieza mas cerca del final por causa penal que cualquier otro.
+        arreglosCompliance: o.arranqueSucio ? 1 : 0,
+        finalId: null,
         eventsTriggeredCount: 0,
         seenEventIds: [],
         yearsInCurrentCompany: 0,
