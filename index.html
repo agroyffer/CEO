@@ -1294,6 +1294,40 @@
       animation: flashIn 0.25s ease both;
     }
 
+    /* ================= DONACIÓN ================= */
+    .donacion-box {
+      width: 100%;
+      max-width: 340px;
+      margin: 22px auto 4px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .donacion-box p {
+      font-size: 0.72rem;
+      line-height: 1.5;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .btn-donacion {
+      display: inline-block;
+      padding: 9px 18px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card-inner);
+      color: var(--text-dim);
+      font-family: var(--font-body);
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn-donacion:hover, .btn-donacion:focus-visible {
+      border-color: var(--cyber-amber);
+      color: var(--cyber-amber);
+      outline: none;
+    }
+
     /* ================= PIE DE PÁGINA ================= */
     .site-footer {
       width: 100%;
@@ -1747,7 +1781,7 @@
   <div id="eventModalContainer"></div>
 
   <footer class="site-footer">
-    © 2026 · Una idea de <a href="https://x.com/un_taladro" target="_blank" rel="noopener">@un_taladro</a> tercerizando a Claude y Gemini.
+    © 2026 · Una idea de <a href="https://x.com/un_taladro" target="_blank" rel="noopener">@un_taladro</a> tercerizando a Claude y Gemini. Los errores son míos.
   </footer>
 
   <!-- Overlay de Milestones / Ascensos -->
@@ -1879,6 +1913,18 @@ const mcStat  = s  => MC_ICONS["stat_" + s] || "";   // vision | ejecucion | car
        Todo pasa por metrica(), que traga cualquier error: los
        bloqueadores de publicidad tapan estos scripts muy seguido y el
        juego no se puede romper porque no cargó la analítica. */
+    /* ================= DONACIÓN =================
+       Pegá la URL y aparece el bloque al final del reporte. Vacía = no se
+       muestra nada. Sirve cualquier link: Cafecito, un link de pago de
+       Mercado Pago, Ko-fi, lo que sea.
+
+       Un consejo: poné un LINK, no un alias ni un CVU sueltos. Un alias
+       en una página pública es un identificador permanente atado a tu
+       cuenta, cualquiera lo screenshotea y lo usa para hacerse pasar por
+       vos. Un link de pago lo das de baja cuando querés. */
+    const DONACION_URL   = "https://mpago.la/1Vv615N";
+    const DONACION_TEXTO = "Invitame un cafecito ($1.000)";
+
     const UMAMI_ID  = "b2f4e1f1-3d0a-46bb-bd5b-a1b021d62d61";   // website-id de Umami
     const UMAMI_SRC = "https://cloud.umami.is/script.js";
 
@@ -4595,6 +4641,27 @@ function avatarSVG(customState = null){
       return "C";
     }
 
+    /* El pedido cambia según cómo te fue: es el chiste del juego aplicado
+       al que lo programó. Nunca culpa ni insistencia, solo autoironía. */
+    function textoDonacion(){
+      const g = gradeDeCarrera(S);
+      if(g === "F")  return "Terminaste en rojo. El que programó esto también.";
+      if(g === "S+" || g === "A") return "Llegaste arriba. Un cafecito para el que te armó la escalera no te funde.";
+      if((S.historialDespidos || []).length >= 2) return "Te echaron más de una vez. Bancá al que te consiguió los laburos.";
+      return "Si te reíste, invitame un cafecito. Si te calentaste, también: era la idea.";
+    }
+
+    function buildDonacionHTML(){
+      if(!DONACION_URL) return "";
+      return `
+        <div class="donacion-box">
+          <p>${esc(textoDonacion())}</p>
+          <a class="btn-donacion" href="${esc(DONACION_URL)}" target="_blank" rel="noopener"
+             onclick="metrica('click-donacion', { grade: gradeDeCarrera(S) })">☕ ${esc(DONACION_TEXTO)}</a>
+        </div>
+      `;
+    }
+
     function buildEndHTML(){
       const unlockedMeta = getUnlockedTrophies();
       const unlockedCount = ALL_TROPHIES.filter(t => unlockedMeta[t.id]).length;
@@ -4743,6 +4810,8 @@ function avatarSVG(customState = null){
           </div>
 
           <button type="button" class="btn" style="margin-top:20px; width:100%; max-width:340px; padding:14px;" onclick="initSetup()">COMENZAR NUEVA CARRERA</button>
+
+          ${buildDonacionHTML()}
         </div>
       `;
     }
