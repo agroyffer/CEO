@@ -1867,6 +1867,40 @@ const mcTier  = t  => MC_ICONS["tier_t" + t] || "";
 const mcStat  = s  => MC_ICONS["stat_" + s] || "";   // vision | ejecucion | carisma | rosca
 
 
+    /* ================= MÉTRICAS (Umami) =================
+       Pegá acá abajo el website-id que te da Umami y se prende solo.
+       Vacío = no se carga ningún script, no se hace ni un pedido de red.
+
+       Umami no usa cookies ni guarda datos personales, así que no hace
+       falta cartel de consentimiento. Igual, acá NO se manda nada que
+       identifique a nadie: el nombre que escribe el jugador es texto
+       libre y podría ser su nombre real, así que no sale del navegador.
+
+       Todo pasa por metrica(), que traga cualquier error: los
+       bloqueadores de publicidad tapan estos scripts muy seguido y el
+       juego no se puede romper porque no cargó la analítica. */
+    const UMAMI_ID  = "";                              // ← acá va el website-id
+    const UMAMI_SRC = "https://cloud.umami.is/script.js";
+
+    (function cargarUmami(){
+      if(!UMAMI_ID) return;
+      try {
+        const sc = document.createElement("script");
+        sc.defer = true;
+        sc.src = UMAMI_SRC;
+        sc.setAttribute("data-website-id", UMAMI_ID);
+        document.head.appendChild(sc);
+      } catch(e){}
+    })();
+
+    function metrica(nombre, datos){
+      try {
+        if(window.umami && typeof window.umami.track === "function"){
+          window.umami.track(nombre, datos || {});
+        }
+      } catch(e){}
+    }
+
     /* ================= ESCAPADO SEGURO DE STRINGS ================= */
     const esc = s => String(s || '').replace(/[&<>"']/g, c =>
       ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -3483,6 +3517,16 @@ function avatarSVG(customState = null){
       S.endReason = meta.titulo;
       S.endIcon = meta.ic;
       playSfx(S.cash >= 0 ? 'cash' : 'bad');
+      /* Con esto y partida-iniciada sale la tasa de finalización.
+         Nada de acá identifica a nadie: es todo mecánica del juego. */
+      metrica("partida-terminada", {
+        final:  S.finalId,
+        ritmo:  S.pace,
+        origen: S.origin,
+        edad:   S.age,
+        rango:  S.maxRank ? S.maxRank.n : "?",
+        grade:  gradeDeCarrera(S)
+      });
       renderApp();
     }
 
@@ -4160,7 +4204,7 @@ function avatarSVG(customState = null){
         const txt = ep.rawText || ("🏛️ EPITAFIO: " + S.apellido + " • OVR " + S.maxOvr);
         if(navigator.clipboard && window.isSecureContext){
           navigator.clipboard.writeText(txt)
-            .then(() => avisoEpitafio("📋 Copiado como texto (la imagen no se pudo)"))
+            .then(() => { metrica("epitafio-compartido", { via: "texto" }); avisoEpitafio("📋 Copiado como texto (la imagen no se pudo)"); })
             .catch(() => avisoEpitafio("❌ No se pudo compartir", "#b91c1c"));
         } else {
           avisoEpitafio("❌ No se pudo compartir", "#b91c1c");
@@ -4180,6 +4224,7 @@ function avatarSVG(customState = null){
         a.href = url; a.download = nombre;
         document.body.appendChild(a); a.click(); a.remove();
         setTimeout(() => URL.revokeObjectURL(url), 4000);
+        metrica("epitafio-compartido", { via: "descarga" });
         avisoEpitafio("⬇️ Imagen descargada");
         return true;
       } catch(e){ return false; }
@@ -4187,6 +4232,9 @@ function avatarSVG(customState = null){
 
     function compartirEpitafio(){
       if(!S) return;
+      /* Se cuenta el click aparte del resultado: si hay muchos clicks y
+         pocos compartidos, el problema es técnico y no de interés. */
+      metrica("click-compartir", { ritmo: S.pace });
 
       let archivo, blob, nombre;
       try {
@@ -4209,7 +4257,7 @@ function avatarSVG(customState = null){
       // 1. Celular: menú nativo, va derecho a WhatsApp.
       if(esCelular && navigator.share && navigator.canShare && navigator.canShare({ files: [archivo] })){
         navigator.share({ files: [archivo] })
-          .then(() => avisoEpitafio("✨ ¡Epitafio compartido!"))
+          .then(() => { metrica("epitafio-compartido", { via: "share-nativo" }); avisoEpitafio("✨ ¡Epitafio compartido!"); })
           .catch(err => {
             if(err && err.name === "AbortError") return;       // lo canceló, no es un error
             if(!bajarEpitafio(blob, nombre)) copiarEpitafioTexto();
@@ -4220,7 +4268,7 @@ function avatarSVG(customState = null){
       // 2. Escritorio: imagen al portapapeles, un paso y a pegar.
       if(navigator.clipboard && window.ClipboardItem && typeof navigator.clipboard.write === "function" && window.isSecureContext){
         navigator.clipboard.write([ new ClipboardItem({ "image/png": blob }) ])
-          .then(() => avisoEpitafio("🖼️ ¡Imagen copiada! Pegala donde quieras"))
+          .then(() => { metrica("epitafio-compartido", { via: "portapapeles" }); avisoEpitafio("🖼️ ¡Imagen copiada! Pegala donde quieras"); })
           .catch(() => { if(!bajarEpitafio(blob, nombre)) copiarEpitafioTexto(); });
         return;
       }
@@ -4994,6 +5042,7 @@ function avatarSVG(customState = null){
       S.rank = rankOf(computeOvr());
       
       trackPeaks();
+      metrica("partida-iniciada", { origen: S.origin, ritmo: S.pace });
       renderApp();
     }
 
