@@ -4069,6 +4069,36 @@ function avatarSVG(customState = null){
       c.closePath();
     }
 
+    /* La marca se dibuja con primitivas y no cargando el SVG en un Image():
+       new Image() es asincrónico y ahí se pierde el gesto del usuario, que es
+       justo lo que rompe clipboard.write() y share() en Safari. Las medidas
+       son las mismas del market-capo-icon.svg (viewBox de 48). */
+    function dibujarMarca(c, cx, cy, tam){
+      const k = tam / 48;
+      c.save();
+      c.translate(cx - tam/2, cy - tam/2);
+      c.scale(k, k);
+      c.lineCap = "round"; c.lineJoin = "round";
+
+      c.beginPath(); c.moveTo(7,8); c.lineTo(7,38); c.lineTo(41,38);
+      c.strokeStyle = "#ffffff"; c.lineWidth = 3.5; c.stroke();
+
+      c.beginPath(); c.moveTo(7,8); c.lineTo(17,29); c.lineTo(26,17); c.lineTo(38,34);
+      c.strokeStyle = "#f43f5e"; c.lineWidth = 4; c.stroke();
+
+      c.save();
+      c.translate(31, 6); c.scale(0.5, 0.5);
+      c.strokeStyle = "#ffd700";
+      c.beginPath(); c.moveTo(12,2); c.lineTo(12,38); c.lineWidth = 5; c.stroke();
+      c.beginPath(); c.moveTo(22,12);
+      c.bezierCurveTo(18,6, 2,6, 2,20);
+      c.bezierCurveTo(2,34, 18,34, 22,28);
+      c.lineWidth = 6.5; c.stroke();
+      c.restore();
+
+      c.restore();
+    }
+
     function dibujarEpitafioCanvas(){
       const ep = generateEpitaph(S);
       const grade = gradeDeCarrera(S);
@@ -4109,8 +4139,7 @@ function avatarSVG(customState = null){
       c.textAlign = "center";
       let y = PAD + 46;
 
-      c.font = "78px " + FT;
-      c.fillText(S.endIcon || "🏛️", W / 2, y + 20);
+      dibujarMarca(c, W / 2, y - 4, 96);
       y += 104;
 
       const legajo = (1000 + (S.apellido || "").length * 137 + (S.age || 22) * 29) % 9000 + 1000;
