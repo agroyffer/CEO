@@ -408,6 +408,85 @@
       letter-spacing: 0.03em;
     }
     .badge-tag.role { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+    /* Late el escudo para que se distinga de las badges informativas:
+       esta es la única que representa algo que se puede perder. */
+    .badge-tag.rosca-tag {
+      background: rgba(255, 215, 0, 0.12);
+      color: var(--gold);
+      border: 1px solid rgba(255, 215, 0, 0.45);
+      animation: roscaGlow 2.4s ease-in-out infinite;
+    }
+    @keyframes roscaGlow {
+      0%, 100% { box-shadow: 0 0 0 rgba(255, 215, 0, 0); }
+      50%      { box-shadow: 0 0 9px rgba(255, 215, 0, 0.55); }
+    }
+    @media (prefers-reduced-motion: reduce){
+      .badge-tag.rosca-tag { animation: none; box-shadow: 0 0 7px rgba(255,215,0,0.4); }
+    }
+
+    /* ===== TRASCENDENCIA =====
+       El color escala con el escalón: arranca en el celeste clínico de
+       una obra social y termina en el dorado de una escribanía. Que se
+       note que cada vez es menos medicina y más trámite. */
+    .trasc-box { border-color: var(--trasc); box-shadow: 0 0 22px -6px var(--trasc); }
+    .trasc-box.t1 { --trasc: #38bdf8; }
+    .trasc-box.t2 { --trasc: #a855f7; }
+    .trasc-box.t3 { --trasc: #f43f5e; }
+    .trasc-box.t4 { --trasc: #ffd700; }
+    .trasc-box .box-header h2 { color: var(--trasc); }
+    .trasc-escalera { display: flex; gap: 4px; margin: 8px 0 10px; }
+    .trasc-paso {
+      flex: 1; height: 4px; border-radius: 3px;
+      background: #1e293b; transition: background .25s;
+    }
+    .trasc-paso.hecho { background: var(--trasc); opacity: .55; }
+    .trasc-paso.actual { background: var(--trasc); animation: trascPulso 1.8s ease-in-out infinite; }
+    @keyframes trascPulso {
+      0%, 100% { box-shadow: 0 0 0 var(--trasc); }
+      50%      { box-shadow: 0 0 10px var(--trasc); }
+    }
+    .trasc-lore {
+      font-size: 0.80rem; color: var(--text-muted); line-height: 1.55; margin: 0;
+    }
+    .trasc-cierre {
+      font-size: 0.82rem; font-weight: 800; color: var(--trasc);
+      line-height: 1.45; margin: 8px 0 0; font-style: italic;
+    }
+    /* Grilla propia y no la de ofertas: acá no hay un mercado con un hueco
+       para una tercera opción, hay una bifurcación de dos ramas del mismo
+       peso. Las dos tarjetas miden igual y se estiran a la misma altura. */
+    .trasc-grid {
+      display: grid; gap: 8px; margin-top: 10px;
+      grid-template-columns: 1fr 1fr; align-items: stretch;
+    }
+    @media (max-width: 520px){ .trasc-grid { grid-template-columns: 1fr; } }
+    .trasc-grid .contract-card { display: flex; flex-direction: column; }
+    /* .stay-option trae grid-column: 1 / -1 porque en el mercado laboral
+       "quedarte" va a lo ancho debajo de las ofertas. Acá las dos ramas
+       pesan igual, así que vuelve a ocupar una sola columna. */
+    .trasc-grid .contract-card.stay-option {
+      grid-column: auto;
+      border: 1.5px solid rgba(16, 229, 117, 0.35);
+    }
+    .trasc-grid .contract-card.stay-option:hover,
+    .trasc-grid .contract-card.stay-option:focus-visible { border-color: var(--money); }
+    .trasc-firmar { border-color: color-mix(in srgb, var(--trasc) 55%, transparent); }
+    .trasc-pie {
+      margin-top: auto; padding-top: 8px;
+      font-size: 0.67rem; line-height: 1.35; color: var(--text-muted);
+    }
+    .trasc-firmar .trasc-pie { color: var(--trasc); opacity: .85; }
+    .kpi-nota {
+      font-size: 0.60rem; line-height: 1.25; color: var(--hot-pink);
+      margin-top: 3px; font-weight: 700;
+    }
+    .contract-card.trasc-caro { opacity: .55; }
+    .trasc-falta {
+      margin-top: 6px; font-size: 0.68rem; font-weight: 700; color: var(--hot-pink);
+    }
+    @media (prefers-reduced-motion: reduce){
+      .trasc-paso.actual { animation: none; box-shadow: 0 0 8px var(--trasc); }
+    }
 
     .company-headline {
       display: flex;
@@ -1781,7 +1860,7 @@
   <div id="eventModalContainer"></div>
 
   <footer class="site-footer">
-    © 2026 · Una idea de <a href="https://x.com/un_taladro" target="_blank" rel="noopener">@un_taladro</a> tercerizando a Claude y Gemini.
+    © 2026 · Una idea de <a href="https://x.com/un_taladro" target="_blank" rel="noopener">@un_taladro</a> tercerizando a Claude y Gemini. Los errores son míos.
   </footer>
 
   <!-- Overlay de Milestones / Ascensos -->
@@ -1867,6 +1946,8 @@ const MC_ICONS = {
   "ui_trend": "<svg viewBox=\"0 0 32 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 22l8-8 5 4 9-10\" stroke=\"#10e575\" stroke-width=\"2.4\"/><path d=\"M19 8h7v7\" stroke=\"#10e575\" stroke-width=\"2.4\"/><path d=\"M3 27l8 2 5-1 9 2\" stroke=\"#f43f5e\" stroke-width=\"2\" opacity=\".7\"/></svg>",
   "gig_moto": "<svg viewBox=\"0 0 32 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"7.5\" cy=\"24\" r=\"4\" fill=\"#f43f5e\" fill-opacity=\".22\" stroke=\"#f43f5e\" stroke-width=\"2\"/><circle cx=\"25\" cy=\"24\" r=\"4\" fill=\"#f43f5e\" fill-opacity=\".22\" stroke=\"#f43f5e\" stroke-width=\"2\"/><path d=\"M9 16.5h7.5l2.5 5H9.5z\" fill=\"#f43f5e\" fill-opacity=\".28\" stroke=\"#f43f5e\" stroke-width=\"2\"/><path d=\"M7.5 24h9.5\" stroke=\"#f43f5e\" stroke-width=\"2.4\"/><path d=\"M17.5 21.5l4-10\" stroke=\"#f43f5e\" stroke-width=\"2\"/><path d=\"M20 11h5.5\" stroke=\"#f43f5e\" stroke-width=\"2\"/><path d=\"M19.5 16.5L25 24\" stroke=\"#f43f5e\" stroke-width=\"2\"/></svg>",
   "gig_18": "<svg viewBox=\"0 0 32 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"16\" cy=\"16\" r=\"12.5\" fill=\"#f43f5e\" fill-opacity=\".18\" stroke=\"#f43f5e\" stroke-width=\"2.4\"/><path d=\"M11.4 12.6L13 11.4V21\" stroke=\"#f43f5e\" stroke-width=\"2.4\"/><circle cx=\"19.6\" cy=\"13.6\" r=\"2.6\" stroke=\"#f43f5e\" stroke-width=\"2.2\"/><circle cx=\"19.6\" cy=\"18.6\" r=\"3\" stroke=\"#f43f5e\" stroke-width=\"2.2\"/></svg>",
+  "wealth_tarjetear": "<svg viewBox=\"0 0 32 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M11 4.5q5 3 10 0l-3 5.5h-4z\" fill=\"#f43f5e\" fill-opacity=\".5\" stroke=\"#f43f5e\" stroke-width=\"2\"/><path d=\"M11 4.5q-3.5-3 1-3.5T16 4M21 4.5q3.5-3-1-3.5T16 4\" stroke=\"#f43f5e\" stroke-width=\"2\"/><path d=\"M14 10h4c5 2.5 8 6.5 8 11.5 0 5-4 8-10 8s-10-3-10-8c0-5 3-9 8-11.5z\" fill=\"#ffd700\" fill-opacity=\".26\" stroke=\"#ffd700\" stroke-width=\"2\"/><path d=\"M16 15.5v10M13.5 17.5h4a2 2 0 0 1 0 4h-3a2 2 0 0 0 0 4h4\" stroke=\"#ffd700\" stroke-width=\"2\"/></svg>",
+  "wealth_cursito": "<svg viewBox=\"0 0 32 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M2 12l14-6 14 6-14 6z\" fill=\"#38bdf8\" fill-opacity=\".26\" stroke=\"#38bdf8\" stroke-width=\"2\"/><path d=\"M8 15v6c0 2.4 3.6 4 8 4s8-1.6 8-4v-6\" stroke=\"#38bdf8\" stroke-width=\"2\"/><path d=\"M28 12v7\" stroke=\"#38bdf8\" stroke-width=\"2\"/><path d=\"M28 19l-2 4h4z\" fill=\"#f43f5e\"/></svg>",
   "origin_sindical": "<svg viewBox=\"0 0 32 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 12h5l11-6v20l-11-6H4z\" fill=\"#f43f5e\" fill-opacity=\".24\" stroke=\"#f43f5e\" stroke-width=\"2\"/><path d=\"M10.5 20v5.5h3.5V21.5\" stroke=\"#f43f5e\" stroke-width=\"2\"/><path d=\"M24 11a7 7 0 0 1 0 10\" stroke=\"#fbbf24\" stroke-width=\"2\"/><path d=\"M27.5 7.5a12 12 0 0 1 0 17\" stroke=\"#fbbf24\" stroke-width=\"2\" opacity=\".55\"/></svg>",
   "origin_estado": "<svg viewBox=\"0 0 32 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M16 3l12 6H4z\" fill=\"#fbbf24\" fill-opacity=\".26\" stroke=\"#fbbf24\" stroke-width=\"2\"/><path d=\"M6 12v11M12 12v11M20 12v11M26 12v11\" stroke=\"#fbbf24\" stroke-width=\"2\"/><path d=\"M4.5 23h23\" stroke=\"#fbbf24\" stroke-width=\"2\" opacity=\".7\"/><path d=\"M3 27.5h26\" stroke=\"#fbbf24\" stroke-width=\"2.4\"/></svg>",
   "origin_miami": "<svg viewBox=\"0 0 32 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"24\" cy=\"8\" r=\"4.5\" fill=\"#fbbf24\" fill-opacity=\".3\" stroke=\"#fbbf24\" stroke-width=\"2\"/><path d=\"M12 13c0 6-1 10-3 15\" stroke=\"#10e575\" stroke-width=\"2.4\"/><path d=\"M12 13c-4-3-8-2-9 1M12 13c-2-4-1-8 2-9M12 13c4-2 8 0 9 3M12 13c3 1 5 4 5 7\" stroke=\"#10e575\" stroke-width=\"2\"/><path d=\"M4 29h24\" stroke=\"#38bdf8\" stroke-width=\"2\" opacity=\".45\"/></svg>",
@@ -1988,13 +2069,14 @@ const mcStat  = s  => MC_ICONS["stat_" + s] || "";   // vision | ejecucion | car
       { min: 70, n: "Director",      s: "DIR" },
       { min: 78, n: "VP",            s: "VP" },
       { min: 85, n: "C-Level",       s: "CXO" },
-      { min: 90, n: "CEO",           s: "CEO" },
-      { min: 95, n: "Chairman",      s: "CHM" }
+      { min: 87, n: "CEO",           s: "CEO" },
+      { min: 92, n: "Chairman",      s: "CHM" }
     ];
 
     const ORIGINS = [
       {
         id: "mba",
+        rangoMin: 1,   // El posgrado sirve para entrar como Analista. Para eso se endeudó.
         n: "MBA",
         d: "Teoría impecable y una deuda impagable",
         ic: "🎓",
@@ -2005,6 +2087,7 @@ const mcStat  = s  => MC_ICONS["stat_" + s] || "";   // vision | ejecucion | car
       },
       {
         id: "calle",
+        rangoMin: 0,   // Se la gana desde abajo: una pasantía y a laburar.
         n: "Lobo de CABA",
         d: "La escuela de la calle.",
         ic: "🐺",
@@ -2015,6 +2098,7 @@ const mcStat  = s  => MC_ICONS["stat_" + s] || "";   // vision | ejecucion | car
       },
       {
         id: "trust",
+        rangoMin: 2,   // No hace pasantías. Lo ubican.
         n: "Nepobaby",
         d: "Heredaste un montón de plata y deptos para alquiler.",
         ic: "💳",
@@ -2030,6 +2114,7 @@ const mcStat  = s  => MC_ICONS["stat_" + s] || "";   // vision | ejecucion | car
          y la que ya define el tono de toda la carrera. */
       {
         id: "sindical",
+        rangoMin: 0,   // Entra desde abajo, pero con la rosca ya hecha.
         n: "Delegado Gremial",
         d: "Sabés dónde está enterrado cada cuerpo.",
         ic: "📢",
@@ -2042,6 +2127,7 @@ const mcStat  = s  => MC_ICONS["stat_" + s] || "";   // vision | ejecucion | car
       },
       {
         id: "estado",
+        rangoMin: 2,   // El apellido no hace fila.
         n: "Hijo de proveedor del Estado",
         d: "El apellido abre licitaciones. Y expedientes.",
         ic: "🏛️",
@@ -2055,6 +2141,9 @@ const mcStat  = s  => MC_ICONS["stat_" + s] || "";   // vision | ejecucion | car
       },
       {
         id: "miami",
+        rangoMin: 1,   // Vuelve con experiencia de afuera.
+        edadInicial: 41,
+        saltaCrisis40: true,   // Los trece años afuera FUERON su crisis.
         n: "Volvió de Miami",
         d: "Trece años afuera. Acá no te conoce nadie.",
         ic: "🌴",
@@ -2063,11 +2152,13 @@ const mcStat  = s  => MC_ICONS["stat_" + s] || "";   // vision | ejecucion | car
         stats: { vision: 20, ejecucion: 14, carisma: 18, rosca: 2 },
         comp: { ven: 28, pro: 20, fin: 30, ope: 12, mkt: 26, leg: 8 },
         lockedBy: "millonario",
-        lockText: "Se desbloquea con el trofeo Club del Millón.",
-        edadInicial: 35
+        lockText: "Se desbloquea con el trofeo Club del Millón."
       },
       {
         id: "quebrado",
+        rangoMin: 1,
+        edadInicial: 41,
+        saltaCrisis40: true,   // La startup que murió FUE su crisis.
         n: "Fundador quebrado",
         d: "Tu startup murió. La deuda no.",
         ic: "📉",
@@ -2080,6 +2171,7 @@ const mcStat  = s  => MC_ICONS["stat_" + s] || "";   // vision | ejecucion | car
       },
       {
         id: "tecnico",
+        rangoMin: 0,   // Nadie le cree hasta que muestra algo.
         n: "Vibecoder IA",
         d: "Claude, Gemini y ChatGPT. Tenés 0 código.",
         ic: "💾",
@@ -2193,8 +2285,144 @@ const mcStat  = s  => MC_ICONS["stat_" + s] || "";   // vision | ejecucion | car
       { n: "Fondo Soberano Atlántico", s: "Megafondo", t: 5, ini: "FA", areas: ["fin", "leg", "ven", "pro"] }
     ];
 
+    /* Cada extensión es un escalón más de la misma broma: la empresa te
+       alarga la vida para seguir usándola. Arranca como un beneficio de
+       RRHH y termina en una escribanía. */
+    const TRASCENDENCIA = [
+      {
+        tono: "t1",
+        n: "Programa de Bienestar Ejecutivo",
+        kicker: "Beneficio para personal jerárquico",
+        lore: "Terapia de telómeros con cobertura total, aprobada por el directorio como gasto deducible. En el memo interno figura como «renovación anticipada de contrato».",
+        cierre: "Diez años más. Todavía firmás vos.",
+        trofeo: "transhumano"
+      },
+      {
+        tono: "t2",
+        n: "Reemplazo de Componentes",
+        kicker: "Proveedor homologado · Garantía 10 años",
+        lore: "Hígado, riñones y dos válvulas de un proveedor con certificación ISO. La cicatriz queda debajo de la camisa, que es exactamente donde el área de Imagen pidió que quedara.",
+        cierre: "Ya no firmás con la mano con la que naciste.",
+        trofeo: "ext_repuestos"
+      },
+      {
+        tono: "t3",
+        n: "Respaldo Cognitivo",
+        kicker: "Infraestructura provista por la compañía",
+        lore: "Tu memoria se sincroniza cada noche contra un servidor en el subsuelo. Legales aclaró el punto en una nota al pie: el respaldo es propiedad de la empresa.",
+        cierre: "Si te vas, no te podés llevar lo que aprendiste. Literalmente.",
+        trofeo: "ext_backup"
+      },
+      {
+        tono: "t4",
+        n: "Constitución como Persona Jurídica",
+        kicker: "Escribanía · Acta de directorio",
+        lore: "Dejaste de ser un empleado. Sos una sociedad anónima con domicilio fiscal, CUIT propio y un único activo declarado en el balance.",
+        cierre: "Ya no te pueden echar. Te pueden liquidar.",
+        trofeo: "ext_juridica"
+      }
+    ];
+
+    /* Peligros propios del que decidió seguir. No entran en el cupo de
+       eventos normales ni compiten con ellos: se disparan por haber
+       firmado, y las dos ramas de cada uno pueden cerrarte la carrera. */
+    const EVENTS_TRASC = [
+      {
+        id: "tr_rechazo", minExt: 1, imgKey: "hr",
+        t: "Comité de Renovación de Beneficios",
+        s: "RRHH está revisando quién sigue dentro del plan de extensión vital. Tu legajo entró en la lista de casos a discutir y te avisan que conviene que estés presente.",
+        o: [
+          {
+            n: "Presentar tu Caso al Comité",
+            tag: "Vía Institucional",
+            roll: [
+              { p: 62, label: "Te renuevan, pero con la cobertura recortada al mínimo", type: "ovr", val: -8, isPositive: false },
+              { p: 38, label: "El comité pidió más información y se juntó de nuevo en marzo", type: "end", final: "falla_sist", isPositive: false }
+            ]
+          },
+          {
+            n: "Arreglar Directo con el Laboratorio",
+            tag: "Por Afuera del Plan", sucio: true,
+            roll: [
+              { p: 82, label: "Te atienden como cliente y no como legajo. Otra cosa", type: "ovr", val: 10, isPositive: true },
+              { p: 18, label: "El laboratorio no estaba habilitado para lo que te aplicó", type: "end", final: "falla_sist", isPositive: false }
+            ]
+          }
+        ]
+      },
+      {
+        id: "tr_recall", minExt: 2, imgKey: "compliance",
+        t: "Compras Licitó de Nuevo",
+        s: "El área de Compras volvió a licitar el contrato de componentes y ganó un proveedor más barato. Tus repuestos quedaron fuera de catálogo el lunes.",
+        o: [
+          {
+            n: "Comprar el Stock Viejo de tu Bolsillo",
+            tag: "Pagarlo Vos",
+            roll: [
+              { p: 88, label: "Te alzás con las últimas piezas de tu modelo. Salió una fortuna", type: "cash", val: -4000000, isPositive: false },
+              { p: 12, label: "El stock ya se lo había reservado alguien del directorio", type: "end", final: "falla_sist", isPositive: false }
+            ]
+          },
+          {
+            n: "Homologarte con el Proveedor Nuevo",
+            tag: "Lo Que Cubre la Empresa",
+            roll: [
+              { p: 68, label: "Te adaptan sin cargo. Andás distinto, pero andás", type: "ovr", val: 6, isPositive: true },
+              { p: 32, label: "La homologación falló y el proveedor viejo ya no existe", type: "end", final: "falla_sist", isPositive: false }
+            ]
+          }
+        ]
+      },
+      {
+        id: "tr_backup", minExt: 3, imgKey: "board",
+        t: "Auditoría del Respaldo Cognitivo",
+        s: "Legales encontró documentación reservada del directorio adentro de tu respaldo. Te recuerdan, con el contrato en la mano, que el servidor es de la empresa.",
+        o: [
+          {
+            n: "Entregar el Respaldo Entero",
+            tag: "Cooperar con la Auditoría",
+            roll: [
+              { p: 70, label: "Te devuelven una copia podada. Faltan años enteros", type: "ovr", val: -14, isPositive: false },
+              { p: 30, label: "Lo que borraron incluía cómo hacías tu trabajo", type: "end", final: "falla_sist", isPositive: false }
+            ]
+          },
+          {
+            n: "Trabar el Expediente en Tribunales",
+            tag: "Rosca Pesada", sucio: true,
+            roll: [
+              { p: 48, label: "Nadie quiere el precedente. Arreglan y te indemnizan", type: "cash", val: 5000000, isPositive: true },
+              { p: 52, label: "Cortaron el servicio un martes a la mañana, por mantenimiento", type: "end", final: "falla_sist", isPositive: false }
+            ]
+          }
+        ]
+      },
+      {
+        id: "tr_oferta", minExt: 4, imgKey: "crypto",
+        t: "OPA Hostil por Tu Propio Paquete",
+        s: "Un fondo presentó una oferta por la sociedad anónima que sos. Es por el paquete completo, y el paquete completo incluye el único activo declarado en el balance.",
+        o: [
+          {
+            n: "Aceptar la Oferta",
+            tag: "Vender el Paquete",
+            roll: [
+              { p: 100, label: "Firmaste la cesión. El activo cambió de dueño", type: "end", final: "adquirido", isPositive: false },
+              { p: 0, label: "-", type: "end", final: "adquirido", isPositive: false }
+            ]
+          },
+          {
+            n: "Blindar el Paquete y Rechazar",
+            tag: "Defensa Hostil",
+            roll: [
+              { p: 45, label: "Retiran la oferta y te queda la prima de fracaso", type: "cash", val: 9000000, isPositive: true },
+              { p: 55, label: "Una adquisición hostil también se resuelve por otras vías", type: "end", final: "corchazo", isPositive: false }
+            ]
+          }
+        ]
+      }
+    ];
+
     const RETIRE_AGES = [65, 75, 85, 95, 105];
-    const EXT_COSTS = [1500000, 3000000, 6000000, 12000000];
+    const EXT_COSTS = [900000, 1100000, 1400000, 1800000];
 
     const ALL_TROPHIES = [
       { id: "ascenso", n: "Primer Gran Ascenso", d: "Alcanzá el cargo de Gerente (OVR 60+).", ic: "🎖️" },
@@ -2204,78 +2432,81 @@ const mcStat  = s  => MC_ICONS["stat_" + s] || "";   // vision | ejecucion | car
       { id: "chairman", n: "Chairman Supremo", d: "Alcanzá el rango máximo Chairman (OVR 95+).", ic: "🏛️" },
       { id: "millonario", n: "Club del Millón", d: "Acumulá más de $1,000,000 en patrimonio neto.", ic: "💰" },
       { id: "magnate", n: "Vida de Magnate", d: "Comprate un auto de lujo importado y penthouse.", ic: "🏎️" },
-      { id: "transhumano", n: "Inmortalidad Corporativa", d: "Comprá una extensión biológica transhumana.", ic: "🧬" },
-      { id: "timba", n: "Lobo de la Timba", d: "Ganale a la ruleta de riesgo cripto / startup.", ic: "🎲" },
+      { id: "transhumano", n: "Transhumanismo", d: "Comprá tu primera extensión vital.", ic: "🧬" },
+      { id: "ext_repuestos", n: "Repuestos Homologados", d: "Segunda extensión: sos un Cyborg.", ic: "🫀", oculto: true },
+      { id: "ext_backup", n: "Backup Corporativo", d: "Tercera extensión: tu memoria vive en un servidor ajeno.", ic: "🧠", oculto: true },
+      { id: "ext_juridica", n: "Singularidad", d: "Cuarta extensión: dejaste de ser una persona física. Sos una S.A.", ic: "🏛️", oculto: true },
+      { id: "timba", n: "Criptobro", d: "Ganale a la ruleta de riesgo cripto.", ic: "🎲" },
+      { id: "timba_jubilacion", n: "Timbear la Jubilación", d: "Jugaste a la cripto parado en la puerta del retiro.", ic: "🎰", oculto: true },
       { id: "compliance", n: "Inmunidad Penal", d: "Blanqueá tu expediente con el bufete de compliance.", ic: "⚖️" },
       { id: "equity", n: "Socio Accionista", d: "Comprá un paquete de acciones de la empresa.", ic: "📈" },
       { id: "purga", n: "Inmune a la Purga", d: "Llegá a la jubilación sin ser despedido jamás.", ic: "🚪" },
-      { id: "gig_king", n: "Rey del Monotributo", d: "Aguantá 9 años de Gig Economy, sumados.", ic: "🛵" },
+      { id: "gig_king", n: "Rey del Monotributo", d: "Aguantá 9 años de Gig Economy.", ic: "🛵" },
       { id: "onlyflans_star", n: "Top 1% en OnlyFlanes", d: "Monetizá contenido independiente en plataformas.", ic: "🔞" }
     ];
 
+    /* Cuatro tarjetas, cuatro verbos distintos. Antes eran seis y cinco
+       hacían lo mismo (comprar status), con la única diferencia del precio:
+       un menú donde ninguna opción era una decisión. */
     const WEALTH_ACTIONS = [
       {
-        id: "pr_lobby",
-        n: "Blindaje de Prensa",
-        ic: "📰",
-        cost: 25000,
-        statusGain: 5,
-        gainText: "+5 Status",
-        cooldownYears: 4,
-        feedback: "¡Campaña en medios exitosa! Ganaste +5 de Status OVR."
-      },
-      {
         id: "buy_rosca",
-        n: "Rosca al Directorio",
+        n: "Rosquear",
         ic: "🍷",
+        /* El precio sale de costoEscudo(): escala con el sueldo. */
+        costoDinamico: true,
         cost: 45000,
-        statusGain: 8,
-        gainText: "+8 Status",
-        cooldownYears: 3,
-        feedback: "Lobby privado en Puerto Madero: Ganaste +8 de Status OVR."
+        gainText: "1 escudo de despido",
+        efecto: "escudo",
+        cooldownYears: 6,
+        feedback: "Rosca hecha. Si te quieren echar, alguien va a levantar el teléfono por vos."
       },
       {
-        id: "equity_stake",
-        n: "Comprar Equity",
-        ic: "📈",
-        cost: 55000,
-        statusGain: 7,
-        gainText: "+7 Status",
-        oncePerCompany: true,
-        trophy: "equity",
-        feedback: "¡Ahora sos socio accionista! Ganaste +7 de Status OVR."
+        id: "cursito",
+        n: "Hacer un Cursito",
+        ic: "🎓",
+        /* El costo sale de costoCursito(): sube con el tier al que estás
+           apuntando. Comprar la puerta del Tier 2 no puede salir lo mismo
+           que comprar la del Tier 5. */
+        costoDinamico: true,
+        gainText: "3 ofertas: +1 tier y +1 cargo",
+        efecto: "cursito",
+        cooldownYears: 5,
+        feedback: "Diploma colgado. Tres ofertas de empresas más grandes y un escalón más arriba."
       },
       {
         id: "crypto_gamble",
         n: "Timba Cripto",
         ic: "🎲",
         cost: 30000,
-        statusGain: 0,
-        gainText: "+$90K / -$30K",
-        cooldownYears: 2,
-        isGamble: true
+        gainText: "±60% · se puede apalancar",
+        efecto: "timba",
+        aCredito: true,
+        cooldownYears: 2
+      },
+      {
+        id: "tarjetear",
+        n: "Tarjetear las Compras",
+        ic: "💳",
+        /* El límite lo da el puesto, no la cuenta: cuanto más arriba
+           estás, más te prestan. Y más te podés hundir. */
+        costoDinamico: true,
+        gainText: "+3 OVR, a pagar después",   // tiene que coincidir con OVR_TARJETA
+        efecto: "tarjeta",
+        aCredito: true,
+        cooldownYears: 3,
+        feedback: "Auto nuevo, reloj y la ronda siempre paga. Nadie duda de vos. El resumen llega en enero."
       },
       {
         id: "luxury_lifestyle",
         n: "Penthouse & Auto de Lujo",
         ic: "🏎️",
-        cost: 150000,
-        statusGain: 18,
-        gainText: "+18 Status",
+        cost: 900000,
+        gainText: "Vanidad pura",
+        efecto: "vanidad",
         usedOnce: true,
         trophy: "magnate",
-        feedback: "Deportivo importado y piso en torre: ¡Ganaste +18 de Status OVR!"
-      },
-      {
-        id: "bribe_compliance",
-        n: "Arreglo Compliance",
-        ic: "⚖️",
-        cost: 35000,
-        statusGain: 6,
-        gainText: "+6 Status",
-        cooldownYears: 4,
-        trophy: "compliance",
-        feedback: "Expedientes sellados por penalistas: Ganaste +6 de Status OVR."
+        feedback: "Deportivo importado y piso en torre. No sirve para nada. Ese es el punto."
       }
     ];
 
@@ -2314,7 +2545,7 @@ const mcStat  = s  => MC_ICONS["stat_" + s] || "";   // vision | ejecucion | car
           },
           {
             n: "Dibujo Contable y Venta de Fruta",
-            tag: "Atajo Financiero",
+            tag: "Atajo Financiero", sucio: true,
             roll: [
               { p: 50, label: "Contabilidad creativa. Te quedas con un vuelto", type: "cash", val: 220000, isPositive: true },
               { p: 50, label: "Escrache en redes por balances inflados", type: "fire", isPositive: false }
@@ -2362,7 +2593,7 @@ const mcStat  = s  => MC_ICONS["stat_" + s] || "";   // vision | ejecucion | car
           },
           {
             n: "Arreglo por Atrás con el Inspector",
-            tag: "Atajo Turbio",
+            tag: "Atajo Turbio", sucio: true,
             roll: [
               { p: 50, label: "Expediente cajoneado y bono de bolsillo", type: "cash", val: 180000, isPositive: true },
               { p: 50, label: "Descubren el soborno. Te quedas en la calle", type: "fire", isPositive: false }
@@ -2386,7 +2617,7 @@ const mcStat  = s  => MC_ICONS["stat_" + s] || "";   // vision | ejecucion | car
           },
           {
             n: "Operar la Filtración en Medios",
-            tag: "Rosca en Sombras",
+            tag: "Rosca en Sombras", sucio: true,
             roll: [
               { p: 50, label: "Vendés la primicia y cobrás sobresueldo", type: "cash", val: 140000, isPositive: true },
               { p: 50, label: "Descubren la filtración y te echan de la firma", type: "fire", isPositive: false }
@@ -2410,7 +2641,7 @@ const mcStat  = s  => MC_ICONS["stat_" + s] || "";   // vision | ejecucion | car
           },
           {
             n: "Métricas Fantasía con IA Cuántica",
-            tag: "Venta de Fruta",
+            tag: "Venta de Fruta", sucio: true,
             roll: [
               { p: 50, label: "¡Valuación récord y bono de éxito millonario!", type: "cash", val: 260000, isPositive: true },
               { p: 50, label: "Due diligence estricto descubre el engaño", type: "ovr", val: -16, isPositive: false }
@@ -2458,7 +2689,7 @@ const mcStat  = s  => MC_ICONS["stat_" + s] || "";   // vision | ejecucion | car
           },
           {
             n: "Contratar Hacker para Limpiar el Rastro",
-            tag: "Operación Sigilosa",
+            tag: "Operación Sigilosa", sucio: true,
             roll: [
               { p: 55, label: "Huellas borradas y causa archivada", type: "cash", val: 120000, isPositive: true },
               { p: 45, label: "El hackeo sale en las noticias y te despiden", type: "fire", isPositive: false }
@@ -2482,7 +2713,7 @@ const mcStat  = s  => MC_ICONS["stat_" + s] || "";   // vision | ejecucion | car
           },
           {
             n: "Comprar en la Caída con la Caja Fuerte",
-            tag: "Timba Financiera",
+            tag: "Timba Financiera", sucio: true,
             roll: [
               { p: 50, label: "Rebote milagroso: ¡Ganancia histórica!", type: "cash", val: 320000, isPositive: true },
               { p: 50, label: "Cero absoluto: Quiebra total de fondos", type: "cash", val: -180000, isPositive: false }
@@ -2767,10 +2998,37 @@ function avatarSVG(customState = null){
       return `💼 ${rank.n} de ${areaName}`;
     }
 
+    /* Lo que sale por año sostener cada escalón, y cómo se encarece.
+       No se paga una vez: la biotecnología es un abono, y encima uno con
+       aumento anual. Nadie te discontinúa el cuerpo de un día para el
+       otro; te lo van haciendo insostenible. */
+    const MANTENIMIENTO = [0, 90000, 220000, 500000, 950000];
+    const INFLACION_BIO = 1.14;
+    const CONCEPTO_MANT = [
+      "",
+      "cuota del tratamiento",
+      "autopartes homologadas",
+      "alquiler de RAM para tu memoria",
+      "honorarios de tu propia sociedad"
+    ];
+    function nivelTrasc(){
+      return Math.min((S && S.extensiones) || 0, MANTENIMIENTO.length - 1);
+    }
+    function conceptoMantenimiento(){ return CONCEPTO_MANT[nivelTrasc()] || ""; }
+    function costoMantenimiento(){
+      const nivel = nivelTrasc();
+      if(!nivel) return 0;
+      /* El aumento corre dentro del contrato vigente: cada tratamiento
+         nuevo arranca de una base más alta y su propio reloj. Compuesto
+         desde la primera firma daba doble exponencial ($136M/año a los
+         95) y volvía a cerrar la escalera. */
+      const anios = Math.max(0, ((S && S.age) || 0) - ((S && S.edadUltimaExt) || (S && S.age) || 0));
+      return Math.round(MANTENIMIENTO[nivel] * Math.pow(INFLACION_BIO, anios));
+    }
     function costOfLivingFor(rank, tier){
       const rIdx = (rank && rank.i !== undefined) ? rank.i : 0;
       const t = tier || 1;
-      return Math.round(8000 + rIdx * 3200 + (t - 1) * 4200);
+      return Math.round(8000 + rIdx * 3200 + (t - 1) * 4200) + costoMantenimiento();
     }
 
     function salaryFor(co, area, rank){
@@ -2784,7 +3042,7 @@ function avatarSVG(customState = null){
     }
 
     /* ================= UNIFICACIÓN MATEMÁTICA OVRCORE ================= */
-    function ovrCore({ comp, area, stats, age, tierBonus = 0, statusBonus = 0, penalties = 0 }){
+    function ovrCore({ comp, area, stats, age, tierBonus = 0, penalties = 0 }){
       const compObj = comp || { ven: 20, pro: 20, fin: 20, ope: 20, mkt: 20, leg: 20 };
       const maxComp = Math.max(...Object.values(compObj), 20);
 
@@ -2797,10 +3055,8 @@ function avatarSVG(customState = null){
         organic = 65 + (organic - 65) * 0.50;
       }
 
-      const clampedTierBonus = clamp(tierBonus, 14, 0);
-      const clampedStatusBonus = clamp(statusBonus, 20, 0);
-
-      return clamp(organic + clampedTierBonus + clampedStatusBonus - penalties);
+      const clampedTierBonus = clamp(tierBonus, 22, 0);
+      return clamp(organic + clampedTierBonus - penalties);
     }
 
     const computeOvr = () => S ? ovrCore({
@@ -2809,7 +3065,6 @@ function avatarSVG(customState = null){
       stats: S.stats,
       age: S.age,
       tierBonus: S.tierBonus || 0,
-      statusBonus: S.statusBonus || 0,
       penalties: S.ovrPenalties || 0
     }) : 36;
 
@@ -2818,8 +3073,7 @@ function avatarSVG(customState = null){
       area: area,
       stats: S.stats,
       age: S.age,
-      tierBonus: Math.max(S.tierBonus || 0, Math.min(((tier || 1) - 1) * 3.5, 14)),
-      statusBonus: S.statusBonus || 0,
+      tierBonus: Math.max(S.tierBonus || 0, Math.min(((tier || 1) - 1) * 5.5, 22)),
       penalties: S.ovrPenalties || 0
     }) : 36;
 
@@ -2859,6 +3113,33 @@ function avatarSVG(customState = null){
       }
     }
 
+    /* El cursito te abre la puerta del tier siguiente, y esa puerta
+       vale más cuanto más arriba está. */
+    function tierDelCursito(){
+      const tActual = (S && S.company && S.company.t) || 0;
+      return Math.min(5, Math.max(accessibleTier(), tActual) + 1);
+    }
+    function costoCursito(){ return 25000 * Math.pow(2.2, tierDelCursito() - 2); }
+    /* El límite de la tarjeta crece con el puesto: te prestan por lo que
+       aparentás, no por lo que tenés. */
+    /* La rosca se paga en proporción al puesto: proteger una silla de
+       VP no puede salir lo mismo que proteger un escritorio de Analista. */
+    function costoEscudo(){
+      if(!S || !S.company) return 45000;
+      const ref = Math.max(S.salary || 0, salaryFor(S.company, S.area, S.rank));
+      return Math.max(45000, ref * 0.45);
+    }
+    /* Lo que la tarjeta promete en la etiqueta. Es también lo que
+       entrega: el efecto reparte atributos hasta cumplirlo. */
+    const OVR_TARJETA = 3;
+    function limiteTarjeta(){ return 50000 + ((S && S.rank && S.rank.i) || 0) * 30000; }
+    function costoDe(act){
+      if(act.efecto === "tarjeta") return Math.round(limiteTarjeta());
+      if(act.efecto === "escudo")  return Math.round(costoEscudo());
+      if(act.efecto === "cursito") return Math.round(costoCursito());
+      return act.cost;
+    }
+
     function checkWealthAvailability(act){
       if(!S) return { ok: false, reason: "No iniciado" };
       if(S.usedWealthThisRound){
@@ -2874,7 +3155,19 @@ function avatarSVG(customState = null){
         const remaining = S.cooldowns[act.id] - S.age;
         if(remaining > 0) return { ok: false, status: "cooldown", reason: `Enfriando (${remaining}a restantes)` };
       }
-      if(S.cash < act.cost) {
+      if(act.efecto === "tarjeta" && S.stats &&
+         ['carisma','rosca','vision','ejecucion'].every(k => (S.stats[k] || 10) >= 99)){
+        return { ok: false, status: "techo", reason: "Ya no te queda nada que aparentar" };
+      }
+      if(act.efecto === "escudo" && !S.company){
+        return { ok: false, status: "sin_puesto", reason: "No tenés puesto que proteger" };
+      }
+      if(act.efecto === "cursito" && S.company && tierDelCursito() <= S.company.t){
+        return { ok: false, status: "techo", reason: "Ya estás en la cima del mercado" };
+      }
+      /* Las que van a crédito se pueden usar en rojo: de eso se trata.
+         El resto sigue pidiendo la plata en mano. */
+      if(!act.aCredito && S.cash < costoDe(act)) {
         return { ok: false, status: "no_cash", reason: "Fondos Insuficientes" };
       }
       return { ok: true, status: "available" };
@@ -2902,35 +3195,83 @@ function avatarSVG(customState = null){
       if(act.cooldownYears) S.cooldowns[act.id] = S.age + act.cooldownYears;
       S.usedWealthThisRound = true;
 
-      if(act.id === 'bribe_compliance') S.arreglosCompliance = (S.arreglosCompliance || 0) + 1;
-
-      if(act.isGamble){
+      if(act.efecto === "timba"){
+        /* Porcentaje y no monto fijo: $90K eran una fortuna a los 25 y
+           calderilla a los 60. Así la timba pesa igual toda la carrera. */
         S.timbasJugadas = (S.timbasJugadas || 0) + 1;
-        const isWin = Math.random() < 0.50;
-        if(isWin) S.timbasGanadas = (S.timbasGanadas || 0) + 1;
-        const diff = isWin ? 90000 : -30000;
+        const gano = Math.random() < 0.50;
+        if(gano) S.timbasGanadas = (S.timbasGanadas || 0) + 1;
+        /* +60% / -60%: en promedio no ganás ni perdés, pero apostar
+           repetido te funde igual (la media geométrica es menor que 1).
+           Con +85/-35 el valor esperado era +25% por jugada y la timba
+           se volvía una impresora de plata, que es justo lo contrario
+           de lo que el juego dice sobre la timba. */
+        /* Apalancada: se puede jugar en rojo y la apuesta no se achica
+           cuando no tenés nada. Así es como la gente se funde de verdad
+           con esto — persiguiendo la pérdida con plata prestada. */
+        const base = Math.max(S.cash, 120000);
+        const diff = gano ? Math.round(base * 0.60) : -Math.round(base * 0.60);
         S.cash += diff;
-        if(isWin) unlockTrophy('timba');
-
+        if(gano) unlockTrophy('timba');
+        /* El cajón sigue abierto en la puerta del retiro: podés apostar la
+           plata que define si te alcanza para la extensión o con cuánto te
+           jubilás. El juego ya permitía hacerlo y no lo nombraba. */
+        const enLaPuerta = S.phase === "longevity";
+        if(enLaPuerta) unlockTrophy('timba_jubilacion');
         S.flash = {
-          good: isWin,
-          title: isWin ? "¡Pegaste el Pump Cripto!" : "Rug pull y liquidación de fondos",
-          ovrDelta: 0,
-          cashDelta: diff
+          good: gano,
+          title: enLaPuerta
+            ? (gano ? "Timbeaste la jubilación y salió. Volvés a la mesa con más de lo que trajiste."
+                    : "Timbeaste la jubilación y no salió. Con eso ibas a vivir.")
+            : (gano ? "¡Pegaste el Pump Cripto!" : "Rug pull y liquidación de fondos"),
+          ovrDelta: 0, cashDelta: diff
         };
       } else {
-        S.cash -= act.cost;
-        if(act.statusGain) {
-          S.statusBonus = clamp((S.statusBonus || 0) + act.statusGain, 20, 0);
-          S.purchasedOvrPoints = (S.purchasedOvrPoints || 0) + act.statusGain;
+        S.cash -= costoDe(act);
+
+        let ovrGanado = 0;
+        if(act.efecto === "escudo"){
+          /* No sirve contra la Crisis de los 40: esa es la que no se
+             arregla con contactos, y es el corazón del juego. */
+          S.escudoDespido = (S.escudoDespido || 0) + 1;
+        }
+        if(act.efecto === "tarjeta"){
+          /* Reparte de a un punto hasta que el OVR suba lo prometido, en
+             vez de sumar un bonus fijo por fuera de la fórmula. Empieza
+             por Carisma y Rosca, que es lo que se compra tarjeteando, y
+             sigue por las otras dos: cuando parecés exitoso nadie duda
+             de tu visión tampoco. El reparto se adapta solo al techo
+             blando del OVR, donde cada punto sale el doble. */
+          const objetivo = OVR_TARJETA;
+          const ovrAntes = computeOvr();
+          const orden = ['carisma', 'rosca', 'vision', 'ejecucion'];
+          let i = 0, guarda = 0;
+          while(computeOvr() < ovrAntes + objetivo && guarda++ < 600){
+            if(orden.every(k => (S.stats[k] || 10) >= 99)) break;
+            const k = orden[i++ % orden.length];
+            if((S.stats[k] || 10) < 99) S.stats[k] = clamp((S.stats[k] || 10) + 1);
+          }
+          ovrGanado = computeOvr() - ovrAntes;
+        }
+        if(act.efecto === "cursito"){
+          /* Tres ofertas de un tier por encima del que te corresponde,
+             en este mismo turno. Es la única forma de meterte en un puesto
+             que te queda grande — y por lo tanto la única forma real de
+             que después te rajen por rendimiento. */
+          const rangoObjetivo = Math.min(RANKS.length - 1, ((S.rank && S.rank.i) || 0) + 1);
+          S.offers = makeOffers(tierDelCursito(), 3, S.company,
+                                { pisoTier: true, pisoRango: rangoObjetivo });
         }
         if(act.trophy) unlockTrophy(act.trophy);
 
+        /* ovrDelta se setea en todo el archivo y no lo lee nadie: la
+           plantilla del flash solo dibuja el título. Si la tarjeta promete
+           OVR, el título tiene que decir cuánto entregó. */
         S.flash = {
           good: true,
-          title: act.feedback,
-          ovrDelta: act.statusGain || 0,
-          cashDelta: -act.cost
+          title: act.feedback + (ovrGanado > 0 ? " +" + ovrGanado + " OVR." : ""),
+          ovrDelta: ovrGanado,
+          cashDelta: -costoDe(act)
         };
       }
 
@@ -3092,12 +3433,26 @@ function avatarSVG(customState = null){
       S.historialDespidos.push({ name: nombre, age: edad, motivo: motivo || 'rendimiento' });
     }
 
-    function makeOffers(tier, n, exclude){
+    function makeOffers(tier, n, exclude, opts){
+      opts = opts || {};
       S.firedCompanies = S.firedCompanies || [];
       S.firedCompanies = S.firedCompanies.filter(f => (typeof f === 'object' ? (S.age - f.age < 8) : false));
       const firedNames = S.firedCompanies.map(f => (typeof f === 'object' ? f.name : f));
 
-      let pool = COMPANIES.filter(c => c.t <= tier && (!exclude || c.n !== exclude.n) && !firedNames.includes(c.n));
+      const libre = c => (!exclude || c.n !== exclude.n) && !firedNames.includes(c.n);
+      /* Con pisoTier el pool es el tier objetivo EXACTO, no [1, tier]:
+         ese <= era el bug — el cursito subía el techo y dejaba el piso
+         intacto, así que seguías sorteando entre las mismas pymes. */
+      let pool;
+      if(opts.pisoTier){
+        pool = COMPANIES.filter(c => c.t === tier && libre(c));
+        /* Solo para completar la tanda, nunca como premio: Tier 5 tiene
+           tres empresas en total y los vetos pueden dejarlo corto. */
+        if(pool.length < n) pool = pool.concat(COMPANIES.filter(c => c.t === tier + 1 && libre(c)));
+        if(!pool.length) pool = COMPANIES.filter(c => c.t === tier && (!exclude || c.n !== exclude.n));
+      } else {
+        pool = COMPANIES.filter(c => c.t <= tier && libre(c));
+      }
       const currentOvr = computeOvr();
       const out = [];
 
@@ -3110,7 +3465,12 @@ function avatarSVG(customState = null){
           previewVal = 41;
         }
 
-        const offeredRank = rankOf(previewVal);
+        /* Sin esto, pickCompany pisaba el rango del origen y todos
+           volvían a pasante: el piso tiene que respetarse acá también. */
+        let offeredRank = rankOf(previewVal);
+        const piso = Math.min(RANKS.length - 1,
+                              Math.max(S.rangoPiso || 0, opts.pisoRango || 0));
+        if(offeredRank.i < piso) offeredRank = { ...RANKS[piso], i: piso };
         out.push({
           ...co,
           area: offeredArea,
@@ -3118,7 +3478,9 @@ function avatarSVG(customState = null){
         });
       }
 
-      if(!out.length){
+      /* La oferta desesperada de Tier 1 no puede ser el resultado de una
+         compra: si no salió nada, mejor menos ofertas que una estafa. */
+      if(!out.length && !opts.pisoTier){
         const fallbackCo = COMPANIES.find(c => c.t === 1) || COMPANIES[0];
         out.push({
           ...fallbackCo,
@@ -3142,7 +3504,7 @@ function avatarSVG(customState = null){
         S.gigConsecutiveYears = 0;
         S.cambiosDeEmpresa = (S.cambiosDeEmpresa || 0) + 1;
         
-        const tierBoost = Math.min((c.t - 1) * 3.5, 14);
+        const tierBoost = Math.min((c.t - 1) * 5.5, 22);
         S.tierBonus = Math.max(S.tierBonus || 0, tierBoost);
         S.salary = salaryFor(S.company, S.area, S.rank);
         S.badYears = 0;
@@ -3177,6 +3539,10 @@ function avatarSVG(customState = null){
     function resolveChoice(i){
       if(!S || !S.choice || !S.choice.o || !S.choice.o[i]) return;
       const o = S.choice.o[i];
+      /* La causa penal ahora sale de lo que hiciste, no de una compra en
+         un menú. Antes el único incremento venía de "Arreglo Compliance",
+         que se solapaba con estas mismas decisiones. */
+      if(o.sucio) S.arreglosCompliance = (S.arreglosCompliance || 0) + 1;
       const isFirstWon = Math.random() < (o.roll[0].p / 100);
       const rollIdx = isFirstWon ? 0 : 1;
       const rollItem = o.roll[rollIdx];
@@ -3243,7 +3609,7 @@ function avatarSVG(customState = null){
                habias ascendido. Ahora el ascenso empuja el rango de
                verdad, y si ya estabas arriba de todo lo dice. */
             const rangoPrevio = S.rank ? (S.rank.i !== undefined ? S.rank.i : rankOf(computeOvr()).i) : 0;
-            S.tierBonus = clamp((S.tierBonus || 0) + 6, 14, 0);
+            S.tierBonus = clamp((S.tierBonus || 0) + 6, 22, 0);
             if(rangoPrevio >= RANKS.length - 1){
               S.rank = rankOf(computeOvr());
               metricText = `🎖️ Ascendido a ${S.rank.n}. Ya eras ${S.rank.n}. Felicitaciones igual.`;
@@ -3253,12 +3619,25 @@ function avatarSVG(customState = null){
               metricText = "🎖️ Ascendido a " + S.rank.n;
             }
             unlockTrophy('ascenso');
+          } else if(rollItem.type === "end"){
+            /* El único desenlace del que no se vuelve. Sin esto, "seguir
+               jugando" no tenía ningún riesgo: solo facturas. */
+            S.rolling = null;
+            pendingEventResult = null;
+            S.choice = null;
+            return endGame(rollItem.final);
           } else if(rollItem.type === "fire"){
             S.ovrPenalties = (S.ovrPenalties || 0) + 6;
+            if((S.escudoDespido || 0) > 0){
+              S.escudoDespido--;
+              metricText = "🍷 Te salvó la rosca (la gastaste)";
+              S.flash = { good: true, title: "Te querían echar y alguien levantó el teléfono por vos. Te quedaste sin rosca.", ovrDelta: 0, cashDelta: 0 };
+            } else {
             if(S.company) registrarDespido(S.company.n, S.age, 'evento');
             S.company = null;
             S.area = null;
             metricText = "⚠️ Contrato Rescindido (-6 OVR)";
+            }
           }
 
           pendingEventResult = {
@@ -3321,10 +3700,6 @@ function avatarSVG(customState = null){
       S.usedWealthThisRound = false;
       S.usedGigThisRound = false;
 
-      if(S.statusBonus > 0){
-        S.statusBonus = Math.max(0, S.statusBonus - (1 * stepYears));
-      }
-
       // Crisis de los 40
       if(prevAge < 40 && S.age >= 40 && !S.crisis40Triggered){
         S.crisis40Triggered = true;
@@ -3358,7 +3733,7 @@ function avatarSVG(customState = null){
           renderApp();
           return;
         } else {
-          S.tierBonus = clamp((S.tierBonus || 0) + 6, 14, 0);
+          S.tierBonus = clamp((S.tierBonus || 0) + 6, 22, 0);
           S.milestones.push({
             tone: "good",
             ic: "🛡️",
@@ -3369,6 +3744,12 @@ function avatarSVG(customState = null){
           });
         }
       }
+
+      /* La pasantía dura exactamente un turno. Después de eso el piso
+         sube a Analista para todos: más de un turno cobrando $0 se lee
+         como que el juego está roto, no como parte del chiste. */
+      S.rangoPiso = Math.max(S.rangoPiso || 0, 1);
+      if(S.rank && S.rank.i < S.rangoPiso) S.rank = { ...RANKS[S.rangoPiso], i: S.rangoPiso };
 
       const c = (S.comp && S.comp[S.area]) || 20;
       const coTier = S.company ? S.company.t : 1;
@@ -3398,7 +3779,23 @@ function avatarSVG(customState = null){
       const targetRank = rankOf(computeOvr());
       let promotionOccurred = false;
 
-      if(S.company && targetRank.i > prevRank && perf >= 40){
+      /* A CEO y Chairman no se llega solo por número: hay una moneda
+         al aire. El OVR te habilita a ser considerado; el directorio
+         decide. Si sale mal seguís donde estás y podés volver a intentar
+         el año que viene. */
+      let vetoDirectorio = false;
+      if(S.company && targetRank.i >= 7 && targetRank.i > prevRank && perf >= 40){
+        if(Math.random() < 0.50){
+          vetoDirectorio = true;
+          S.flash = {
+            good: false,
+            title: "El directorio te consideró para " + RANKS[targetRank.i].n + " y votó que no. Seguís donde estabas.",
+            ovrDelta: 0, cashDelta: 0
+          };
+        }
+      }
+
+      if(S.company && !vetoDirectorio && targetRank.i > prevRank && perf >= 40){
         promotionOccurred = true;
         S.rank = targetRank;
         S.badYears = 0;
@@ -3462,9 +3859,48 @@ function avatarSVG(customState = null){
         cash: S.cash
       });
 
-      if(S.cash < -800000) return endGame("Bancarrota Financiera");
+      /* Estaba en -800.000 con un patrimonio mediano final de $142K: el
+         jugador más autodestructivo tocaba fondo en -$183K y no llegaba
+         ni cerca. Bajado a algo proporcional a esta economía. */
+      /* La quiebra tiene que verse venir. Antes el juego te cortaba la
+         carrera a los 37 sin ningún aviso y era imposible entender qué
+         había pasado. Ahora la deuda golpea la puerta dos veces antes. */
+      S.avisosDeuda = S.avisosDeuda || 0;
+      if(S.cash < -100000 && S.avisosDeuda < 1){
+        S.avisosDeuda = 1;
+        S.milestones.push({
+          tone: "fire-flames",
+          ic: "📵",
+          kick: "Números desconocidos",
+          title: "Te empezaron a llamar",
+          sub: "Tres billeteras virtuales, siempre a la hora de la siesta. Debés " + money(Math.abs(S.cash)) + ".",
+          cta: "Atender después"
+        });
+      } else if(S.cash < -250000 && S.avisosDeuda < 2){
+        S.avisosDeuda = 2;
+        S.milestones.push({
+          tone: "fire-flames",
+          ic: "☎️",
+          kick: "Ya no te llaman a vos",
+          title: "Llamaron a tu vieja",
+          sub: "Consiguieron el teléfono de tu familia y les leyeron el monto. Debés " + money(Math.abs(S.cash)) + ".",
+          cta: "Cortar"
+        });
+      }
+
+      /* -400.000 y no -200.000: ahora que existe deuda de verdad
+         (tarjeta + timba apalancada) el umbral tiene que dar lugar a una
+         espiral, no fulminarte con una sola compra. */
+      if(S.cash < -400000) return endGame("Bancarrota Financiera");
 
       if(!promotionOccurred && S.badYears >= 3){
+        if((S.escudoDespido || 0) > 0){
+          S.escudoDespido--;
+          S.badYears = 0;
+          S.flash = { good: true, title: "Te querían echar y alguien levantó el teléfono por vos. Gastaste la rosca.", ovrDelta: 0, cashDelta: 0 };
+          renderApp();
+          return;
+        }
         if(S.company) registrarDespido(S.company.n, S.age, 'rendimiento');
         const firedFrom = S.company ? S.company.n : 'la empresa';
         S.company = null;
@@ -3492,13 +3928,16 @@ function avatarSVG(customState = null){
       const retireTarget = RETIRE_AGES[Math.min(S.extensiones, RETIRE_AGES.length - 1)];
       if(S.age >= retireTarget){
         const nextCost = EXT_COSTS[S.extensiones];
-        if(nextCost && S.cash >= nextCost){
+        /* La puerta se abre siempre que quede un escalón, alcance o no.
+           Antes, si no te alcanzaba, el juego te jubilaba en silencio: no
+           llegabas a enterarte de que existía la decisión ni de por cuánto
+           te la perdiste. Si no podés pagar, la ves y no la podés firmar. */
+        if(nextCost !== undefined){
           S.phase = "longevity";
           renderApp();
           return;
-        } else {
-          return endGame(S.cash >= 0 ? "Jubilación Dorada" : "Jubilación con Deudas");
         }
+        return endGame(S.cash >= 0 ? "Jubilación Dorada" : "Jubilación con Deudas");
       }
 
       const isDirectorOrHigher = S.company && S.rank && ((S.rank.i !== undefined ? S.rank.i : (RANKS.findIndex(r => r.n === S.rank.n))) >= 4 || (S.rank.min !== undefined && S.rank.min >= 70));
@@ -3508,9 +3947,20 @@ function avatarSVG(customState = null){
       const yearsSinceLastEvent = S.age - (S.lastEventAge || 0);
 
       let shouldTriggerEvent = false;
+      let eventoForzado = null;
       const availableEvents = EVENTS.filter(e => !S.seenEventIds.includes(e.id));
 
-      if(isDirectorOrHigher && !promotionOccurred && S.eventsTriggeredCount < maxEventsByPace && availableEvents.length){
+      /* Los de trascendencia tienen prioridad y presupuesto propio: el que
+         llega a los 65 ya gastó su cupo de eventos normales y si no, no
+         vería ninguno de estos nunca. */
+      const trascDisponibles = EVENTS_TRASC.filter(e =>
+        (S.extensiones || 0) >= e.minExt && !S.seenEventIds.includes(e.id));
+      if(trascDisponibles.length && (S.age - (S.lastEventAge || 0)) >= 2 && Math.random() < 0.60){
+        eventoForzado = rnd(trascDisponibles);
+        shouldTriggerEvent = true;
+      }
+
+      if(!eventoForzado && isDirectorOrHigher && !promotionOccurred && S.eventsTriggeredCount < maxEventsByPace && availableEvents.length){
         if(S.pace === "exp"){
           if(yearsSinceLastEvent >= 6 && Math.random() < 0.50) shouldTriggerEvent = true;
         } else if(S.pace === "nor"){
@@ -3523,7 +3973,7 @@ function avatarSVG(customState = null){
       if(shouldTriggerEvent){
         S.eventsTriggeredCount++;
         S.lastEventAge = S.age;
-        const selectedEvent = rnd(availableEvents);
+        const selectedEvent = eventoForzado || rnd(availableEvents);
         S.seenEventIds.push(selectedEvent.id);
         S.choice = { ...selectedEvent };
         S.phase = "choice";
@@ -3538,15 +3988,20 @@ function avatarSVG(customState = null){
     function buyLongevity(){
       const cost = EXT_COSTS[S.extensiones];
       if(S.cash < cost) return;
+      const paso = TRASCENDENCIA[S.extensiones];
       S.cash -= cost;
       S.extensiones = (S.extensiones || 0) + 1;
+      if(!S.edadTrascendio) S.edadTrascendio = S.age;
+      S.edadUltimaExt = S.age;
       S.isTranshumano = true;
-      unlockTrophy('transhumano');
+      /* Un trofeo oculto por escalón: el mecanismo tenía cuatro compras
+         distintas y un solo logro que saltaba en la primera. */
+      if(paso && paso.trofeo) unlockTrophy(paso.trofeo);
       playSfx('levelUp');
       
       S.flash = {
         good: true,
-        title: "🧬 ¡Transformación Transhumana Completada! Ganaste 10 años más de vida corporativa.",
+        title: paso ? ("🧬 " + paso.n + ". " + paso.cierre) : "Ganaste 10 años más de vida corporativa.",
         ovrDelta: 0,
         cashDelta: -cost
       };
@@ -3787,6 +4242,8 @@ function avatarSVG(customState = null){
       bancarrota:    { titulo: "BANCARROTA",              ic: "🏦" },
       causa_penal:   { titulo: "CAUSA PENAL",             ic: "⚖️" },
       corchazo:      { titulo: "EL CORCHAZO",             ic: "🥩" },
+      falla_sist:    { titulo: "FALLA SISTÉMICA",         ic: "🧬" },
+      adquirido:     { titulo: "ACTIVO ADQUIRIDO",        ic: "🤝" },
       miami:         { titulo: "SE FUE A MIAMI",          ic: "✈️" },
       changa:        { titulo: "TODA UNA VIDA DE CHANGA", ic: "🛵" },
       casa_materna:  { titulo: "VOLVIÓ A LO DE SU VIEJA", ic: "🏠" },
@@ -3801,11 +4258,27 @@ function avatarSVG(customState = null){
       const rosca = (S.stats && S.stats.rosca) || 0;
       const rankI = S.maxRank ? S.maxRank.i : 0;
 
-      if(motivoBase === "Bancarrota Financiera") return "bancarrota";
+      /* Los cierres de la trascendencia son explícitos: no se sortean
+         contra la plata ni el rango, ya se decidieron en la mesa. */
+      if(motivoBase === "falla_sist") return "falla_sist";
+      if(motivoBase === "adquirido")  return "adquirido";
+      if(motivoBase === "corchazo")   return "corchazo";
+
+      if(motivoBase === "Bancarrota Financiera"){
+        /* Un banco te ejecuta, te embarga y te manda al Veraz. Nada de eso
+           te saca de la carrera a los 37. Si el juego te fulmina, es porque
+           la plata se la debías a alguien que no usa el Veraz. La rosca
+           no lo habilita, solo hace que sean más y peores. */
+        if(Math.random() < (rosca >= 30 ? 0.80 : 0.55)) return "corchazo";
+        return "bancarrota";
+      }
 
       // Los finales raros se sortean una sola vez, al cerrar la carrera.
       if((S.arreglosCompliance || 0) >= 2 && Math.random() < 0.45) return "causa_penal";
-      if(rankI >= 7 && rosca >= 38 && Math.random() < 0.14) return "corchazo";
+      /* Si llegaste a CEO rosqueando, que te den el corchazo es moneda al
+      aire. Con 0.14 salía en el 0,7% de las carreras y es un final que
+      está en el título del juego. */
+      if(rankI >= 7 && rosca >= 38 && Math.random() < 0.50) return "corchazo";
       if(c >= 400000 && despidos >= 2) return "miami";
       if(((S.changasHechas || 0) >= 12 && c < 120000) || (S.aniosSinCobrar || 0) >= 14) return "changa";
       if(c < 25000 && S.age >= 55) return "casa_materna";
@@ -3836,7 +4309,7 @@ function avatarSVG(customState = null){
       const despidos = (state.historialDespidos || []).length;
       const comprado = state.purchasedOvrPoints || 0;
       const transhumano = (state.extensiones || 0) > 0;
-      const anios = (state.age || 22) - 22;
+      const anios = (state.age || 22) - (state.edadInicio || 22);
       const final = state.finalId || 'jubilacion';
       const timbas = state.timbasJugadas || 0;
       const ganadas = state.timbasGanadas || 0;
@@ -3857,9 +4330,22 @@ function avatarSVG(customState = null){
           `${nombre}, el primer ejecutivo del rubro en explicarle a un fiscal qué es un fideicomiso financiero. No le salió.`,
           `${nombre} pasó ${anios} años firmando cosas que no leía. Un juzgado las leyó todas.`
         ],
-        corchazo: [
+        corchazo: (state.cash < 0 ? [
+          `A ${nombre} lo fueron a visitar. No era del banco: el banco manda cartas.`,
+          `${nombre} hizo la cuenta de todo lo que debía y le faltó la columna importante: a quién.`,
+          `${nombre} llegó al límite de tres tarjetas y de la paciencia de un solo señor.`
+        ] : [
           `${nombre} llegó al directorio de la única empresa donde las diferencias de criterio no se resuelven en el comité.`,
           `${nombre} hizo la rosca perfecta. Con la gente equivocada.`
+        ]),
+        falla_sist: [
+          `${nombre} compró ${(state.extensiones||1) * 10} años de vida y usó todos menos los últimos, que estaban en garantía.`,
+          `${nombre} le ganó a la biología cuatro veces seguidas. La quinta jugó de local.`,
+          `A ${nombre} lo apagaron un martes a la mañana, que es cuando la empresa hace mantenimiento.`
+        ],
+        adquirido: [
+          `${nombre} firmó la cesión del paquete completo. En el balance figuraba un solo activo, y el activo tenía nombre y apellido.`,
+          `${nombre} terminó siendo la mejor inversión de un fondo que ${lo_la} compró entero, con recuerdos y todo.`
         ],
         miami: [
           `${nombre} resolvió el mercado laboral argentino de la única manera comprobada: yéndose.`,
@@ -3888,10 +4374,28 @@ function avatarSVG(customState = null){
       } else if(quienFue[final]){
         who = rnd(quienFue[final]);
       } else if(transhumano){
-        who = rnd([
-          `${nombre} le compró ${(state.extensiones||1) * 10} años a la biología para seguir yendo a reuniones. Los usó todos.`,
-          `${nombre} trascendió el cuerpo humano y lo primero que hizo con eso fue pedir una silla en un directorio Tier 5.`
-        ]);
+        /* Cada escalón cierra distinto: el que se compró diez años no
+           terminó en el mismo lugar que el que se constituyó en sociedad. */
+        const TRASC_EPITAFIO = [
+          [
+            `${nombre} le compró diez años a la biología para seguir yendo a reuniones. Los usó todos.`,
+            `${nombre} pasó los 65 y el directorio decidió que todavía servía. Le renovaron el cuerpo como se renueva una licencia.`
+          ],
+          [
+            `${nombre} llegó a los ${state.age} con dos órganos de proveedor homologado y la carpeta de garantías al día.`,
+            `${nombre} tenía más piezas de reemplazo que recuerdos propios. Las piezas andaban mejor.`
+          ],
+          [
+            `${nombre} guardó su memoria en un servidor de la empresa y nunca leyó la cláusula que aclaraba de quién era el servidor.`,
+            `${nombre} podía recordar cada reunión de ${anios} años de carrera. Ese fue exactamente el problema.`
+          ],
+          [
+            `${nombre} dejó de ser una persona física a los noventa y algo. El trámite salió más rápido que una licencia por enfermedad.`,
+            `${nombre} terminó siendo una sociedad anónima con un único activo declarado en el balance. El activo era ${el_ella}.`
+          ]
+        ];
+        const escalon = Math.min(TRASC_EPITAFIO.length, Math.max(1, state.extensiones || 1));
+        who = rnd(TRASC_EPITAFIO[escalon - 1]);
       } else if(maxOvr >= 90){
         who = rnd([
           `${nombre} llegó a ${maxRank} y en ${anios} años nunca aprendió el nombre de nadie de Operaciones.`,
@@ -4071,7 +4575,7 @@ function avatarSVG(customState = null){
       const meta = FINALES[final] || FINALES.jubilacion;
       const rawText =
         `${meta.ic} MARKET CAPo - ${meta.titulo}\n` +
-        `${nombre} | 22 a ${state.age} años | ${maxRank} | OVR ${maxOvr} | ${money(plata)}\n\n` +
+        `${nombre} | ${state.edadInicio || 22} a ${state.age} años | ${maxRank} | OVR ${maxOvr} | ${money(plata)}\n\n` +
         `QUIÉN FUE\n${who}\n\n` +
         `CÓMO VIVIÓ\n${lived}\n\n` +
         `QUÉ DEJA\n${leaves}\n\n` +
@@ -4201,7 +4705,7 @@ function avatarSVG(customState = null){
 
       c.font = "700 28px " + FN;
       c.fillStyle = "#94a3b8";
-      c.fillText("22 A " + S.age + " AÑOS • " + (S.maxRank ? S.maxRank.n.toUpperCase() : "EJECUTIVO"), W / 2, y + 40);
+      c.fillText((S.edadInicio || 22) + " A " + S.age + " AÑOS • " + (S.maxRank ? S.maxRank.n.toUpperCase() : "EJECUTIVO"), W / 2, y + 40);
       y += 80;
 
       c.strokeStyle = "rgba(255,255,255,0.10)"; c.lineWidth = 2;
@@ -4454,6 +4958,9 @@ function avatarSVG(customState = null){
                   <span class="badge-tag rank-tag" style="background:#1e293b; color:var(--gold); border:1px solid rgba(255,215,0,0.35); font-weight:900;">${rankTagText}</span>
                   ${S.area ? `<span class="badge-tag role">${esc(areaById(S.area).n.toUpperCase())}</span>` : ''}
                 ` : ''}
+                ${(S.escudoDespido || 0) > 0 ? `
+                  <span class="badge-tag rosca-tag" title="Tenés la rosca hecha: si te quieren echar, alguien levanta el teléfono por vos. No sirve contra la Crisis de los 40.">🍷 ROSCA${(S.escudoDespido || 0) > 1 ? ' ×' + S.escudoDespido : ''}</span>
+                ` : ''}
               </div>
               <div class="company-headline ${!S.company?'none':''}">
                 ${companyLogo(S.company)}
@@ -4474,7 +4981,8 @@ function avatarSVG(customState = null){
             </div>
             <div class="kpi-cell">
               <div class="l">Costo de Vida</div>
-              <div class="v amber">${money(annualCost)}/año</div>
+              <div class="v ${(S.extensiones || 0) > 0 ? 'red' : 'amber'}">${money(annualCost)}/año</div>
+              ${(S.extensiones || 0) > 0 ? `<div class="kpi-nota">${money(costoMantenimiento())} de ${esc(conceptoMantenimiento())}</div>` : ''}
             </div>
           </div>
         </article>
@@ -4511,30 +5019,22 @@ function avatarSVG(customState = null){
     function buildWealthHTML(){
       const affordable = WEALTH_ACTIONS.filter(a => checkWealthAvailability(a).ok).length;
       const usadoEsteAnio = S.usedWealthThisRound;
-
-      /* Si no hay ninguna disponible el cajón queda gris y no abre, igual
-         que cuando ya lo usaste: abrirlo para mostrar seis tarjetas
-         apagadas no informa nada que el encabezado no diga mejor.
-         El motivo no siempre es la plata (pueden estar compradas o
-         enfriando), así que el cartel lo aclara según el caso. */
       const sinOpciones = affordable === 0;
-      const isLocked = usadoEsteAnio || sinOpciones;
+
+      /* Si no hay nada para hacer y todavía no lo usaste, el cajón NO se
+         muestra. Un panel gris permanente en la primera partida es ruido:
+         no le dice al jugador nada que le sirva y le ocupa pantalla.
+         Aparece solo, la primera vez que podés activar algo, y a partir de
+         ahí se queda (en gris) cuando ya lo gastaste, porque ahí sí el
+         cartel informa: te avisa que vuelve el año que viene. */
+      if(sinOpciones && !usadoEsteAnio) return "";
+
+      const isLocked = usadoEsteAnio;
       const hasOptions = !isLocked && affordable > 0;
 
-      const costoMasBarato = WEALTH_ACTIONS
-        .filter(a => checkWealthAvailability(a).status === "no_cash")
-        .reduce((min, a) => Math.min(min, a.cost), Infinity);
-
-      let headerText = "";
-      if(usadoEsteAnio){
-        headerText = "🔒 Usado este año [1/1] (Se reactiva el próximo año)";
-      } else if(sinOpciones && costoMasBarato !== Infinity){
-        headerText = `🔒 No te alcanza (la más barata sale ${money(costoMasBarato)})`;
-      } else if(sinOpciones){
-        headerText = "🔒 Sin movimientos disponibles este año";
-      } else {
-        headerText = `Usar Patrimonio ($) (${affordable} disponibles)`;
-      }
+      const headerText = usadoEsteAnio
+        ? "🔒 Usado este año [1/1] (Se reactiva el próximo año)"
+        : `Usar Patrimonio ($) (${affordable} disponibles)`;
 
       return `
         <div class="wealth-drawer ${wealthDrawerOpen ? 'open' : ''}" id="wealthDrawer">
@@ -4557,7 +5057,7 @@ function avatarSVG(customState = null){
                     <div class="ic" aria-hidden="true">${a.ic}</div>
                     <div class="title">${esc(a.n)}</div>
                     <div class="gain-tag">${esc(a.gainText)}</div>
-                    ${check.ok ? `<span class="cost-pill">-${money(a.cost)}</span>` : `<span class="status-badge ${check.status}">${esc(check.reason)}</span>`}
+                    ${check.ok ? `<span class="cost-pill">-${money(costoDe(a))}</span>` : `<span class="status-badge ${check.status}">${esc(check.reason)}</span>`}
                   </div>
                 `;
               }).join('')}
@@ -4570,23 +5070,36 @@ function avatarSVG(customState = null){
         function buildDecisionHTML(){
       if(S.phase === "longevity"){
         const nextCost = EXT_COSTS[S.extensiones];
+        const paso = TRASCENDENCIA[S.extensiones] || TRASCENDENCIA[TRASCENDENCIA.length - 1];
+        const puedePagar = S.cash >= nextCost;
         return `
-          <div class="decisions-box">
+          <div class="decisions-box trasc-box ${paso.tono}">
             <div class="box-header">
-              <h2>Transición Vital</h2>
-              <span class="status">Edad: ${S.age} años</span>
+              <h2>${esc(paso.n)}</h2>
+              <span class="status">Extensión ${S.extensiones + 1} de ${TRASCENDENCIA.length} · ${S.age} años</span>
             </div>
-            <p style="font-size:0.80rem; color:var(--text-muted); line-height:1.5;">Llegaste a la edad de retiro. Podés usar tu fortuna en biotecnología para competir en corporaciones de Tier 5 o retirarte a disfrutar la guita.</p>
-            <div class="contract-grid" style="margin-top:8px;">
-              <div class="contract-card" role="button" tabindex="0" onclick="buyLongevity()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();buyLongevity();}">
-                <span class="card-kicker">Tratamiento Neuronal</span>
-                <div class="company-name">Comprar Extensión Vital</div>
+            <div class="trasc-escalera" aria-hidden="true">
+              ${TRASCENDENCIA.map((p, i) => `<span class="trasc-paso ${i < S.extensiones ? 'hecho' : (i === S.extensiones ? 'actual' : '')}"></span>`).join('')}
+            </div>
+            <p class="trasc-lore">${esc(paso.lore)}</p>
+            <p class="trasc-cierre">${esc(paso.cierre)}</p>
+            <div class="trasc-grid">
+              <div class="contract-card trasc-firmar ${puedePagar ? '' : 'trasc-caro'}"
+                   ${puedePagar
+                     ? `role="button" tabindex="0" onclick="buyLongevity()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();buyLongevity();}"`
+                     : `aria-disabled="true"`}>
+                <span class="card-kicker">${esc(paso.kicker)}</span>
+                <div class="company-name">Firmar el Tratamiento</div>
                 <div class="salary-pill down">-${money(nextCost)}</div>
+                <div class="trasc-pie">Seguís hasta los ${RETIRE_AGES[Math.min(S.extensiones + 1, RETIRE_AGES.length - 1)]} años.<br>
+                  Deja ${money(MANTENIMIENTO[Math.min(S.extensiones + 1, MANTENIMIENTO.length - 1)])} por año de ${esc(CONCEPTO_MANT[Math.min(S.extensiones + 1, CONCEPTO_MANT.length - 1)])}, y sube todos los años.</div>
+                ${puedePagar ? '' : `<div class="trasc-falta">No te alcanza. Te faltan ${money(nextCost - S.cash)}.</div>`}
               </div>
-              <div class="contract-card stay-option" role="button" tabindex="0" onclick="endGame('Jubilación Dorada')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();endGame('Jubilación Dorada');}">
+              <div class="contract-card stay-option trasc-salir" role="button" tabindex="0" onclick="endGame('Jubilación Dorada')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();endGame('Jubilación Dorada');}">
                 <span class="card-kicker">Retiro Definitivo</span>
                 <div class="company-name">Jubilarte con Honor</div>
-                <div class="salary-pill">Disfrutar Fortuna</div>
+                <div class="salary-pill">${money(S.cash)}</div>
+                <div class="trasc-pie">Te vas con todo. El expediente se cierra acá.</div>
               </div>
             </div>
           </div>
@@ -4668,7 +5181,9 @@ function avatarSVG(customState = null){
       
       const scoreGrade = gradeDeCarrera(S);
       const TITULOS = {
-        "F":  ["Retiro en Quiebra y Endeudado",      "var(--hot-pink)"],
+        "F":  [(S.finalId === "corchazo"
+                  ? "Desvinculación Definitiva"
+                  : (S.age < 60 ? "Quiebra Anticipada" : "Retiro en Quiebra y Endeudado")), "var(--hot-pink)"],
         "S+": ["Leyenda Inmortal de Wall Street",    "var(--gold)"],
         "A":  ["Tiburón del Directorio",             "var(--money)"],
         "B":  ["Director Consolidado",               "var(--electric-blue)"],
@@ -4711,7 +5226,7 @@ function avatarSVG(customState = null){
               <div class="cross-icon">${S.endIcon || '🏛️'}</div>
               <span class="rip-kicker">EXPEDIENTE CERRADO • LEGAJO #${(1000 + (S.apellido || '').length * 137 + (S.age || 22) * 29) % 9000 + 1000}</span>
               <h1 class="tomb-name">${esc(S.apellido)}</h1>
-              <span class="tomb-dates">22 a ${S.age} AÑOS • ${esc(S.maxRank ? S.maxRank.n.toUpperCase() : 'EJECUTIVO')}</span>
+              <span class="tomb-dates">${S.edadInicio || 22} a ${S.age} AÑOS • ${esc(S.maxRank ? S.maxRank.n.toUpperCase() : 'EJECUTIVO')}</span>
             </div>
 
             <div class="tombstone-body">
@@ -4782,11 +5297,17 @@ function avatarSVG(customState = null){
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px;">
               ${ALL_TROPHIES.map(t => {
                 const isUnlocked = !!unlockedMeta[t.id];
+                /* Un logro oculto no muestra ni su nombre ni cómo sacarlo:
+                   si lo contás, deja de ser un hallazgo. */
+                const tapado = t.oculto && !isUnlocked;
+                const nombreT = tapado ? "Logro Oculto" : t.n;
+                const descT = tapado ? "Todavía no llegaste tan lejos." : t.d;
+                const icT = tapado ? "❔" : t.ic;
                 return `
                   <div style="background: ${isUnlocked ? 'linear-gradient(135deg, rgba(255,215,0,0.15), rgba(16,229,117,0.05))' : '#080c14'}; border: 1px solid ${isUnlocked ? 'var(--gold)' : 'var(--border)'}; border-radius: 12px; padding: 10px; opacity: ${isUnlocked ? '1' : '0.4'}; transition: all 0.2s;">
-                    <div class="trophy-ic ${isUnlocked ? '' : 'locked'}" aria-hidden="true">${t.ic}</div>
-                    <div style="font-size: 0.78rem; font-weight: 800; color: ${isUnlocked ? '#fff' : 'var(--text-dim)'};">${esc(t.n)}</div>
-                    <div style="font-size: 0.68rem; color: var(--text-muted); line-height: 1.3; margin-top: 2px;">${esc(t.d)}</div>
+                    <div class="trophy-ic ${isUnlocked ? '' : 'locked'}" aria-hidden="true">${icT}</div>
+                    <div style="font-size: 0.78rem; font-weight: 800; color: ${isUnlocked ? '#fff' : 'var(--text-dim)'};">${esc(nombreT)}</div>
+                    <div style="font-size: 0.68rem; color: var(--text-muted); line-height: 1.3; margin-top: 2px;">${esc(descT)}</div>
                   </div>
                 `;
               }).join('')}
@@ -4870,11 +5391,19 @@ function avatarSVG(customState = null){
                   <div class="company-name" style="font-size:0.96rem;">${esc(opt.n)}</div>
                   <div class="outcomes">
                     ${opt.roll.map((rl, j) => {
+                      /* Una rama al 0% es relleno de estructura (las opciones
+                         de desenlace único lo necesitan): no se dibuja, si no
+                         aparece una fila fantasma con guion. */
+                      if(!rl.p) return '';
                       let tagText = "";
                       if(rl.type === "ovr") tagText = `${rl.val > 0 ? '+' : ''}${rl.val} OVR`;
                       else if(rl.type === "cash") tagText = `${rl.val > 0 ? '+' : ''}${money(rl.val)}`;
                       else if(rl.type === "promote") tagText = "🎖️ ASCENSO DIRECTO";
                       else if(rl.type === "fire") tagText = "⚠️ DESPIDO INMEDIATO";
+                      else if(rl.type === "end"){
+                        const fin = FINALES[rl.final];
+                        tagText = (fin ? fin.ic + " FIN: " + fin.titulo : "☠️ FIN DE CARRERA");
+                      }
 
                       return `
                         <div class="outcome outcome-slot-${j}">
@@ -5031,7 +5560,7 @@ function avatarSVG(customState = null){
         <div class="left-col">
           ${buildIdentityHTML()}
           ${buildWealthHTML()}
-          ${S.flash ? `<div class="flash ${S.flash.good?'good':'bad'}" role="status" aria-live="polite"><div class="fh"><span>${esc(S.flash.title)}</span></div></div>` : ''}
+          ${(S.flash && String(S.flash.title || '').trim()) ? `<div class="flash ${S.flash.good?'good':'bad'}" role="status" aria-live="polite"><div class="fh"><span>${esc(S.flash.title)}</span></div></div>` : ''}
           ${buildDecisionHTML()}
           ${buildGigWidgetHTML()}
         </div>
@@ -5092,7 +5621,6 @@ function avatarSVG(customState = null){
         area: null,
         rep: o.rep,
         tierBonus: 0,
-        statusBonus: 0,
         purchasedOvrPoints: 0,
         ovrPenalties: 0,
         age: o.edadInicial || 22,
@@ -5106,7 +5634,10 @@ function avatarSVG(customState = null){
         badYears: 0,
         extensiones: 0,
         lastEventAge: 18,
-        crisis40Triggered: false,
+        /* Los orígenes que arrancan a los 41 ya la vivieron: si no,
+           el juego se las cobraba de nuevo a los pocos turnos. */
+        crisis40Triggered: !!o.saltaCrisis40,
+        edadInicio: o.edadInicial || 22,
         
         usedWealthThisRound: false,
         usedGigThisRound: false,
@@ -5137,7 +5668,13 @@ function avatarSVG(customState = null){
         offers: makeOffers(1, 3)
       };
 
-      S.rank = rankOf(computeOvr());
+      /* El rango de arranque lo fija el origen, no solo el OVR: antes todos
+         empezaban entre 38 y 40 contra un umbral de 41 y hacían pasantía sí
+         o sí (el Nepobaby, 6 turnos sin cobrar y primer sueldo a los 28). */
+      const pisoOrigen = (o && o.rangoMin) || 0;
+      S.rangoPiso = pisoOrigen;
+      const rangoPorOvr = rankOf(computeOvr());
+      S.rank = rangoPorOvr.i >= pisoOrigen ? rangoPorOvr : { ...RANKS[pisoOrigen], i: pisoOrigen };
       
       trackPeaks();
       metrica("partida-iniciada", { origen: S.origin, ritmo: S.pace });
