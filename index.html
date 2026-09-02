@@ -4669,7 +4669,12 @@ function avatarSVG(customState = null){
       m.font = "400 34px " + FT;
       bloques.forEach(b => { b.lineas = envolverTexto(m, b.txt, anchoTexto); });
 
-      let H = PAD + 104 + 46 + 104 + 46 + 34;
+      /* La tarjeta nunca decia COMO termino la carrera: en pantalla el
+         final es el titulo mas grande, pero la imagen que se comparte lo
+         perdia. El que la ve suelta no se entera de que el juego tiene
+         finales distintos, que es justo el gancho. */
+      const tituloFinal = (S.endReason || "").trim();
+      let H = PAD + 104 + 46 + 104 + 46 + 34 + (tituloFinal ? 58 : 0);
       bloques.forEach(b => { H += 30 + b.lineas.length * 46 + 42; });
       H += 96 + 56 + PAD;
 
@@ -4702,6 +4707,13 @@ function avatarSVG(customState = null){
       c.fillStyle = "#f8fafc";
       c.fillText(String(S.apellido || "").toUpperCase(), W / 2, y + 62);
       y += 104;
+
+      if(tituloFinal){
+        c.font = "900 46px " + FB;
+        c.fillStyle = "#ffd700";
+        c.fillText(tituloFinal.toUpperCase(), W / 2, y + 34);
+        y += 58;
+      }
 
       c.font = "700 28px " + FN;
       c.fillStyle = "#94a3b8";
