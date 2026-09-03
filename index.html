@@ -408,6 +408,51 @@
       letter-spacing: 0.03em;
     }
     .badge-tag.role { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+
+    /* ===== PORTADA =====
+       Misma jerarquía que la og-image, que ya la tenía bien y la portada
+       no usaba: píldora → nombre → bajada → pitch. */
+    .landing-kicker {
+      display: inline-block;
+      font-size: 0.64rem; font-weight: 800; letter-spacing: 0.07em;
+      text-transform: uppercase; color: var(--gold);
+      border: 1px solid rgba(255,215,0,0.45); border-radius: 999px;
+      padding: 5px 13px; margin-bottom: 14px; line-height: 1.3;
+    }
+    .landing-title {
+      font-family: var(--font-brand);
+      font-size: clamp(2.1rem, 7vw, 3.2rem); font-weight: 900;
+      color: #f8fafc; margin: 0; line-height: 1;
+    }
+    .landing-hero {
+      font-size: clamp(0.86rem, 2.6vw, 1.06rem); font-weight: 800;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--electric-blue); margin: 10px 0 12px;
+    }
+    .landing-pitch {
+      font-size: 0.84rem; color: var(--text-muted);
+      line-height: 1.55; margin: 0 auto; max-width: 44ch;
+    }
+    /* Los personajes son la única prueba visual de que esto es un juego.
+       Ya estaban en el archivo y solo se veían tras elegir origen. */
+    .vitrina {
+      display: grid; grid-template-columns: repeat(8, 1fr);
+      gap: 6px; margin: 18px auto 6px; max-width: 480px;
+    }
+    @media (max-width: 520px){ .vitrina { grid-template-columns: repeat(4, 1fr); } }
+    .vit-item {
+      aspect-ratio: 1; border-radius: 9px; overflow: hidden;
+      border: 1px solid var(--border); background: #080c14;
+      transition: transform .18s, border-color .18s;
+    }
+    .vit-item:hover { transform: translateY(-3px); border-color: var(--gold); }
+    .vit-item svg { width: 100%; height: 100%; display: block; }
+    .vitrina-pie {
+      font-size: 0.72rem; color: var(--text-dim); margin: 4px 0 0; font-weight: 700;
+    }
+    .pace-pill b { display: block; font-size: 0.80rem; line-height: 1.2; }
+    .pace-pill small { display: block; font-size: 0.63rem; opacity: .72; font-weight: 700; }
+
     /* Late el escudo para que se distinga de las badges informativas:
        esta es la única que representa algo que se puede perder. */
     .badge-tag.rosca-tag {
@@ -1834,15 +1879,18 @@
   <!-- Main Board Container -->
   <main class="board" id="board" style="grid-template-columns: 1fr;">
     <div class="landing-card" id="staticLanding">
-      <h2>Hacete de abajo</h2>
-      <p>Elegí tus orígenes y estilo. Conseguite un laburo honesto, aguantá los puestos que te toquen, año a año, hasta llegar al directorio o el corchazo.</p>
+      <div class="landing-kicker">Simulador satírico de carrera corporativa · Roguelite</div>
+      <h1 class="landing-title">Market CAPo</h1>
+      <div class="landing-hero">Hacete de abajo</div>
+      <p class="landing-pitch">Elegí tus orígenes. Aguantá los puestos que te toquen. Llegá al directorio. O al corchazo.</p>
+      <div id="vitrinaEstatica"></div>
 
-      <div style="margin: 8px 0;">
+      <div style="margin: 12px 0 8px;">
         <label style="font-size:0.68rem; text-transform:uppercase; color:var(--text-dim); font-weight:800; display:block; margin-bottom:6px;">Elegí el ritmo</label>
         <div class="paces-row">
-          <button type="button" class="pace-pill on" onclick="PACE='int';renderApp()">Intensa</button>
-          <button type="button" class="pace-pill" onclick="PACE='nor';renderApp()">Normal</button>
-          <button type="button" class="pace-pill" onclick="PACE='exp';renderApp()">Rápido</button>
+          <button type="button" class="pace-pill on" onclick="PACE='exp';renderApp()"><b>Rápido</b><small>~5 min</small></button>
+          <button type="button" class="pace-pill" onclick="PACE='nor';renderApp()"><b>Normal</b><small>~8 min</small></button>
+          <button type="button" class="pace-pill" onclick="PACE='int';renderApp()"><b>Intensa</b><small>~15 min</small></button>
         </div>
       </div>
       
@@ -1852,6 +1900,17 @@
       </div>
     </div>
   </main>
+
+  <script>
+    /* La portada del HTML es estática y renderApp() no corre al cargar,
+       así que la vitrina se inyecta acá una sola vez. */
+    window.addEventListener('DOMContentLoaded', function(){
+      try {
+        var cont = document.getElementById('vitrinaEstatica');
+        if(cont && typeof buildVitrinaHTML === 'function') cont.innerHTML = buildVitrinaHTML();
+      } catch(e){}
+    });
+  </script>
 
   <!-- Modal de Legajo Ejecutivo (Stats, Competencias y Timeline) -->
   <div id="legajoModalContainer"></div>
@@ -2042,14 +2101,19 @@ const mcStat  = s  => MC_ICONS["stat_" + s] || "";   // vision | ejecucion | car
 
     /* ================= CONSTANTES DEL JUEGO ================= */
     const GAME = {
+      kicker: "Simulador satírico de carrera corporativa · Roguelite",
+      titulo: "Market CAPo",
       hero: "Hacete de abajo",
-      pitch: "Elegí tus orígenes y estilo. Conseguite un laburo honesto, aguantá los puestos que te toquen, año a año, hasta llegar al directorio o el corchazo."
+      pitch: "Elegí tus orígenes. Aguantá los puestos que te toquen. Llegá al directorio. O al corchazo."
     };
 
+    /* Los minutos salen de medir las interacciones de una carrera entera
+       (17 / 24 / 45) a un ritmo realista de lectura y decisión. "Rápido"
+       y "Normal" no le dicen nada a nadie; los minutos sí. */
     const PACES = [
-      { id: "int", n: "Intensa" },
-      { id: "nor", n: "Normal" },
-      { id: "exp", n: "Rápido" }
+      { id: "exp", n: "Rápido",  min: "~5 min" },
+      { id: "nor", n: "Normal",  min: "~8 min" },
+      { id: "int", n: "Intensa", min: "~15 min" }
     ];
 
     const AREAS = [
@@ -2432,7 +2496,7 @@ const mcStat  = s  => MC_ICONS["stat_" + s] || "";   // vision | ejecucion | car
       { id: "chairman", n: "Chairman Supremo", d: "Alcanzá el rango máximo Chairman (OVR 95+).", ic: "🏛️" },
       { id: "millonario", n: "Club del Millón", d: "Acumulá más de $1,000,000 en patrimonio neto.", ic: "💰" },
       { id: "magnate", n: "Vida de Magnate", d: "Comprate un auto de lujo importado y penthouse.", ic: "🏎️" },
-      { id: "transhumano", n: "Transhumanismo", d: "Comprá tu primera extensión vital.", ic: "🧬" },
+      { id: "transhumano", n: "Transhumanismo", d: "Comprá tu primera extensión vital.", ic: "🧬", oculto: true },
       { id: "ext_repuestos", n: "Repuestos Homologados", d: "Segunda extensión: sos un Cyborg.", ic: "🫀", oculto: true },
       { id: "ext_backup", n: "Backup Corporativo", d: "Tercera extensión: tu memoria vive en un servidor ajeno.", ic: "🧠", oculto: true },
       { id: "ext_juridica", n: "Singularidad", d: "Cuarta extensión: dejaste de ser una persona física. Sos una S.A.", ic: "🏛️", oculto: true },
@@ -3078,7 +3142,7 @@ function avatarSVG(customState = null){
     }) : 36;
 
     /* ================= CONTROL DE COMODINES Y ESTADO ================= */
-    let PACE = "int";
+    let PACE = "exp";
     let S = null;
     let wealthDrawerOpen = false;
     let legajoModalOpen = false;
@@ -3928,11 +3992,22 @@ function avatarSVG(customState = null){
       const retireTarget = RETIRE_AGES[Math.min(S.extensiones, RETIRE_AGES.length - 1)];
       if(S.age >= retireTarget){
         const nextCost = EXT_COSTS[S.extensiones];
-        /* La puerta se abre siempre que quede un escalón, alcance o no.
-           Antes, si no te alcanzaba, el juego te jubilaba en silencio: no
-           llegabas a enterarte de que existía la decisión ni de por cuánto
-           te la perdiste. Si no podés pagar, la ves y no la podés firmar. */
-        if(nextCost !== undefined){
+        /* La puerta se abre aunque no te alcance: ver por cuánto te la
+           perdiste es lo que te hace volver a intentarlo.
+
+           La excepción es la PRIMERA, y solo hasta que la descubriste una
+           vez. Que exista la trascendencia tiene que ser un hallazgo de
+           una partida bien jugada, no un cartel que te spoilea el final
+           del juego en la primera carrera. Una vez que la firmaste alguna
+           vez (queda el trofeo, que persiste entre partidas) ya no hay
+           sorpresa que cuidar y se muestra siempre. */
+        let ocultarPuerta = false;
+        if(nextCost !== undefined && (S.extensiones || 0) === 0 && S.cash < nextCost){
+          let yaLaDescubrio = false;
+          try { yaLaDescubrio = !!(getUnlockedTrophies() || {})['transhumano']; } catch(e){}
+          ocultarPuerta = !yaLaDescubrio;
+        }
+        if(nextCost !== undefined && !ocultarPuerta){
           S.phase = "longevity";
           renderApp();
           return;
@@ -4913,17 +4988,43 @@ function avatarSVG(customState = null){
       `;
     }
 
+    /* Alterna género a propósito: que se vea de entrada que se puede
+       jugar como mujer, sin tener que entrar a la pantalla de setup. */
+    const VITRINA = [
+      { id: "mba",      g: "H" }, { id: "calle",  g: "M" },
+      { id: "trust",    g: "H" }, { id: "sindical", g: "M" },
+      { id: "estado",   g: "H" }, { id: "miami",  g: "M" },
+      { id: "quebrado", g: "H" }, { id: "tecnico", g: "M" }
+    ];
+    function buildVitrinaHTML(){
+      const piezas = VITRINA.map(v => {
+        const svg = (typeof ARG_FIXED_AVATARS !== 'undefined')
+          ? (ARG_FIXED_AVATARS[v.g + "_" + v.id] || "") : "";
+        if(!svg) return "";
+        const o = ORIGINS.find(x => x.id === v.id);
+        return `<div class="vit-item" title="${esc(o ? o.n : '')}">${svg}</div>`;
+      }).filter(Boolean).join("");
+      if(!piezas) return "";
+      return `
+        <div class="vitrina" aria-hidden="true">${piezas}</div>
+        <p class="vitrina-pie">Ocho orígenes. Ninguno te salva.</p>
+      `;
+    }
+
     function buildLandingHTML(){
       const hasSaved = !!loadRun();
       return `
         <div class="landing-card">
-          <h2>Hacete de abajo</h2>
-          <p>${GAME.pitch}</p>
+          <div class="landing-kicker">${esc(GAME.kicker)}</div>
+          <h1 class="landing-title">${esc(GAME.titulo)}</h1>
+          <div class="landing-hero">${esc(GAME.hero)}</div>
+          <p class="landing-pitch">${esc(GAME.pitch)}</p>
+          ${buildVitrinaHTML()}
 
-          <div style="margin: 8px 0;">
+          <div style="margin: 12px 0 8px;">
             <label style="font-size:0.68rem; text-transform:uppercase; color:var(--text-dim); font-weight:800; display:block; margin-bottom:6px;">Elegí el ritmo</label>
             <div class="paces-row" role="group" aria-label="Ritmo de carrera">
-              ${PACES.map(p => `<button type="button" class="pace-pill ${PACE===p.id?'on':''}" onclick="PACE='${p.id}';renderApp()">${esc(p.n)}</button>`).join('')}
+              ${PACES.map(p => `<button type="button" class="pace-pill ${PACE===p.id?'on':''}" onclick="PACE='${p.id}';renderApp()"><b>${esc(p.n)}</b><small>${esc(p.min)}</small></button>`).join('')}
             </div>
           </div>
 
